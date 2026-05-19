@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ads_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ads_backend
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    container_name: ads_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  centrifugo:
+    image: centrifugo/centrifugo:v5
+    container_name: ads_centrifugo
+    ports:
+      - "8000:8000"
+    command: centrifugo --config=config.json
+    volumes:
+      - ./config.json:/centrifugo/config.json
+
+volumes:
+  mysql_data:
+  redis_data:

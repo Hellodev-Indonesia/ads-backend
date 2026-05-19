@@ -1,0 +1,621 @@
+basePath: /api/v1
+definitions:
+  dto.AssignPermissionRequest:
+    properties:
+      permission_ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - permission_ids
+    type: object
+  dto.AuthUserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.LoginResponse:
+    properties:
+      centrifugo_token:
+        type: string
+      permissions:
+        items:
+          type: string
+        type: array
+      roles:
+        items:
+          type: string
+        type: array
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/dto.AuthUserResponse'
+    type: object
+  dto.PermissionRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dto.PermissionResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.RoleBrief:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.RoleRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dto.RoleResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/dto.PermissionResponse'
+        type: array
+    type: object
+  dto.UserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      role_ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - email
+    - name
+    type: object
+  dto.UserResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/dto.RoleBrief'
+        type: array
+    type: object
+  response.ErrorResponse:
+    properties:
+      errors: {}
+      message:
+        example: Error message
+        type: string
+      success:
+        example: false
+        type: boolean
+    type: object
+  response.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        example: Success
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+host: localhost:8888
+info:
+  contact: {}
+  description: ERP Ready Backend for Meta Ads & Business Management
+  title: Ads Backend API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return token
+      parameters:
+      - description: Login Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.LoginResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Login
+      tags:
+      - Authentication
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout user (Clear session/token)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Logout
+      tags:
+      - Authentication
+  /permissions:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all permissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.PermissionResponse'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get All Permissions
+      tags:
+      - Permission Management
+    post:
+      consumes:
+      - application/json
+      description: Create a new permission
+      parameters:
+      - description: Create Permission Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Create Permission
+      tags:
+      - Permission Management
+  /permissions/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a permission by ID
+      parameters:
+      - description: Permission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete Permission
+      tags:
+      - Permission Management
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a permission by its ID
+      parameters:
+      - description: Permission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.PermissionResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get Permission by ID
+      tags:
+      - Permission Management
+    put:
+      consumes:
+      - application/json
+      description: Update a permission by ID
+      parameters:
+      - description: Permission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Permission Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Update Permission
+      tags:
+      - Permission Management
+  /roles:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all roles with permissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.RoleResponse'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get All Roles
+      tags:
+      - Role Management
+    post:
+      consumes:
+      - application/json
+      description: Create a new role
+      parameters:
+      - description: Create Role Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RoleRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Create Role
+      tags:
+      - Role Management
+  /roles/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a role by ID
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete Role
+      tags:
+      - Role Management
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a role by its ID
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.RoleResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get Role by ID
+      tags:
+      - Role Management
+    put:
+      consumes:
+      - application/json
+      description: Update a role by ID
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Role Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Update Role
+      tags:
+      - Role Management
+  /roles/{id}/permissions:
+    post:
+      consumes:
+      - application/json
+      description: Assign permissions to a role
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Assign Permission Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AssignPermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Assign Permissions
+      tags:
+      - Role Management
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all users
+      parameters:
+      - description: Filter by name
+        in: query
+        name: name
+        type: string
+      - description: Filter by email
+        in: query
+        name: email
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.UserResponse'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get All Users
+      tags:
+      - User Management
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: Create User Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Register User
+      tags:
+      - User Management
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete User
+      tags:
+      - User Management
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user by its ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.UserResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get User by ID
+      tags:
+      - User Management
+    put:
+      consumes:
+      - application/json
+      description: Update a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update User Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Update User
+      tags:
+      - User Management
+securityDefinitions:
+  BearerAuth:
+    description: Tuliskan 'Bearer ' diikuti dengan token JWT Anda.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
