@@ -57,12 +57,18 @@ func RegisterApiRoutes(router *gin.Engine) {
 			config.MetaAccessToken,
 		)
 
-		// Sub-module services
+		// Repositories (DB access layer)
+		campaignRepo := campaign.NewRepository(config.DB)
+		adSetRepo := adset.NewRepository(config.DB)
+		adsRepo := ads.NewRepository(config.DB)
+		insightRepo := insight.NewRepository(config.DB)
+
+		// Services (Meta client + Repository)
 		adAccountService := ad_account.NewService(metaClient)
-		campaignService := campaign.NewService(metaClient)
-		adSetService := adset.NewService(metaClient)
-		adsService := ads.NewService(metaClient)
-		insightService := insight.NewService(metaClient)
+		campaignService := campaign.NewService(metaClient, campaignRepo)
+		adSetService := adset.NewService(metaClient, adSetRepo)
+		adsService := ads.NewService(metaClient, adsRepo)
+		insightService := insight.NewService(metaClient, insightRepo)
 
 		// Sub-module handlers
 		adAccountHandler := ad_account.NewHandler(adAccountService)
@@ -74,8 +80,8 @@ func RegisterApiRoutes(router *gin.Engine) {
 		// Register Meta Routes
 		metaRoutes.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler)
 
-		// Start Meta Background Sync Job
-		syncJob := jobs.NewMetaAdsSyncJob(campaignService)
+		// Start Meta Background Sync Job (syncs all 4 modules)
+		syncJob := jobs.NewMetaAdsSyncJob(campaignService, adSetService, adsService, insightService)
 		syncJob.Start()
 	}
 }

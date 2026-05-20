@@ -108,13 +108,39 @@ const docTemplate = `{
                     "Meta Ad Accounts"
                 ],
                 "summary": "Get Meta Ad Accounts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Custom fields comma-separated preset",
+                        "name": "fields",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pagination limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor after",
+                        "name": "after",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cursor before",
+                        "name": "before",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -124,6 +150,9 @@ const docTemplate = `{
                                             "items": {
                                                 "$ref": "#/definitions/dto.AdAccountResponse"
                                             }
+                                        },
+                                        "paging": {
+                                            "$ref": "#/definitions/response.MetaPaging"
                                         }
                                     }
                                 }
@@ -147,7 +176,7 @@ const docTemplate = `{
         },
         "/meta/ads": {
             "get": {
-                "description": "Retrieve ads for the given or default ad account",
+                "description": "Retrieve ads from local database (synced from Meta)",
                 "consumes": [
                     "application/json"
                 ],
@@ -161,8 +190,40 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Ad Account ID (falls back to config.MetaAdAccountID)",
-                        "name": "ad_account_id",
+                        "description": "Filter by campaign ID",
+                        "name": "campaign_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by adset ID",
+                        "name": "adset_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by status (ACTIVE, PAUSED, etc)",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by ad name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
                         "in": "query"
                     }
                 ],
@@ -172,7 +233,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -182,6 +243,9 @@ const docTemplate = `{
                                             "items": {
                                                 "$ref": "#/definitions/dto.AdResponse"
                                             }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -205,7 +269,7 @@ const docTemplate = `{
         },
         "/meta/adsets": {
             "get": {
-                "description": "Retrieve adsets for the given or default ad account",
+                "description": "Retrieve adsets from local database (synced from Meta)",
                 "consumes": [
                     "application/json"
                 ],
@@ -219,8 +283,34 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Ad Account ID (falls back to config.MetaAdAccountID)",
-                        "name": "ad_account_id",
+                        "description": "Filter by campaign ID",
+                        "name": "campaign_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by status (ACTIVE, PAUSED, etc)",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by adset name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
                         "in": "query"
                     }
                 ],
@@ -230,7 +320,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -240,6 +330,9 @@ const docTemplate = `{
                                             "items": {
                                                 "$ref": "#/definitions/dto.AdSetResponse"
                                             }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -263,7 +356,7 @@ const docTemplate = `{
         },
         "/meta/campaigns": {
             "get": {
-                "description": "Retrieve campaigns for the given or default ad account",
+                "description": "Retrieve campaigns from local database (synced from Meta)",
                 "consumes": [
                     "application/json"
                 ],
@@ -280,6 +373,32 @@ const docTemplate = `{
                         "description": "Ad Account ID (falls back to config.MetaAdAccountID)",
                         "name": "ad_account_id",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by status (ACTIVE, PAUSED, etc)",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by campaign name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -288,7 +407,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -298,6 +417,9 @@ const docTemplate = `{
                                             "items": {
                                                 "$ref": "#/definitions/dto.CampaignResponse"
                                             }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -319,9 +441,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/meta/insights": {
+        "/meta/creatives/{id}": {
             "get": {
-                "description": "Retrieve today's campaign insights for the given or default ad account",
+                "description": "Retrieve details of a specific ad creative (direct Meta API call)",
                 "consumes": [
                     "application/json"
                 ],
@@ -329,14 +451,21 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Insights"
+                    "Meta Ads"
                 ],
-                "summary": "Get Insights",
+                "summary": "Get Ad Creative",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Ad Account ID (falls back to config.MetaAdAccountID)",
-                        "name": "ad_account_id",
+                        "description": "Creative ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Custom fields comma-separated preset",
+                        "name": "fields",
                         "in": "query"
                     }
                 ],
@@ -346,7 +475,106 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.CreativeResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/insights/ad": {
+            "get": {
+                "description": "Retrieve ad-level insights from local database (synced from Meta)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Insights"
+                ],
+                "summary": "Get Ad Insights",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by account ID",
+                        "name": "account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by campaign ID",
+                        "name": "campaign_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by adset ID",
+                        "name": "adset_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by ad ID",
+                        "name": "ad_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -356,6 +584,102 @@ const docTemplate = `{
                                             "items": {
                                                 "$ref": "#/definitions/dto.InsightResponse"
                                             }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/definitions/response.PaginationMeta"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/insights/campaign": {
+            "get": {
+                "description": "Retrieve campaign-level insights from local database (synced from Meta)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Insights"
+                ],
+                "summary": "Get Campaign Insights",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by account ID",
+                        "name": "account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by campaign ID",
+                        "name": "campaign_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.InsightResponse"
+                                            }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -1091,6 +1415,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "2381234567890"
                 },
+                "created_time": {
+                    "type": "string",
+                    "example": "2026-05-11T10:00:00Z"
+                },
                 "creative": {
                     "$ref": "#/definitions/dto.CreativeRef"
                 },
@@ -1109,15 +1437,32 @@ const docTemplate = `{
                 "status": {
                     "type": "string",
                     "example": "ACTIVE"
+                },
+                "updated_time": {
+                    "type": "string",
+                    "example": "2026-05-11T12:00:00Z"
                 }
             }
         },
         "dto.AdSetResponse": {
             "type": "object",
             "properties": {
+                "attribution_spec": {},
+                "bid_strategy": {
+                    "type": "string",
+                    "example": "LOWEST_COST_WITHOUT_CAP"
+                },
+                "budget_remaining": {
+                    "type": "string",
+                    "example": "50000"
+                },
                 "campaign_id": {
                     "type": "string",
                     "example": "2381234567890"
+                },
+                "created_time": {
+                    "type": "string",
+                    "example": "2026-05-11T10:00:00Z"
                 },
                 "daily_budget": {
                     "type": "string",
@@ -1150,6 +1495,10 @@ const docTemplate = `{
                 "status": {
                     "type": "string",
                     "example": "ACTIVE"
+                },
+                "updated_time": {
+                    "type": "string",
+                    "example": "2026-05-11T12:00:00Z"
                 }
             }
         },
@@ -1184,9 +1533,29 @@ const docTemplate = `{
         "dto.CampaignResponse": {
             "type": "object",
             "properties": {
+                "account_id": {
+                    "type": "string",
+                    "example": "541050504790549"
+                },
+                "bid_strategy": {
+                    "type": "string",
+                    "example": "LOWEST_COST_WITHOUT_CAP"
+                },
+                "budget_remaining": {
+                    "type": "string",
+                    "example": "50000"
+                },
+                "buying_type": {
+                    "type": "string",
+                    "example": "AUCTION"
+                },
                 "created_time": {
                     "type": "string",
                     "example": "2026-05-11T10:00:00Z"
+                },
+                "daily_budget": {
+                    "type": "string",
+                    "example": "50000"
                 },
                 "effective_status": {
                     "type": "string",
@@ -1196,6 +1565,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "2381234567890"
                 },
+                "lifetime_budget": {
+                    "type": "string",
+                    "example": "0"
+                },
                 "name": {
                     "type": "string",
                     "example": "Summer Sale Campaign"
@@ -1204,9 +1577,21 @@ const docTemplate = `{
                     "type": "string",
                     "example": "OUTCOMES_LEADS"
                 },
+                "spend_cap": {
+                    "type": "string",
+                    "example": "0"
+                },
+                "start_time": {
+                    "type": "string",
+                    "example": "2026-05-11T10:00:00Z"
+                },
                 "status": {
                     "type": "string",
                     "example": "ACTIVE"
+                },
+                "stop_time": {
+                    "type": "string",
+                    "example": "2026-06-11T10:00:00Z"
                 },
                 "updated_time": {
                     "type": "string",
@@ -1223,9 +1608,74 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.CreativeResponse": {
+            "type": "object",
+            "properties": {
+                "asset_feed_spec": {},
+                "body": {
+                    "type": "string",
+                    "example": "Get 20% off today!"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "2387654321098"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://scontent.xx.fbcdn.net/..."
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Creative Promo 1"
+                },
+                "object_story_spec": {},
+                "thumbnail_url": {
+                    "type": "string",
+                    "example": "https://scontent.xx.fbcdn.net/..."
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Special Offer"
+                },
+                "url_tags": {
+                    "type": "string",
+                    "example": "utm_source=facebook\u0026utm_medium=cpc"
+                }
+            }
+        },
         "dto.InsightResponse": {
             "type": "object",
             "properties": {
+                "account_currency": {
+                    "type": "string",
+                    "example": "USD"
+                },
+                "account_id": {
+                    "type": "string",
+                    "example": "541050504790549"
+                },
+                "account_name": {
+                    "type": "string",
+                    "example": "My Ad Account"
+                },
+                "action_values": {},
+                "actions": {},
+                "ad_id": {
+                    "type": "string",
+                    "example": "2386543210987"
+                },
+                "ad_name": {
+                    "type": "string",
+                    "example": "Promo Image Ad"
+                },
+                "adset_id": {
+                    "type": "string",
+                    "example": "2389876543210"
+                },
+                "adset_name": {
+                    "type": "string",
+                    "example": "AdSet Leads USA"
+                },
                 "campaign_id": {
                     "type": "string",
                     "example": "2381234567890"
@@ -1238,6 +1688,7 @@ const docTemplate = `{
                     "type": "string",
                     "example": "350"
                 },
+                "cost_per_action_type": {},
                 "cpc": {
                     "type": "string",
                     "example": "0.36"
@@ -1250,9 +1701,33 @@ const docTemplate = `{
                     "type": "string",
                     "example": "2.30"
                 },
+                "date_start": {
+                    "type": "string",
+                    "example": "2026-04-11"
+                },
+                "date_stop": {
+                    "type": "string",
+                    "example": "2026-05-11"
+                },
                 "impressions": {
                     "type": "string",
                     "example": "15200"
+                },
+                "inline_link_click_ctr": {
+                    "type": "string",
+                    "example": "2.0"
+                },
+                "inline_link_clicks": {
+                    "type": "string",
+                    "example": "300"
+                },
+                "objective": {
+                    "type": "string",
+                    "example": "OUTCOMES_LEADS"
+                },
+                "reach": {
+                    "type": "string",
+                    "example": "12000"
                 },
                 "spend": {
                     "type": "string",
@@ -1433,6 +1908,81 @@ const docTemplate = `{
                 "success": {
                     "type": "boolean",
                     "example": false
+                }
+            }
+        },
+        "response.Meta": {
+            "type": "object",
+            "properties": {
+                "last_page": {
+                    "type": "integer"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.MetaPaging": {
+            "type": "object",
+            "properties": {
+                "cursors": {
+                    "type": "object",
+                    "properties": {
+                        "after": {
+                            "type": "string"
+                        },
+                        "before": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "has_next": {
+                    "type": "boolean"
+                },
+                "has_previous": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response.PaginationMeta": {
+            "type": "object",
+            "properties": {
+                "last_page": {
+                    "type": "integer"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "errors": {},
+                "message": {
+                    "type": "string"
+                },
+                "meta": {
+                    "$ref": "#/definitions/response.Meta"
+                },
+                "paging": {
+                    "$ref": "#/definitions/response.MetaPaging"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         },

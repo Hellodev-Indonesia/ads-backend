@@ -20,6 +20,9 @@ definitions:
       campaign_id:
         example: "2381234567890"
         type: string
+      created_time:
+        example: "2026-05-11T10:00:00Z"
+        type: string
       creative:
         $ref: '#/definitions/dto.CreativeRef'
       effective_status:
@@ -34,11 +37,24 @@ definitions:
       status:
         example: ACTIVE
         type: string
+      updated_time:
+        example: "2026-05-11T12:00:00Z"
+        type: string
     type: object
   dto.AdSetResponse:
     properties:
+      attribution_spec: {}
+      bid_strategy:
+        example: LOWEST_COST_WITHOUT_CAP
+        type: string
+      budget_remaining:
+        example: "50000"
+        type: string
       campaign_id:
         example: "2381234567890"
+        type: string
+      created_time:
+        example: "2026-05-11T10:00:00Z"
         type: string
       daily_budget:
         example: "50000"
@@ -64,6 +80,9 @@ definitions:
       status:
         example: ACTIVE
         type: string
+      updated_time:
+        example: "2026-05-11T12:00:00Z"
+        type: string
     type: object
   dto.AssignPermissionRequest:
     properties:
@@ -85,8 +104,23 @@ definitions:
     type: object
   dto.CampaignResponse:
     properties:
+      account_id:
+        example: "541050504790549"
+        type: string
+      bid_strategy:
+        example: LOWEST_COST_WITHOUT_CAP
+        type: string
+      budget_remaining:
+        example: "50000"
+        type: string
+      buying_type:
+        example: AUCTION
+        type: string
       created_time:
         example: "2026-05-11T10:00:00Z"
+        type: string
+      daily_budget:
+        example: "50000"
         type: string
       effective_status:
         example: ACTIVE
@@ -94,14 +128,26 @@ definitions:
       id:
         example: "2381234567890"
         type: string
+      lifetime_budget:
+        example: "0"
+        type: string
       name:
         example: Summer Sale Campaign
         type: string
       objective:
         example: OUTCOMES_LEADS
         type: string
+      spend_cap:
+        example: "0"
+        type: string
+      start_time:
+        example: "2026-05-11T10:00:00Z"
+        type: string
       status:
         example: ACTIVE
+        type: string
+      stop_time:
+        example: "2026-06-11T10:00:00Z"
         type: string
       updated_time:
         example: "2026-05-11T12:00:00Z"
@@ -113,8 +159,57 @@ definitions:
         example: "2387654321098"
         type: string
     type: object
+  dto.CreativeResponse:
+    properties:
+      asset_feed_spec: {}
+      body:
+        example: Get 20% off today!
+        type: string
+      id:
+        example: "2387654321098"
+        type: string
+      image_url:
+        example: https://scontent.xx.fbcdn.net/...
+        type: string
+      name:
+        example: Creative Promo 1
+        type: string
+      object_story_spec: {}
+      thumbnail_url:
+        example: https://scontent.xx.fbcdn.net/...
+        type: string
+      title:
+        example: Special Offer
+        type: string
+      url_tags:
+        example: utm_source=facebook&utm_medium=cpc
+        type: string
+    type: object
   dto.InsightResponse:
     properties:
+      account_currency:
+        example: USD
+        type: string
+      account_id:
+        example: "541050504790549"
+        type: string
+      account_name:
+        example: My Ad Account
+        type: string
+      action_values: {}
+      actions: {}
+      ad_id:
+        example: "2386543210987"
+        type: string
+      ad_name:
+        example: Promo Image Ad
+        type: string
+      adset_id:
+        example: "2389876543210"
+        type: string
+      adset_name:
+        example: AdSet Leads USA
+        type: string
       campaign_id:
         example: "2381234567890"
         type: string
@@ -124,6 +219,7 @@ definitions:
       clicks:
         example: "350"
         type: string
+      cost_per_action_type: {}
       cpc:
         example: "0.36"
         type: string
@@ -133,8 +229,26 @@ definitions:
       ctr:
         example: "2.30"
         type: string
+      date_start:
+        example: "2026-04-11"
+        type: string
+      date_stop:
+        example: "2026-05-11"
+        type: string
       impressions:
         example: "15200"
+        type: string
+      inline_link_click_ctr:
+        example: "2.0"
+        type: string
+      inline_link_clicks:
+        example: "300"
+        type: string
+      objective:
+        example: OUTCOMES_LEADS
+        type: string
+      reach:
+        example: "12000"
         type: string
       spend:
         example: "125.50"
@@ -256,6 +370,55 @@ definitions:
         example: false
         type: boolean
     type: object
+  response.Meta:
+    properties:
+      last_page:
+        type: integer
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  response.MetaPaging:
+    properties:
+      cursors:
+        properties:
+          after:
+            type: string
+          before:
+            type: string
+        type: object
+      has_next:
+        type: boolean
+      has_previous:
+        type: boolean
+    type: object
+  response.PaginationMeta:
+    properties:
+      last_page:
+        type: integer
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  response.Response:
+    properties:
+      data: {}
+      errors: {}
+      message:
+        type: string
+      meta:
+        $ref: '#/definitions/response.Meta'
+      paging:
+        $ref: '#/definitions/response.MetaPaging'
+      success:
+        type: boolean
+    type: object
   response.SuccessResponse:
     properties:
       data: {}
@@ -326,6 +489,23 @@ paths:
       consumes:
       - application/json
       description: Retrieve all ad accounts associated with the system user token
+      parameters:
+      - description: Custom fields comma-separated preset
+        in: query
+        name: fields
+        type: string
+      - description: Pagination limit
+        in: query
+        name: limit
+        type: string
+      - description: Cursor after
+        in: query
+        name: after
+        type: string
+      - description: Cursor before
+        in: query
+        name: before
+        type: string
       produces:
       - application/json
       responses:
@@ -333,12 +513,14 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.SuccessResponse'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
                     $ref: '#/definitions/dto.AdAccountResponse'
                   type: array
+                paging:
+                  $ref: '#/definitions/response.MetaPaging'
               type: object
         "400":
           description: Bad Request
@@ -355,12 +537,34 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieve ads for the given or default ad account
+      description: Retrieve ads from local database (synced from Meta)
       parameters:
-      - description: Ad Account ID (falls back to config.MetaAdAccountID)
+      - description: Filter by campaign ID
         in: query
-        name: ad_account_id
+        name: campaign_id
         type: string
+      - description: Filter by adset ID
+        in: query
+        name: adset_id
+        type: string
+      - description: Filter by status (ACTIVE, PAUSED, etc)
+        in: query
+        name: status
+        type: string
+      - description: Search by ad name
+        in: query
+        name: search
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
@@ -368,12 +572,14 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.SuccessResponse'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
                     $ref: '#/definitions/dto.AdResponse'
                   type: array
+                meta:
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
@@ -390,12 +596,30 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieve adsets for the given or default ad account
+      description: Retrieve adsets from local database (synced from Meta)
       parameters:
-      - description: Ad Account ID (falls back to config.MetaAdAccountID)
+      - description: Filter by campaign ID
         in: query
-        name: ad_account_id
+        name: campaign_id
         type: string
+      - description: Filter by status (ACTIVE, PAUSED, etc)
+        in: query
+        name: status
+        type: string
+      - description: Search by adset name
+        in: query
+        name: search
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
@@ -403,12 +627,14 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.SuccessResponse'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
                     $ref: '#/definitions/dto.AdSetResponse'
                   type: array
+                meta:
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
@@ -425,12 +651,30 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieve campaigns for the given or default ad account
+      description: Retrieve campaigns from local database (synced from Meta)
       parameters:
       - description: Ad Account ID (falls back to config.MetaAdAccountID)
         in: query
         name: ad_account_id
         type: string
+      - description: Filter by status (ACTIVE, PAUSED, etc)
+        in: query
+        name: status
+        type: string
+      - description: Search by campaign name
+        in: query
+        name: search
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
@@ -438,12 +682,14 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.SuccessResponse'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
                     $ref: '#/definitions/dto.CampaignResponse'
                   type: array
+                meta:
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
@@ -456,16 +702,20 @@ paths:
       summary: Get Campaigns
       tags:
       - Meta Campaigns
-  /meta/insights:
+  /meta/creatives/{id}:
     get:
       consumes:
       - application/json
-      description: Retrieve today's campaign insights for the given or default ad
-        account
+      description: Retrieve details of a specific ad creative (direct Meta API call)
       parameters:
-      - description: Ad Account ID (falls back to config.MetaAdAccountID)
+      - description: Creative ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Custom fields comma-separated preset
         in: query
-        name: ad_account_id
+        name: fields
         type: string
       produces:
       - application/json
@@ -474,12 +724,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.SuccessResponse'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  items:
-                    $ref: '#/definitions/dto.InsightResponse'
-                  type: array
+                  $ref: '#/definitions/dto.CreativeResponse'
               type: object
         "400":
           description: Bad Request
@@ -489,7 +737,134 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Get Insights
+      summary: Get Ad Creative
+      tags:
+      - Meta Ads
+  /meta/insights/ad:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve ad-level insights from local database (synced from Meta)
+      parameters:
+      - description: Filter by account ID
+        in: query
+        name: account_id
+        type: string
+      - description: Filter by campaign ID
+        in: query
+        name: campaign_id
+        type: string
+      - description: Filter by adset ID
+        in: query
+        name: adset_id
+        type: string
+      - description: Filter by ad ID
+        in: query
+        name: ad_id
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.InsightResponse'
+                  type: array
+                meta:
+                  $ref: '#/definitions/response.PaginationMeta'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Ad Insights
+      tags:
+      - Meta Insights
+  /meta/insights/campaign:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve campaign-level insights from local database (synced from
+        Meta)
+      parameters:
+      - description: Filter by account ID
+        in: query
+        name: account_id
+        type: string
+      - description: Filter by campaign ID
+        in: query
+        name: campaign_id
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.InsightResponse'
+                  type: array
+                meta:
+                  $ref: '#/definitions/response.PaginationMeta'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Campaign Insights
       tags:
       - Meta Insights
   /permissions:
