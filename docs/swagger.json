@@ -99,7 +99,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta Ad Accounts"
                 ],
                 "summary": "Get Meta Ad Accounts",
                 "responses": {
@@ -149,7 +149,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta Ads"
                 ],
                 "summary": "Get Ads",
                 "parameters": [
@@ -207,7 +207,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta AdSets"
                 ],
                 "summary": "Get AdSets",
                 "parameters": [
@@ -265,7 +265,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta Campaigns"
                 ],
                 "summary": "Get Campaigns",
                 "parameters": [
@@ -315,7 +315,7 @@
         },
         "/meta/insights": {
             "get": {
-                "description": "Retrieve today's insights for the given or default ad account",
+                "description": "Retrieve today's campaign insights for the given or default ad account",
                 "consumes": [
                     "application/json"
                 ],
@@ -323,7 +323,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta Insights"
                 ],
                 "summary": "Get Insights",
                 "parameters": [

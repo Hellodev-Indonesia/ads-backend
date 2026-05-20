@@ -105,7 +105,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta Ad Accounts"
                 ],
                 "summary": "Get Meta Ad Accounts",
                 "responses": {
@@ -155,7 +155,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta Ads"
                 ],
                 "summary": "Get Ads",
                 "parameters": [
@@ -213,7 +213,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta AdSets"
                 ],
                 "summary": "Get AdSets",
                 "parameters": [
@@ -271,7 +271,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta Campaigns"
                 ],
                 "summary": "Get Campaigns",
                 "parameters": [
@@ -321,7 +321,7 @@ const docTemplate = `{
         },
         "/meta/insights": {
             "get": {
-                "description": "Retrieve today's insights for the given or default ad account",
+                "description": "Retrieve today's campaign insights for the given or default ad account",
                 "consumes": [
                     "application/json"
                 ],
@@ -329,7 +329,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Marketing"
+                    "Meta Insights"
                 ],
                 "summary": "Get Insights",
                 "parameters": [

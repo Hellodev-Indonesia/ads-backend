@@ -7,7 +7,12 @@ import (
 	"github.com/alex/ads_backend/internal/core/role"
 	"github.com/alex/ads_backend/internal/core/user"
 	"github.com/alex/ads_backend/internal/jobs"
-	metaInternal "github.com/alex/ads_backend/internal/meta"
+	"github.com/alex/ads_backend/internal/meta/ad_account"
+	"github.com/alex/ads_backend/internal/meta/adset"
+	"github.com/alex/ads_backend/internal/meta/ads"
+	"github.com/alex/ads_backend/internal/meta/campaign"
+	"github.com/alex/ads_backend/internal/meta/insight"
+	"github.com/alex/ads_backend/pkg/meta_client"
 	"github.com/alex/ads_backend/pkg/swagger"
 	"github.com/alex/ads_backend/routes/core"
 	metaRoutes "github.com/alex/ads_backend/routes/meta"
@@ -38,22 +43,39 @@ func RegisterApiRoutes(router *gin.Engine) {
 		roleHandler := role.NewHandler(roleService)
 		permHandler := permission.NewHandler(permService)
 
-		// Register Modular Routes
+		// Register Core Routes
 		core.RegisterAuthRoutes(v1, authHandler)
 		core.RegisterUserRoutes(v1, userHandler)
 		core.RegisterRoleRoutes(v1, roleHandler)
 		core.RegisterPermissionRoutes(v1, permHandler)
 
 		// --- META DOMAIN ---
-		metaClient := metaInternal.NewClient()
-		metaService := metaInternal.NewService(metaClient)
-		metaHandler := metaInternal.NewHandler(metaService)
+		// Shared low-level client (single instance, injected into all sub-module services)
+		metaClient := meta_client.NewClient(
+			config.MetaGraphBaseURL,
+			config.MetaGraphVersion,
+			config.MetaAccessToken,
+		)
+
+		// Sub-module services
+		adAccountService := ad_account.NewService(metaClient)
+		campaignService := campaign.NewService(metaClient)
+		adSetService := adset.NewService(metaClient)
+		adsService := ads.NewService(metaClient)
+		insightService := insight.NewService(metaClient)
+
+		// Sub-module handlers
+		adAccountHandler := ad_account.NewHandler(adAccountService)
+		campaignHandler := campaign.NewHandler(campaignService)
+		adSetHandler := adset.NewHandler(adSetService)
+		adsHandler := ads.NewHandler(adsService)
+		insightHandler := insight.NewHandler(insightService)
 
 		// Register Meta Routes
-		metaRoutes.RegisterMetaRoutes(v1, metaHandler)
+		metaRoutes.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler)
 
 		// Start Meta Background Sync Job
-		syncJob := jobs.NewMetaAdsSyncJob(metaService)
+		syncJob := jobs.NewMetaAdsSyncJob(campaignService)
 		syncJob.Start()
 	}
 }

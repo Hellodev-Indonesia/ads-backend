@@ -350,7 +350,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get Meta Ad Accounts
       tags:
-      - Meta Marketing
+      - Meta Ad Accounts
   /meta/ads:
     get:
       consumes:
@@ -385,7 +385,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get Ads
       tags:
-      - Meta Marketing
+      - Meta Ads
   /meta/adsets:
     get:
       consumes:
@@ -420,7 +420,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get AdSets
       tags:
-      - Meta Marketing
+      - Meta AdSets
   /meta/campaigns:
     get:
       consumes:
@@ -455,12 +455,13 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get Campaigns
       tags:
-      - Meta Marketing
+      - Meta Campaigns
   /meta/insights:
     get:
       consumes:
       - application/json
-      description: Retrieve today's insights for the given or default ad account
+      description: Retrieve today's campaign insights for the given or default ad
+        account
       parameters:
       - description: Ad Account ID (falls back to config.MetaAdAccountID)
         in: query
@@ -490,7 +491,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get Insights
       tags:
-      - Meta Marketing
+      - Meta Insights
   /permissions:
     get:
       consumes:

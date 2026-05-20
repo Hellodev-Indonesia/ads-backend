@@ -5,21 +5,21 @@ import (
 	"time"
 
 	"github.com/alex/ads_backend/config"
-	"github.com/alex/ads_backend/internal/meta"
+	"github.com/alex/ads_backend/internal/meta/campaign"
 )
 
 type MetaAdsSyncJob struct {
-	metaService meta.Service
+	campaignService campaign.Service
 }
 
-func NewMetaAdsSyncJob(metaService meta.Service) *MetaAdsSyncJob {
-	return &MetaAdsSyncJob{metaService: metaService}
+func NewMetaAdsSyncJob(campaignService campaign.Service) *MetaAdsSyncJob {
+	return &MetaAdsSyncJob{campaignService: campaignService}
 }
 
 // Start launches a ticker-based job that runs every 15 minutes
 func (j *MetaAdsSyncJob) Start() {
 	log.Println("Meta Ads Sync Job scheduler initialized (Interval: 15 minutes)")
-	
+
 	// Run immediately on start in background
 	go j.Run()
 
@@ -34,14 +34,14 @@ func (j *MetaAdsSyncJob) Start() {
 // Run performs the actual synchronization logic
 func (j *MetaAdsSyncJob) Run() {
 	log.Println("Starting Meta Ads synchronization job...")
-	
+
 	adAccountID := config.MetaAdAccountID
 	if adAccountID == "" {
 		log.Println("Warning: META_AD_ACCOUNT_ID is empty, skipping background sync")
 		return
 	}
 
-	campaigns, err := j.metaService.GetCampaigns(adAccountID)
+	campaigns, err := j.campaignService.GetCampaigns(adAccountID)
 	if err != nil {
 		log.Printf("Error syncing Meta campaigns: %v", err)
 		return
