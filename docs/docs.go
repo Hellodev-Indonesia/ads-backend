@@ -95,6 +95,288 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/ad-accounts": {
+            "get": {
+                "description": "Retrieve all ad accounts associated with the system user token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Marketing"
+                ],
+                "summary": "Get Meta Ad Accounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.AdAccountResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/ads": {
+            "get": {
+                "description": "Retrieve ads for the given or default ad account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Marketing"
+                ],
+                "summary": "Get Ads",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID (falls back to config.MetaAdAccountID)",
+                        "name": "ad_account_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.AdResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/adsets": {
+            "get": {
+                "description": "Retrieve adsets for the given or default ad account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Marketing"
+                ],
+                "summary": "Get AdSets",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID (falls back to config.MetaAdAccountID)",
+                        "name": "ad_account_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.AdSetResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/campaigns": {
+            "get": {
+                "description": "Retrieve campaigns for the given or default ad account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Marketing"
+                ],
+                "summary": "Get Campaigns",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID (falls back to config.MetaAdAccountID)",
+                        "name": "ad_account_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.CampaignResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/insights": {
+            "get": {
+                "description": "Retrieve today's insights for the given or default ad account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Marketing"
+                ],
+                "summary": "Get Insights",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID (falls back to config.MetaAdAccountID)",
+                        "name": "ad_account_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.InsightResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/permissions": {
             "get": {
                 "security": [
@@ -781,6 +1063,96 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.AdAccountResponse": {
+            "type": "object",
+            "properties": {
+                "account_status": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "string",
+                    "example": "act_123456789"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "My Ad Account"
+                }
+            }
+        },
+        "dto.AdResponse": {
+            "type": "object",
+            "properties": {
+                "adset_id": {
+                    "type": "string",
+                    "example": "2389876543210"
+                },
+                "campaign_id": {
+                    "type": "string",
+                    "example": "2381234567890"
+                },
+                "creative": {
+                    "$ref": "#/definitions/dto.CreativeRef"
+                },
+                "effective_status": {
+                    "type": "string",
+                    "example": "ACTIVE"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "2386543210987"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Promo Image Ad"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "ACTIVE"
+                }
+            }
+        },
+        "dto.AdSetResponse": {
+            "type": "object",
+            "properties": {
+                "campaign_id": {
+                    "type": "string",
+                    "example": "2381234567890"
+                },
+                "daily_budget": {
+                    "type": "string",
+                    "example": "50000"
+                },
+                "effective_status": {
+                    "type": "string",
+                    "example": "ACTIVE"
+                },
+                "end_time": {
+                    "type": "string",
+                    "example": "2026-06-11T10:00:00Z"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "2389876543210"
+                },
+                "lifetime_budget": {
+                    "type": "string",
+                    "example": "0"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "AdSet Leads USA"
+                },
+                "start_time": {
+                    "type": "string",
+                    "example": "2026-05-11T10:00:00Z"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "ACTIVE"
+                }
+            }
+        },
         "dto.AssignPermissionRequest": {
             "type": "object",
             "required": [
@@ -806,6 +1178,85 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.CampaignResponse": {
+            "type": "object",
+            "properties": {
+                "created_time": {
+                    "type": "string",
+                    "example": "2026-05-11T10:00:00Z"
+                },
+                "effective_status": {
+                    "type": "string",
+                    "example": "ACTIVE"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "2381234567890"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Summer Sale Campaign"
+                },
+                "objective": {
+                    "type": "string",
+                    "example": "OUTCOMES_LEADS"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "ACTIVE"
+                },
+                "updated_time": {
+                    "type": "string",
+                    "example": "2026-05-11T12:00:00Z"
+                }
+            }
+        },
+        "dto.CreativeRef": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "2387654321098"
+                }
+            }
+        },
+        "dto.InsightResponse": {
+            "type": "object",
+            "properties": {
+                "campaign_id": {
+                    "type": "string",
+                    "example": "2381234567890"
+                },
+                "campaign_name": {
+                    "type": "string",
+                    "example": "Summer Sale Campaign"
+                },
+                "clicks": {
+                    "type": "string",
+                    "example": "350"
+                },
+                "cpc": {
+                    "type": "string",
+                    "example": "0.36"
+                },
+                "cpm": {
+                    "type": "string",
+                    "example": "8.26"
+                },
+                "ctr": {
+                    "type": "string",
+                    "example": "2.30"
+                },
+                "impressions": {
+                    "type": "string",
+                    "example": "15200"
+                },
+                "spend": {
+                    "type": "string",
+                    "example": "125.50"
                 }
             }
         },

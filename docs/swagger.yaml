@@ -1,5 +1,70 @@
 basePath: /api/v1
 definitions:
+  dto.AdAccountResponse:
+    properties:
+      account_status:
+        example: 1
+        type: integer
+      id:
+        example: act_123456789
+        type: string
+      name:
+        example: My Ad Account
+        type: string
+    type: object
+  dto.AdResponse:
+    properties:
+      adset_id:
+        example: "2389876543210"
+        type: string
+      campaign_id:
+        example: "2381234567890"
+        type: string
+      creative:
+        $ref: '#/definitions/dto.CreativeRef'
+      effective_status:
+        example: ACTIVE
+        type: string
+      id:
+        example: "2386543210987"
+        type: string
+      name:
+        example: Promo Image Ad
+        type: string
+      status:
+        example: ACTIVE
+        type: string
+    type: object
+  dto.AdSetResponse:
+    properties:
+      campaign_id:
+        example: "2381234567890"
+        type: string
+      daily_budget:
+        example: "50000"
+        type: string
+      effective_status:
+        example: ACTIVE
+        type: string
+      end_time:
+        example: "2026-06-11T10:00:00Z"
+        type: string
+      id:
+        example: "2389876543210"
+        type: string
+      lifetime_budget:
+        example: "0"
+        type: string
+      name:
+        example: AdSet Leads USA
+        type: string
+      start_time:
+        example: "2026-05-11T10:00:00Z"
+        type: string
+      status:
+        example: ACTIVE
+        type: string
+    type: object
   dto.AssignPermissionRequest:
     properties:
       permission_ids:
@@ -16,6 +81,63 @@ definitions:
       id:
         type: integer
       name:
+        type: string
+    type: object
+  dto.CampaignResponse:
+    properties:
+      created_time:
+        example: "2026-05-11T10:00:00Z"
+        type: string
+      effective_status:
+        example: ACTIVE
+        type: string
+      id:
+        example: "2381234567890"
+        type: string
+      name:
+        example: Summer Sale Campaign
+        type: string
+      objective:
+        example: OUTCOMES_LEADS
+        type: string
+      status:
+        example: ACTIVE
+        type: string
+      updated_time:
+        example: "2026-05-11T12:00:00Z"
+        type: string
+    type: object
+  dto.CreativeRef:
+    properties:
+      id:
+        example: "2387654321098"
+        type: string
+    type: object
+  dto.InsightResponse:
+    properties:
+      campaign_id:
+        example: "2381234567890"
+        type: string
+      campaign_name:
+        example: Summer Sale Campaign
+        type: string
+      clicks:
+        example: "350"
+        type: string
+      cpc:
+        example: "0.36"
+        type: string
+      cpm:
+        example: "8.26"
+        type: string
+      ctr:
+        example: "2.30"
+        type: string
+      impressions:
+        example: "15200"
+        type: string
+      spend:
+        example: "125.50"
         type: string
     type: object
   dto.LoginRequest:
@@ -199,6 +321,176 @@ paths:
       summary: Logout
       tags:
       - Authentication
+  /meta/ad-accounts:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all ad accounts associated with the system user token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.AdAccountResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Meta Ad Accounts
+      tags:
+      - Meta Marketing
+  /meta/ads:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve ads for the given or default ad account
+      parameters:
+      - description: Ad Account ID (falls back to config.MetaAdAccountID)
+        in: query
+        name: ad_account_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.AdResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Ads
+      tags:
+      - Meta Marketing
+  /meta/adsets:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve adsets for the given or default ad account
+      parameters:
+      - description: Ad Account ID (falls back to config.MetaAdAccountID)
+        in: query
+        name: ad_account_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.AdSetResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get AdSets
+      tags:
+      - Meta Marketing
+  /meta/campaigns:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve campaigns for the given or default ad account
+      parameters:
+      - description: Ad Account ID (falls back to config.MetaAdAccountID)
+        in: query
+        name: ad_account_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.CampaignResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Campaigns
+      tags:
+      - Meta Marketing
+  /meta/insights:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve today's insights for the given or default ad account
+      parameters:
+      - description: Ad Account ID (falls back to config.MetaAdAccountID)
+        in: query
+        name: ad_account_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.InsightResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Insights
+      tags:
+      - Meta Marketing
   /permissions:
     get:
       consumes:
