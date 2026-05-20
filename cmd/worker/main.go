@@ -9,6 +9,7 @@ import (
 
 func main() {
 	config.LoadEnv()
+	config.InitMeta()
 	
 	redisHost := config.GetEnv("REDIS_HOST", "localhost")
 	redisPort := config.GetEnv("REDIS_PORT", "6379")
