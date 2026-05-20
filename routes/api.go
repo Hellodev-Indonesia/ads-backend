@@ -8,14 +8,15 @@ import (
 	"github.com/alex/ads_backend/internal/core/user"
 	"github.com/alex/ads_backend/internal/jobs"
 	"github.com/alex/ads_backend/internal/meta/ad_account"
-	"github.com/alex/ads_backend/internal/meta/adset"
 	"github.com/alex/ads_backend/internal/meta/ads"
+	"github.com/alex/ads_backend/internal/meta/adset"
 	"github.com/alex/ads_backend/internal/meta/campaign"
 	"github.com/alex/ads_backend/internal/meta/insight"
+	"github.com/alex/ads_backend/internal/meta/sync_logs"
 	"github.com/alex/ads_backend/pkg/meta_client"
 	"github.com/alex/ads_backend/pkg/swagger"
 	"github.com/alex/ads_backend/routes/core"
-	metaRoutes "github.com/alex/ads_backend/routes/meta"
+	"github.com/alex/ads_backend/routes/meta"
 	"github.com/gin-gonic/gin"
 )
 
@@ -62,6 +63,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		adSetRepo := adset.NewRepository(config.DB)
 		adsRepo := ads.NewRepository(config.DB)
 		insightRepo := insight.NewRepository(config.DB)
+		syncLogRepo := sync_logs.NewRepository(config.DB)
 
 		// Services (Meta client + Repository)
 		adAccountService := ad_account.NewService(metaClient)
@@ -69,6 +71,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		adSetService := adset.NewService(metaClient, adSetRepo)
 		adsService := ads.NewService(metaClient, adsRepo)
 		insightService := insight.NewService(metaClient, insightRepo)
+		syncLogService := sync_logs.NewService(syncLogRepo)
 
 		// Sub-module handlers
 		adAccountHandler := ad_account.NewHandler(adAccountService)
@@ -78,10 +81,10 @@ func RegisterApiRoutes(router *gin.Engine) {
 		insightHandler := insight.NewHandler(insightService)
 
 		// Register Meta Routes
-		metaRoutes.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler)
+		meta.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler)
 
 		// Start Meta Background Sync Job (syncs all 4 modules)
-		syncJob := jobs.NewMetaAdsSyncJob(campaignService, adSetService, adsService, insightService)
+		syncJob := jobs.NewMetaAdsSyncJob(campaignService, adSetService, adsService, insightService, syncLogService)
 		syncJob.Start()
 	}
 }

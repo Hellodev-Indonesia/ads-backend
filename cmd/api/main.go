@@ -26,6 +26,7 @@ func main() {
 	config.InitDB()
 	config.InitRedis()
 	config.InitMeta()
+	config.InitCentrifugo()
 
 	// Setup Gin
 	router := gin.Default()
