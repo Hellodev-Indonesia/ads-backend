@@ -9,4 +9,5 @@ type CreativeResponse struct {
 	ThumbnailURL    string      `json:"thumbnail_url" example:"https://scontent.xx.fbcdn.net/..."`
 	ObjectStorySpec interface{} `json:"object_story_spec,omitempty"`
 	AssetFeedSpec   interface{} `json:"asset_feed_spec,omitempty"`
+	URLTags         string      `json:"url_tags,omitempty" example:"utm_source=facebook&utm_medium=cpc"`
 }

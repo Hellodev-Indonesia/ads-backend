@@ -39,7 +39,8 @@ type Paging struct {
 		Before string `json:"before"`
 		After  string `json:"after"`
 	} `json:"cursors"`
-	Next string `json:"next"`
+	Previous string `json:"previous"`
+	Next     string `json:"next"`
 }
 
 type BaseResponse struct {
@@ -59,16 +60,16 @@ func NewClient(baseURL, version, accessToken string) *Client {
 }
 
 // Get performs a GET request, attaches the access_token, handles paging (if autoPage is true), and parses errors.
-func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json.RawMessage, error) {
+func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json.RawMessage, *Paging, error) {
 	if c.AccessToken == "" {
-		return nil, errors.New("Meta Access Token is missing. Please set META_ACCESS_TOKEN in your environment/.env")
+		return nil, nil, errors.New("Meta Access Token is missing. Please set META_ACCESS_TOKEN in your environment/.env")
 	}
 
 	fullURL := fmt.Sprintf("%s/%s/%s", c.BaseURL, c.Version, path)
 	
 	u, err := url.Parse(fullURL)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse URL: %w", err)
+		return nil, nil, fmt.Errorf("failed to parse URL: %w", err)
 	}
 	
 	q := u.Query()
@@ -82,23 +83,24 @@ func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json
 
 	var allData []json.RawMessage
 	nextURL := u.String()
+	var lastPaging *Paging
 
 	for nextURL != "" {
 		req, err := http.NewRequest("GET", nextURL, nil)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create request: %w", err)
+			return nil, nil, fmt.Errorf("failed to create request: %w", err)
 		}
 
 		resp, err := c.HTTPClient.Do(req)
 		if err != nil {
 			log.Printf("Meta API Request failed: GET %s - Error: %v", path, err)
-			return nil, fmt.Errorf("failed to execute request: %w", err)
+			return nil, nil, fmt.Errorf("failed to execute request: %w", err)
 		}
 		defer resp.Body.Close()
 
 		bodyBytes, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return nil, fmt.Errorf("failed to read response body: %w", err)
+			return nil, nil, fmt.Errorf("failed to read response body: %w", err)
 		}
 
 		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
@@ -106,23 +108,24 @@ func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json
 			
 			var wrap errorWrapper
 			if err := json.Unmarshal(bodyBytes, &wrap); err == nil && wrap.Error != nil {
-				return nil, wrap.Error
+				return nil, nil, wrap.Error
 			}
 			
-			return nil, fmt.Errorf("Meta API returned status %d: %s", resp.StatusCode, string(bodyBytes))
+			return nil, nil, fmt.Errorf("Meta API returned status %d: %s", resp.StatusCode, string(bodyBytes))
 		}
 
 		var base BaseResponse
 		if err := json.Unmarshal(bodyBytes, &base); err != nil {
 			// Response might be a single object, not a paginated list of data
-			return []json.RawMessage{bodyBytes}, nil
+			return []json.RawMessage{bodyBytes}, nil, nil
 		}
 
 		if base.Data == nil && !autoPage {
-			return []json.RawMessage{bodyBytes}, nil
+			return []json.RawMessage{bodyBytes}, nil, nil
 		}
 
 		allData = append(allData, base.Data...)
+		lastPaging = base.Paging
 
 		if autoPage && base.Paging != nil && base.Paging.Next != "" {
 			nextURL = base.Paging.Next
@@ -131,5 +134,5 @@ func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json
 		}
 	}
 
-	return allData, nil
+	return allData, lastPaging, nil
 }

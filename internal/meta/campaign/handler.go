@@ -34,7 +34,11 @@ func (h *Handler) getAdAccountID(c *gin.Context) string {
 // @Accept       json
 // @Produce      json
 // @Param        ad_account_id  query     string  false  "Ad Account ID (falls back to config.MetaAdAccountID)"
-// @Success      200            {object}  response.SuccessResponse{data=[]dto.CampaignResponse}
+// @Param        fields         query     string  false  "Custom fields comma-separated preset"
+// @Param        limit          query     string  false  "Pagination limit"
+// @Param        after          query     string  false  "Cursor after"
+// @Param        before         query     string  false  "Cursor before"
+// @Success      200            {object}  response.Response{data=[]dto.CampaignResponse,paging=response.MetaPaging}
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
 // @Router       /meta/campaigns [get]
@@ -45,10 +49,19 @@ func (h *Handler) GetCampaigns(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.service.GetCampaigns(adAccountID)
+	fields := c.Query("fields")
+	if fields == "" {
+		fields = DefaultFields
+	}
+
+	limit := c.Query("limit")
+	after := c.Query("after")
+	before := c.Query("before")
+
+	resp, paging, err := h.service.GetCampaigns(adAccountID, fields, limit, after, before, false)
 	if err != nil {
 		response.Error(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
-	response.Success(c, "Successfully retrieved campaigns", resp)
+	response.SuccessWithPaging(c, "Successfully retrieved campaigns", resp, paging)
 }

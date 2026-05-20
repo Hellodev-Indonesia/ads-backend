@@ -18,6 +18,7 @@ func NewHandler(service Service) *Handler {
 }
 
 var _ = dto.AdResponse{}
+var _ = dto.CreativeResponse{}
 
 func (h *Handler) getAdAccountID(c *gin.Context) string {
 	id := c.Query("ad_account_id")
@@ -34,7 +35,11 @@ func (h *Handler) getAdAccountID(c *gin.Context) string {
 // @Accept       json
 // @Produce      json
 // @Param        ad_account_id  query     string  false  "Ad Account ID (falls back to config.MetaAdAccountID)"
-// @Success      200            {object}  response.SuccessResponse{data=[]dto.AdResponse}
+// @Param        fields         query     string  false  "Custom fields comma-separated preset"
+// @Param        limit          query     string  false  "Pagination limit"
+// @Param        after          query     string  false  "Cursor after"
+// @Param        before         query     string  false  "Cursor before"
+// @Success      200            {object}  response.Response{data=[]dto.AdResponse,paging=response.MetaPaging}
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
 // @Router       /meta/ads [get]
@@ -45,10 +50,51 @@ func (h *Handler) GetAds(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.service.GetAds(adAccountID)
+	fields := c.Query("fields")
+	if fields == "" {
+		fields = DefaultAdFields
+	}
+
+	limit := c.Query("limit")
+	after := c.Query("after")
+	before := c.Query("before")
+
+	resp, paging, err := h.service.GetAds(adAccountID, fields, limit, after, before, false)
 	if err != nil {
 		response.Error(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
-	response.Success(c, "Successfully retrieved ads", resp)
+	response.SuccessWithPaging(c, "Successfully retrieved ads", resp, paging)
+}
+
+// GetCreative godoc
+// @Summary      Get Ad Creative
+// @Description  Retrieve details of a specific ad creative
+// @Tags         Meta Ads
+// @Accept       json
+// @Produce      json
+// @Param        id       path      string  true   "Creative ID"
+// @Param        fields   query     string  false  "Custom fields comma-separated preset"
+// @Success      200      {object}  response.Response{data=dto.CreativeResponse}
+// @Failure      400      {object}  response.ErrorResponse
+// @Failure      500      {object}  response.ErrorResponse
+// @Router       /meta/creatives/{id} [get]
+func (h *Handler) GetCreative(c *gin.Context) {
+	creativeID := c.Param("id")
+	if creativeID == "" {
+		response.Error(c, http.StatusBadRequest, "Creative ID is required", nil)
+		return
+	}
+
+	fields := c.Query("fields")
+	if fields == "" {
+		fields = DefaultCreativeFields
+	}
+
+	resp, err := h.service.GetCreative(creativeID, fields)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+	response.Success(c, "Successfully retrieved ad creative", resp)
 }

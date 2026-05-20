@@ -12,4 +12,6 @@ type AdResponse struct {
 	Status          string      `json:"status" example:"ACTIVE"`
 	EffectiveStatus string      `json:"effective_status" example:"ACTIVE"`
 	Creative        CreativeRef `json:"creative"`
+	CreatedTime     string      `json:"created_time,omitempty" example:"2026-05-11T10:00:00Z"`
+	UpdatedTime     string      `json:"updated_time,omitempty" example:"2026-05-11T12:00:00Z"`
 }

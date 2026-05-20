@@ -27,28 +27,80 @@ func (h *Handler) getAdAccountID(c *gin.Context) string {
 	return config.MetaAdAccountID
 }
 
-// GetInsights godoc
-// @Summary      Get Insights
-// @Description  Retrieve today's campaign insights for the given or default ad account
+// GetCampaignInsights godoc
+// @Summary      Get Campaign Insights
+// @Description  Retrieve campaign-level insights
 // @Tags         Meta Insights
 // @Accept       json
 // @Produce      json
 // @Param        ad_account_id  query     string  false  "Ad Account ID (falls back to config.MetaAdAccountID)"
-// @Success      200            {object}  response.SuccessResponse{data=[]dto.InsightResponse}
+// @Param        fields         query     string  false  "Custom fields comma-separated preset"
+// @Param        limit          query     string  false  "Pagination limit"
+// @Param        after          query     string  false  "Cursor after"
+// @Param        before         query     string  false  "Cursor before"
+// @Success      200            {object}  response.Response{data=[]dto.InsightResponse,paging=response.MetaPaging}
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
-// @Router       /meta/insights [get]
-func (h *Handler) GetInsights(c *gin.Context) {
+// @Router       /meta/insights/campaign [get]
+func (h *Handler) GetCampaignInsights(c *gin.Context) {
 	adAccountID := h.getAdAccountID(c)
 	if adAccountID == "" {
 		response.Error(c, http.StatusBadRequest, "Ad Account ID is required", nil)
 		return
 	}
 
-	resp, err := h.service.GetInsights(adAccountID)
+	fields := c.Query("fields")
+	if fields == "" {
+		fields = CampaignInsightFields
+	}
+
+	limit := c.Query("limit")
+	after := c.Query("after")
+	before := c.Query("before")
+
+	resp, paging, err := h.service.GetCampaignInsights(adAccountID, fields, limit, after, before, false)
 	if err != nil {
 		response.Error(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
-	response.Success(c, "Successfully retrieved insights", resp)
+	response.SuccessWithPaging(c, "Successfully retrieved campaign insights", resp, paging)
+}
+
+// GetAdInsights godoc
+// @Summary      Get Ad Insights
+// @Description  Retrieve ad-level insights
+// @Tags         Meta Insights
+// @Accept       json
+// @Produce      json
+// @Param        ad_account_id  query     string  false  "Ad Account ID (falls back to config.MetaAdAccountID)"
+// @Param        fields         query     string  false  "Custom fields comma-separated preset"
+// @Param        limit          query     string  false  "Pagination limit"
+// @Param        after          query     string  false  "Cursor after"
+// @Param        before         query     string  false  "Cursor before"
+// @Success      200            {object}  response.Response{data=[]dto.InsightResponse,paging=response.MetaPaging}
+// @Failure      400            {object}  response.ErrorResponse
+// @Failure      500            {object}  response.ErrorResponse
+// @Router       /meta/insights/ad [get]
+func (h *Handler) GetAdInsights(c *gin.Context) {
+	adAccountID := h.getAdAccountID(c)
+	if adAccountID == "" {
+		response.Error(c, http.StatusBadRequest, "Ad Account ID is required", nil)
+		return
+	}
+
+	fields := c.Query("fields")
+	if fields == "" {
+		fields = AdInsightFields
+	}
+
+	limit := c.Query("limit")
+	after := c.Query("after")
+	before := c.Query("before")
+
+	resp, paging, err := h.service.GetAdInsights(adAccountID, fields, limit, after, before, false)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+	response.SuccessWithPaging(c, "Successfully retrieved ad insights", resp, paging)
 }

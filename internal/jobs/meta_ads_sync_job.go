@@ -41,7 +41,7 @@ func (j *MetaAdsSyncJob) Run() {
 		return
 	}
 
-	campaigns, err := j.campaignService.GetCampaigns(adAccountID)
+	campaigns, _, err := j.campaignService.GetCampaigns(adAccountID, campaign.DefaultFields, "", "", "", true)
 	if err != nil {
 		log.Printf("Error syncing Meta campaigns: %v", err)
 		return
