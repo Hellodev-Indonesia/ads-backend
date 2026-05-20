@@ -6,8 +6,11 @@ import (
 	"github.com/alex/ads_backend/internal/core/permission"
 	"github.com/alex/ads_backend/internal/core/role"
 	"github.com/alex/ads_backend/internal/core/user"
+	"github.com/alex/ads_backend/internal/jobs"
+	metaInternal "github.com/alex/ads_backend/internal/meta"
 	"github.com/alex/ads_backend/pkg/swagger"
 	"github.com/alex/ads_backend/routes/core"
+	metaRoutes "github.com/alex/ads_backend/routes/meta"
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,5 +43,17 @@ func RegisterApiRoutes(router *gin.Engine) {
 		core.RegisterUserRoutes(v1, userHandler)
 		core.RegisterRoleRoutes(v1, roleHandler)
 		core.RegisterPermissionRoutes(v1, permHandler)
+
+		// --- META DOMAIN ---
+		metaClient := metaInternal.NewClient()
+		metaService := metaInternal.NewService(metaClient)
+		metaHandler := metaInternal.NewHandler(metaService)
+
+		// Register Meta Routes
+		metaRoutes.RegisterMetaRoutes(v1, metaHandler)
+
+		// Start Meta Background Sync Job
+		syncJob := jobs.NewMetaAdsSyncJob(metaService)
+		syncJob.Start()
 	}
 }
