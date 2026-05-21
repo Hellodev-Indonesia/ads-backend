@@ -1,4 +1,4 @@
-package sync_logs
+package sync
 
 import (
 	"context"
@@ -11,9 +11,7 @@ type Service struct {
 }
 
 func NewService(repo *Repository) *Service {
-	return &Service{
-		repo: repo,
-	}
+	return &Service{repo: repo}
 }
 
 type StartBatchInput struct {
@@ -33,7 +31,6 @@ func (s *Service) StartBatch(ctx context.Context, input StartBatchInput) (*MetaS
 	if syncMode == "" {
 		syncMode = "scheduled"
 	}
-
 	syncScope := input.SyncScope
 	if syncScope == "" {
 		syncScope = "incremental"
@@ -53,11 +50,9 @@ func (s *Service) StartBatch(ctx context.Context, input StartBatchInput) (*MetaS
 		StartedAt:     &now,
 	}
 
-	err := s.repo.CreateBatch(ctx, batch)
-	if err != nil {
+	if err := s.repo.CreateBatch(ctx, batch); err != nil {
 		return nil, err
 	}
-
 	return batch, nil
 }
 
@@ -66,31 +61,11 @@ func (s *Service) CompleteBatch(ctx context.Context, batchID uint64) error {
 	if err != nil {
 		return err
 	}
-
 	now := time.Now()
-
 	batch.Status = StatusCompleted
 	batch.FinishedAt = &now
 	batch.DurationMs = calculateDurationMs(batch.StartedAt, batch.FinishedAt)
 	batch.ErrorMessage = nil
-
-	return s.repo.UpdateBatch(ctx, batch)
-}
-
-func (s *Service) FailBatch(ctx context.Context, batchID uint64, errInput error) error {
-	batch, err := s.repo.FindBatchByID(ctx, batchID)
-	if err != nil {
-		return err
-	}
-
-	now := time.Now()
-	message := errInput.Error()
-
-	batch.Status = StatusFailed
-	batch.FinishedAt = &now
-	batch.DurationMs = calculateDurationMs(batch.StartedAt, batch.FinishedAt)
-	batch.ErrorMessage = &message
-
 	return s.repo.UpdateBatch(ctx, batch)
 }
 
@@ -99,18 +74,14 @@ func (s *Service) MarkBatchPartialFailed(ctx context.Context, batchID uint64, er
 	if err != nil {
 		return err
 	}
-
-	message := errInput.Error()
-
+	msg := errInput.Error()
 	batch.Status = StatusPartialFailed
-	batch.ErrorMessage = &message
-
+	batch.ErrorMessage = &msg
 	return s.repo.UpdateBatch(ctx, batch)
 }
 
 func (s *Service) StartStep(ctx context.Context, batchID uint64, syncType string, endpoint string) (*MetaSyncStep, error) {
 	now := time.Now()
-
 	step := &MetaSyncStep{
 		BatchID:   batchID,
 		SyncType:  syncType,
@@ -118,12 +89,9 @@ func (s *Service) StartStep(ctx context.Context, batchID uint64, syncType string
 		Status:    StatusRunning,
 		StartedAt: &now,
 	}
-
-	err := s.repo.CreateStep(ctx, step)
-	if err != nil {
+	if err := s.repo.CreateStep(ctx, step); err != nil {
 		return nil, err
 	}
-
 	return step, nil
 }
 
@@ -132,23 +100,18 @@ func (s *Service) CompleteStep(ctx context.Context, stepID uint64, counts StepCo
 	if err != nil {
 		return err
 	}
-
 	now := time.Now()
-
 	step.Status = StatusCompleted
 	step.FinishedAt = &now
 	step.DurationMs = calculateDurationMs(step.StartedAt, step.FinishedAt)
-
 	step.TotalRecords = counts.TotalRecords
 	step.InsertedCount = counts.InsertedCount
 	step.UpdatedCount = counts.UpdatedCount
 	step.SkippedCount = counts.SkippedCount
 	step.FailedCount = counts.FailedCount
 	step.RequestCount = counts.RequestCount
-
 	step.ErrorCode = nil
 	step.ErrorMessage = nil
-
 	return s.repo.UpdateStep(ctx, step)
 }
 
@@ -157,16 +120,13 @@ func (s *Service) FailStep(ctx context.Context, stepID uint64, errInput error) e
 	if err != nil {
 		return err
 	}
-
 	now := time.Now()
-	message := errInput.Error()
-
+	msg := errInput.Error()
 	step.Status = StatusFailed
 	step.FinishedAt = &now
 	step.DurationMs = calculateDurationMs(step.StartedAt, step.FinishedAt)
-	step.ErrorMessage = &message
-	step.FailedCount = step.FailedCount + 1
-
+	step.ErrorMessage = &msg
+	step.FailedCount++
 	return s.repo.UpdateStep(ctx, step)
 }
 
@@ -175,28 +135,23 @@ func (s *Service) RecalculateBatchSummary(ctx context.Context, batchID uint64) e
 	if err != nil {
 		return err
 	}
-
 	counts, err := s.repo.SumStepsByBatchID(ctx, batchID)
 	if err != nil {
 		return err
 	}
-
 	failedSteps, err := s.repo.CountFailedStepsByBatchID(ctx, batchID)
 	if err != nil {
 		return err
 	}
-
 	batch.TotalRecords = counts.TotalRecords
 	batch.InsertedCount = counts.InsertedCount
 	batch.UpdatedCount = counts.UpdatedCount
 	batch.SkippedCount = counts.SkippedCount
 	batch.FailedCount = counts.FailedCount
 	batch.RequestCount = counts.RequestCount
-
 	if failedSteps > 0 {
 		batch.Status = StatusPartialFailed
 	}
-
 	return s.repo.UpdateBatch(ctx, batch)
 }
 
@@ -208,16 +163,12 @@ func calculateDurationMs(startedAt *time.Time, finishedAt *time.Time) uint64 {
 	if startedAt == nil || finishedAt == nil {
 		return 0
 	}
-
-	duration := finishedAt.Sub(*startedAt)
-
-	return uint64(duration.Milliseconds())
+	return uint64(finishedAt.Sub(*startedAt).Milliseconds())
 }
 
 func nullableString(value string) *string {
 	if value == "" {
 		return nil
 	}
-
 	return &value
 }

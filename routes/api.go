@@ -12,7 +12,8 @@ import (
 	"github.com/alex/ads_backend/internal/meta/adset"
 	"github.com/alex/ads_backend/internal/meta/campaign"
 	"github.com/alex/ads_backend/internal/meta/insight"
-	"github.com/alex/ads_backend/internal/meta/sync_logs"
+	"github.com/alex/ads_backend/internal/meta/sync"
+	"github.com/alex/ads_backend/pkg/centrifugo"
 	"github.com/alex/ads_backend/pkg/meta_client"
 	"github.com/alex/ads_backend/pkg/swagger"
 	"github.com/alex/ads_backend/routes/core"
@@ -23,6 +24,9 @@ import (
 func RegisterApiRoutes(router *gin.Engine) {
 	// Documentation
 	swagger.RegisterScalar(router, "Ads Backend API Reference", "/swagger.json")
+
+	// Dev tool: Centrifugo listener page
+	router.StaticFile("/centrifugo-listen", "./centrifugo-listen.html")
 
 	v1 := router.Group("/api/v1")
 	{
@@ -63,7 +67,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		adSetRepo := adset.NewRepository(config.DB)
 		adsRepo := ads.NewRepository(config.DB)
 		insightRepo := insight.NewRepository(config.DB)
-		syncLogRepo := sync_logs.NewRepository(config.DB)
+		syncRepo := sync.NewRepository(config.DB)
 
 		// Services (Meta client + Repository)
 		adAccountService := ad_account.NewService(metaClient)
@@ -71,7 +75,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		adSetService := adset.NewService(metaClient, adSetRepo)
 		adsService := ads.NewService(metaClient, adsRepo)
 		insightService := insight.NewService(metaClient, insightRepo)
-		syncLogService := sync_logs.NewService(syncLogRepo)
+		syncService := sync.NewService(syncRepo)
 
 		// Sub-module handlers
 		adAccountHandler := ad_account.NewHandler(adAccountService)
@@ -83,8 +87,12 @@ func RegisterApiRoutes(router *gin.Engine) {
 		// Register Meta Routes
 		meta.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler)
 
-		// Start Meta Background Sync Job (syncs all 4 modules)
-		syncJob := jobs.NewMetaAdsSyncJob(campaignService, adSetService, adsService, insightService, syncLogService)
-		syncJob.Start()
+		// Centrifugo publisher for real-time sync events
+		centrifugoClient := centrifugo.NewClient(config.CentrifugoConfig.URL, config.CentrifugoConfig.APIKey)
+
+		// Sync job (manual trigger only — no background ticker)
+		syncJob := jobs.NewMetaAdsSyncJob(campaignService, adSetService, adsService, insightService, syncService, centrifugoClient)
+		syncHandler := sync.NewHandler(syncJob)
+		sync.RegisterRoutes(v1, syncHandler)
 	}
 }

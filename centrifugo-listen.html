@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Centrifugo Listener</title>
+</head>
+<body>
+  <h1>Centrifugo Listener</h1>
+  <p>Status: <span id="status">connecting...</span></p>
+
+  <h3>Messages</h3>
+  <pre id="messages"></pre>
+
+  <script src="https://unpkg.com/centrifuge@5/dist/centrifuge.js"></script>
+  <script>
+    const statusEl = document.getElementById("status");
+    const messagesEl = document.getElementById("messages");
+
+    function print(message, data = null) {
+      const time = new Date().toLocaleTimeString();
+      messagesEl.textContent += `[${time}] ${message}`;
+      if (data) {
+        messagesEl.textContent += "\n" + JSON.stringify(data, null, 2);
+      }
+      messagesEl.textContent += "\n\n";
+    }
+
+    const centrifuge = new Centrifuge("ws://127.0.0.1:8000/connection/websocket");
+
+    centrifuge.on("connected", function(ctx) {
+      statusEl.textContent = "connected";
+      print("Connected", ctx);
+    });
+
+    centrifuge.on("disconnected", function(ctx) {
+      statusEl.textContent = "disconnected";
+      print("Disconnected", ctx);
+    });
+
+    centrifuge.on("error", function(ctx) {
+      statusEl.textContent = "error";
+      print("Connection error", ctx);
+    });
+
+    const sub = centrifuge.newSubscription("meta:sync");
+
+    sub.on("subscribed", function(ctx) {
+      print("Subscribed to metasync", ctx);
+    });
+
+    sub.on("publication", function(ctx) {
+      print("New publication from metasync", ctx.data);
+    });
+
+    sub.on("error", function(ctx) {
+      print("Subscription error", ctx);
+    });
+
+    sub.subscribe();
+    centrifuge.connect();
+  </script>
+</body>
+</html>

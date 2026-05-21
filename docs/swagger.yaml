@@ -867,6 +867,45 @@ paths:
       summary: Get Campaign Insights
       tags:
       - Meta Insights
+  /meta/sync:
+    post:
+      description: Manually trigger a full Meta Ads sync. Returns immediately; subscribe
+        to the Centrifugo channel for real-time progress.
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: Sync already in progress
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Trigger Meta Ads Sync
+      tags:
+      - Meta Sync
+  /meta/sync/status:
+    get:
+      description: Returns whether a sync job is currently running.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerAuth: []
+      summary: Get Sync Status
+      tags:
+      - Meta Sync
   /permissions:
     get:
       consumes:

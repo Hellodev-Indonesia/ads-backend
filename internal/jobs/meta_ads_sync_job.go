@@ -2,8 +2,10 @@ package jobs
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
+	"sync/atomic"
 	"time"
 
 	"github.com/alex/ads_backend/config"
@@ -11,15 +13,32 @@ import (
 	"github.com/alex/ads_backend/internal/meta/adset"
 	"github.com/alex/ads_backend/internal/meta/campaign"
 	"github.com/alex/ads_backend/internal/meta/insight"
-	"github.com/alex/ads_backend/internal/meta/sync_logs"
+	metasync "github.com/alex/ads_backend/internal/meta/sync"
 )
+
+// Publisher pushes real-time events to a channel (e.g. Centrifugo).
+type Publisher interface {
+	Publish(ctx context.Context, channel string, data any) error
+}
+
+type syncEvent struct {
+	Event      string `json:"event"`
+	BatchID    uint64 `json:"batch_id,omitempty"`
+	BatchCode  string `json:"batch_code,omitempty"`
+	Step       string `json:"step,omitempty"`
+	Count      int    `json:"count,omitempty"`
+	DurationMs int64  `json:"duration_ms,omitempty"`
+	Error      string `json:"error,omitempty"`
+}
 
 type MetaAdsSyncJob struct {
 	campaignService campaign.Service
 	adSetService    adset.Service
 	adsService      ads.Service
 	insightService  insight.Service
-	syncLogService  *sync_logs.Service
+	syncLogService  *metasync.Service
+	publisher       Publisher
+	running         atomic.Bool
 }
 
 func NewMetaAdsSyncJob(
@@ -27,7 +46,8 @@ func NewMetaAdsSyncJob(
 	adSetService adset.Service,
 	adsService ads.Service,
 	insightService insight.Service,
-	syncLogService *sync_logs.Service,
+	syncLogService *metasync.Service,
+	publisher Publisher,
 ) *MetaAdsSyncJob {
 	return &MetaAdsSyncJob{
 		campaignService: campaignService,
@@ -35,130 +55,111 @@ func NewMetaAdsSyncJob(
 		adsService:      adsService,
 		insightService:  insightService,
 		syncLogService:  syncLogService,
+		publisher:       publisher,
 	}
 }
 
-// Start launches a ticker-based job that runs every 15 minutes
-func (j *MetaAdsSyncJob) Start() {
-	log.Println("Meta Ads Sync Job scheduler initialized (Interval: 15 minutes)")
-
-	// Run immediately on start in background
-	go j.Run()
-
-	ticker := time.NewTicker(15 * time.Minute)
-	go func() {
-		for range ticker.C {
-			j.Run()
-		}
-	}()
-}
-
-// Run performs the actual synchronization logic
-func (j *MetaAdsSyncJob) Run() {
-	log.Println("Starting Meta Ads synchronization job...")
-
-	ctx := context.Background()
+// Start creates a sync batch and launches the job in the background.
+// Returns metasync.ErrAlreadyRunning if a sync is currently in progress.
+func (j *MetaAdsSyncJob) Start(ctx context.Context) (*metasync.MetaSyncBatch, error) {
+	if !j.running.CompareAndSwap(false, true) {
+		return nil, metasync.ErrAlreadyRunning
+	}
 
 	adAccountID := config.MetaAdAccountID
 	if adAccountID == "" {
-		log.Println("Warning: META_AD_ACCOUNT_ID is empty, skipping background sync")
-		return
+		j.running.Store(false)
+		return nil, errors.New("META_AD_ACCOUNT_ID is not configured")
 	}
 
-	startTime := time.Now()
-
 	datePreset := "last_30d"
-
-	batch, err := j.syncLogService.StartBatch(ctx, sync_logs.StartBatchInput{
+	batch, err := j.syncLogService.StartBatch(ctx, metasync.StartBatchInput{
 		AdAccountID: adAccountID,
-		SyncMode:    "scheduled",
+		SyncMode:    "manual",
 		SyncScope:   "incremental",
 		DatePreset:  &datePreset,
 	})
-
 	if err != nil {
-		log.Printf("Failed to create meta sync batch: %v", err)
-		return
+		j.running.Store(false)
+		return nil, err
 	}
+
+	j.publish(ctx, syncEvent{
+		Event:     "sync:started",
+		BatchID:   batch.ID,
+		BatchCode: batch.BatchCode,
+	})
+
+	go j.execute(batch)
+
+	return batch, nil
+}
+
+// IsRunning reports whether a sync is currently in progress.
+func (j *MetaAdsSyncJob) IsRunning() bool {
+	return j.running.Load()
+}
+
+func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch) {
+	defer j.running.Store(false)
+
+	ctx := context.Background()
+	adAccountID := batch.AdAccountID
+	startTime := time.Now()
 
 	hasError := false
 	var firstError error
 
-	// 1. Sync Campaigns
 	campaignCount, err := j.runSyncStep(
-		ctx,
-		batch.ID,
-		sync_logs.SyncTypeCampaigns,
+		ctx, batch.ID,
+		metasync.SyncTypeCampaigns,
 		fmt.Sprintf("/%s/campaigns", adAccountID),
-		func() (int, error) {
-			return j.campaignService.SyncCampaigns(adAccountID)
-		},
+		func() (int, error) { return j.campaignService.SyncCampaigns(adAccountID) },
 	)
-
 	if err != nil {
 		hasError = true
 		firstError = setFirstError(firstError, err)
 	}
 
-	// 2. Sync Ad Sets
 	adSetCount, err := j.runSyncStep(
-		ctx,
-		batch.ID,
-		sync_logs.SyncTypeAdsets,
+		ctx, batch.ID,
+		metasync.SyncTypeAdsets,
 		fmt.Sprintf("/%s/adsets", adAccountID),
-		func() (int, error) {
-			return j.adSetService.SyncAdSets(adAccountID)
-		},
+		func() (int, error) { return j.adSetService.SyncAdSets(adAccountID) },
 	)
-
 	if err != nil {
 		hasError = true
 		firstError = setFirstError(firstError, err)
 	}
 
-	// 3. Sync Ads
 	adsCount, err := j.runSyncStep(
-		ctx,
-		batch.ID,
-		sync_logs.SyncTypeAds,
+		ctx, batch.ID,
+		metasync.SyncTypeAds,
 		fmt.Sprintf("/%s/ads", adAccountID),
-		func() (int, error) {
-			return j.adsService.SyncAds(adAccountID)
-		},
+		func() (int, error) { return j.adsService.SyncAds(adAccountID) },
 	)
-
 	if err != nil {
 		hasError = true
 		firstError = setFirstError(firstError, err)
 	}
 
-	// 4. Sync Campaign Insights
 	campaignInsightCount, err := j.runSyncStep(
-		ctx,
-		batch.ID,
-		sync_logs.SyncTypeCampaignInsights,
+		ctx, batch.ID,
+		metasync.SyncTypeCampaignInsights,
 		fmt.Sprintf("/%s/insights?level=campaign", adAccountID),
-		func() (int, error) {
-			return j.insightService.SyncCampaignInsights(adAccountID)
-		},
+		func() (int, error) { return j.insightService.SyncCampaignInsights(adAccountID) },
 	)
-
 	if err != nil {
 		hasError = true
 		firstError = setFirstError(firstError, err)
 	}
 
-	// 5. Sync Ad Insights
 	adInsightCount, err := j.runSyncStep(
-		ctx,
-		batch.ID,
-		sync_logs.SyncTypeAdInsights,
+		ctx, batch.ID,
+		metasync.SyncTypeAdInsights,
 		fmt.Sprintf("/%s/insights?level=ad", adAccountID),
-		func() (int, error) {
-			return j.insightService.SyncAdInsights(adAccountID)
-		},
+		func() (int, error) { return j.insightService.SyncAdInsights(adAccountID) },
 	)
-
 	if err != nil {
 		hasError = true
 		firstError = setFirstError(firstError, err)
@@ -168,26 +169,34 @@ func (j *MetaAdsSyncJob) Run() {
 		log.Printf("Failed to recalculate batch summary: %v", err)
 	}
 
+	elapsed := time.Since(startTime)
+
 	if hasError {
 		if err := j.syncLogService.MarkBatchPartialFailed(ctx, batch.ID, firstError); err != nil {
 			log.Printf("Failed to mark batch as partial failed: %v", err)
 		}
+		j.publish(ctx, syncEvent{
+			Event:      "sync:partial_failed",
+			BatchID:    batch.ID,
+			BatchCode:  batch.BatchCode,
+			DurationMs: elapsed.Milliseconds(),
+			Error:      firstError.Error(),
+		})
 	} else {
 		if err := j.syncLogService.CompleteBatch(ctx, batch.ID); err != nil {
 			log.Printf("Failed to complete batch: %v", err)
 		}
+		j.publish(ctx, syncEvent{
+			Event:      "sync:completed",
+			BatchID:    batch.ID,
+			BatchCode:  batch.BatchCode,
+			DurationMs: elapsed.Milliseconds(),
+		})
 	}
-
-	elapsed := time.Since(startTime)
 
 	log.Printf(
 		"Meta Ads sync finished in %s (campaigns: %d, adsets: %d, ads: %d, campaign_insights: %d, ad_insights: %d)",
-		elapsed,
-		campaignCount,
-		adSetCount,
-		adsCount,
-		campaignInsightCount,
-		adInsightCount,
+		elapsed, campaignCount, adSetCount, adsCount, campaignInsightCount, adInsightCount,
 	)
 }
 
@@ -204,37 +213,64 @@ func (j *MetaAdsSyncJob) runSyncStep(
 		return 0, err
 	}
 
+	j.publish(ctx, syncEvent{
+		Event:   "sync:step:started",
+		BatchID: batchID,
+		Step:    syncType,
+	})
+
+	stepStart := time.Now()
 	count, err := syncFunc()
+	durationMs := time.Since(stepStart).Milliseconds()
+
 	if err != nil {
 		log.Printf("Error syncing %s: %v", syncType, err)
-
 		if failErr := j.syncLogService.FailStep(ctx, step.ID, err); failErr != nil {
 			log.Printf("Failed to mark sync step %s as failed: %v", syncType, failErr)
 		}
-
+		j.publish(ctx, syncEvent{
+			Event:      "sync:step:failed",
+			BatchID:    batchID,
+			Step:       syncType,
+			DurationMs: durationMs,
+			Error:      err.Error(),
+		})
 		return count, err
 	}
 
-	err = j.syncLogService.CompleteStep(ctx, step.ID, sync_logs.StepCounts{
+	if err := j.syncLogService.CompleteStep(ctx, step.ID, metasync.StepCounts{
 		TotalRecords: toUint(count),
 		RequestCount: 1,
-	})
-
-	if err != nil {
+	}); err != nil {
 		log.Printf("Failed to complete sync step %s: %v", syncType, err)
 		return count, err
 	}
 
-	log.Printf("Synced %d records for %s", count, syncType)
+	j.publish(ctx, syncEvent{
+		Event:      "sync:step:completed",
+		BatchID:    batchID,
+		Step:       syncType,
+		Count:      count,
+		DurationMs: durationMs,
+	})
 
+	log.Printf("Synced %d records for %s", count, syncType)
 	return count, nil
+}
+
+func (j *MetaAdsSyncJob) publish(ctx context.Context, event syncEvent) {
+	if j.publisher == nil {
+		return
+	}
+	if err := j.publisher.Publish(ctx, metasync.Channel, event); err != nil {
+		log.Printf("Failed to publish sync event %s: %v", event.Event, err)
+	}
 }
 
 func setFirstError(current error, newErr error) error {
 	if current != nil {
 		return current
 	}
-
 	return newErr
 }
 
@@ -242,6 +278,5 @@ func toUint(value int) uint {
 	if value < 0 {
 		return 0
 	}
-
 	return uint(value)
 }

@@ -1,10 +1,15 @@
-package sync_logs
+package sync
 
 import (
+	"errors"
 	"time"
 
 	"gorm.io/datatypes"
 )
+
+var ErrAlreadyRunning = errors.New("sync is already in progress")
+
+const Channel = "meta:sync"
 
 const (
 	StatusPending       = "PENDING"
