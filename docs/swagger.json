@@ -89,7 +89,7 @@
                 }
             }
         },
-        "/core/brands": {
+        "/brands": {
             "get": {
                 "security": [
                     {
@@ -101,7 +101,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "List Brands",
                 "parameters": [
@@ -176,7 +176,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "Create Brand",
                 "parameters": [
@@ -224,7 +224,7 @@
                 }
             }
         },
-        "/core/brands/{id}": {
+        "/brands/{id}": {
             "get": {
                 "security": [
                     {
@@ -236,7 +236,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "Get Brand Details",
                 "parameters": [
@@ -289,7 +289,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "Update Brand",
                 "parameters": [
@@ -360,7 +360,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "Delete Brand",
                 "parameters": [

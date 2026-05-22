@@ -20,7 +20,7 @@ func NewHandler(service Service) *Handler {
 // FindAll godoc
 // @Summary      List Brands
 // @Description  Get a paginated list of brands
-// @Tags         Core / Brand
+// @Tags         Brand
 // @Produce      json
 // @Param        page      query     int     false  "Page number" default(1)
 // @Param        limit     query     int     false  "Items per page" default(25)
@@ -29,7 +29,7 @@ func NewHandler(service Service) *Handler {
 // @Success      200       {object}  response.PaginationResponse{data=[]dto.BrandResponse}
 // @Failure      500       {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /core/brands [get]
+// @Router       /brands [get]
 func (h *Handler) FindAll(c *gin.Context) {
 	var filter dto.BrandFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -68,13 +68,13 @@ func (h *Handler) FindAll(c *gin.Context) {
 // FindByID godoc
 // @Summary      Get Brand Details
 // @Description  Get details of a specific brand by ID
-// @Tags         Core / Brand
+// @Tags         Brand
 // @Produce      json
 // @Param        id   path      int  true  "Brand ID"
 // @Success      200  {object}  response.SuccessResponse{data=dto.BrandResponse}
 // @Failure      404  {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /core/brands/{id} [get]
+// @Router       /brands/{id} [get]
 func (h *Handler) FindByID(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -94,7 +94,7 @@ func (h *Handler) FindByID(c *gin.Context) {
 // Create godoc
 // @Summary      Create Brand
 // @Description  Create a new brand
-// @Tags         Core / Brand
+// @Tags         Brand
 // @Accept       json
 // @Produce      json
 // @Param        request  body      dto.CreateBrandRequest  true  "Create Brand Request"
@@ -102,7 +102,7 @@ func (h *Handler) FindByID(c *gin.Context) {
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /core/brands [post]
+// @Router       /brands [post]
 func (h *Handler) Create(c *gin.Context) {
 	var req dto.CreateBrandRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -122,7 +122,7 @@ func (h *Handler) Create(c *gin.Context) {
 // Update godoc
 // @Summary      Update Brand
 // @Description  Update an existing brand
-// @Tags         Core / Brand
+// @Tags         Brand
 // @Accept       json
 // @Produce      json
 // @Param        id       path      int                     true  "Brand ID"
@@ -132,7 +132,7 @@ func (h *Handler) Create(c *gin.Context) {
 // @Failure      404      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /core/brands/{id} [put]
+// @Router       /brands/{id} [put]
 func (h *Handler) Update(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -158,7 +158,7 @@ func (h *Handler) Update(c *gin.Context) {
 // Delete godoc
 // @Summary      Delete Brand
 // @Description  Soft delete a brand
-// @Tags         Core / Brand
+// @Tags         Brand
 // @Produce      json
 // @Param        id   path      int  true  "Brand ID"
 // @Success      200  {object}  response.SuccessResponse
@@ -166,7 +166,7 @@ func (h *Handler) Update(c *gin.Context) {
 // @Failure      404  {object}  response.ErrorResponse
 // @Failure      500  {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /core/brands/{id} [delete]
+// @Router       /brands/{id} [delete]
 func (h *Handler) Delete(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {

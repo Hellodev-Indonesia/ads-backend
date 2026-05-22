@@ -95,7 +95,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/core/brands": {
+        "/brands": {
             "get": {
                 "security": [
                     {
@@ -107,7 +107,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "List Brands",
                 "parameters": [
@@ -182,7 +182,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "Create Brand",
                 "parameters": [
@@ -230,7 +230,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/core/brands/{id}": {
+        "/brands/{id}": {
             "get": {
                 "security": [
                     {
@@ -242,7 +242,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "Get Brand Details",
                 "parameters": [
@@ -295,7 +295,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "Update Brand",
                 "parameters": [
@@ -366,7 +366,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core / Brand"
+                    "Brand"
                 ],
                 "summary": "Delete Brand",
                 "parameters": [
