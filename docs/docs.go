@@ -987,6 +987,198 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/dashboard/ads": {
+            "get": {
+                "description": "Returns ads with performance metrics joined from insights",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Dashboard"
+                ],
+                "summary": "Ad Dashboard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID",
+                        "name": "ad_account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by campaign ID",
+                        "name": "campaign_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by ad set ID",
+                        "name": "adset_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by ad status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by ad name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/dashboard/adsets": {
+            "get": {
+                "description": "Returns ad sets with performance metrics joined from insights",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Dashboard"
+                ],
+                "summary": "Ad Set Dashboard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID",
+                        "name": "ad_account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by campaign ID",
+                        "name": "campaign_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by ad set status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by ad set name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/dashboard/campaigns": {
             "get": {
                 "description": "Returns campaigns with performance metrics (spend, impressions, reach, actions) joined from insights and adsets",
@@ -1003,8 +1195,14 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Ad Account ID (falls back to config)",
+                        "description": "Ad Account ID",
                         "name": "ad_account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
                         "in": "query"
                     },
                     {
@@ -1017,6 +1215,18 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Search by campaign name",
                         "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
                         "in": "query"
                     },
                     {
@@ -1268,14 +1478,11 @@ const docTemplate = `{
                 "summary": "Trigger Meta Ads Sync",
                 "parameters": [
                     {
-                        "description": "Sync Request (optional ad_account_id)",
+                        "description": "Sync Request (optional ad_account_id, date_start, date_stop)",
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/dto.TriggerSyncRequest"
                         }
                     }
                 ],
@@ -2723,6 +2930,23 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/dto.PermissionResponse"
                     }
+                }
+            }
+        },
+        "dto.TriggerSyncRequest": {
+            "type": "object",
+            "properties": {
+                "ad_account_id": {
+                    "type": "string",
+                    "example": "act_1234567890"
+                },
+                "date_start": {
+                    "type": "string",
+                    "example": "2026-03-01"
+                },
+                "date_stop": {
+                    "type": "string",
+                    "example": "2026-03-31"
                 }
             }
         },

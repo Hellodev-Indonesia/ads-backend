@@ -377,6 +377,18 @@ definitions:
           $ref: '#/definitions/dto.PermissionResponse'
         type: array
     type: object
+  dto.TriggerSyncRequest:
+    properties:
+      ad_account_id:
+        example: act_1234567890
+        type: string
+      date_start:
+        example: "2026-03-01"
+        type: string
+      date_stop:
+        example: "2026-03-31"
+        type: string
+    type: object
   dto.UpdateBrandRequest:
     properties:
       description:
@@ -1219,6 +1231,134 @@ paths:
       summary: Get Ad Creative
       tags:
       - Meta Ads
+  /meta/dashboard/ads:
+    get:
+      consumes:
+      - application/json
+      description: Returns ads with performance metrics joined from insights
+      parameters:
+      - description: Ad Account ID
+        in: query
+        name: ad_account_id
+        type: string
+      - description: Brand ID
+        in: query
+        name: brand_id
+        type: integer
+      - description: Filter by campaign ID
+        in: query
+        name: campaign_id
+        type: string
+      - description: Filter by ad set ID
+        in: query
+        name: adset_id
+        type: string
+      - description: Filter by ad status
+        in: query
+        name: status
+        type: string
+      - description: Search by ad name
+        in: query
+        name: search
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Ad Dashboard
+      tags:
+      - Meta Dashboard
+  /meta/dashboard/adsets:
+    get:
+      consumes:
+      - application/json
+      description: Returns ad sets with performance metrics joined from insights
+      parameters:
+      - description: Ad Account ID
+        in: query
+        name: ad_account_id
+        type: string
+      - description: Brand ID
+        in: query
+        name: brand_id
+        type: integer
+      - description: Filter by campaign ID
+        in: query
+        name: campaign_id
+        type: string
+      - description: Filter by ad set status
+        in: query
+        name: status
+        type: string
+      - description: Search by ad set name
+        in: query
+        name: search
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Ad Set Dashboard
+      tags:
+      - Meta Dashboard
   /meta/dashboard/campaigns:
     get:
       consumes:
@@ -1226,10 +1366,14 @@ paths:
       description: Returns campaigns with performance metrics (spend, impressions,
         reach, actions) joined from insights and adsets
       parameters:
-      - description: Ad Account ID (falls back to config)
+      - description: Ad Account ID
         in: query
         name: ad_account_id
         type: string
+      - description: Brand ID
+        in: query
+        name: brand_id
+        type: integer
       - description: Filter by campaign status (ACTIVE, PAUSED, etc)
         in: query
         name: status
@@ -1237,6 +1381,14 @@ paths:
       - description: Search by campaign name
         in: query
         name: search
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
         type: string
       - default: 1
         description: Page number
@@ -1398,13 +1550,11 @@ paths:
       description: Manually trigger a full Meta Ads sync. Returns immediately; subscribe
         to the Centrifugo channel for real-time progress.
       parameters:
-      - description: Sync Request (optional ad_account_id)
+      - description: Sync Request (optional ad_account_id, date_start, date_stop)
         in: body
         name: request
         schema:
-          additionalProperties:
-            type: string
-          type: object
+          $ref: '#/definitions/dto.TriggerSyncRequest'
       responses:
         "202":
           description: Accepted

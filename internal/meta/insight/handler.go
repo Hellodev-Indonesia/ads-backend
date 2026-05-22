@@ -14,7 +14,7 @@ type Handler struct {
 }
 
 func NewHandler(service Service) *Handler {
-	return &Handler{service}
+	return &Handler{service: service}
 }
 
 var _ = dto.InsightResponse{}

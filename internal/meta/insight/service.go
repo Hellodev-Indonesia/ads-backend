@@ -21,8 +21,8 @@ type Service interface {
 	GetAdInsights(filter InsightFilter) ([]dto.InsightResponse, *response.PaginationMeta, error)
 
 	// Meta API sync (used by sync job)
-	SyncCampaignInsights(adAccountID string) (int, error)
-	SyncAdInsights(adAccountID string) (int, error)
+	SyncCampaignInsights(req dto.SyncInsightRequest) (int, error)
+	SyncAdInsights(req dto.SyncInsightRequest) (int, error)
 }
 
 type serviceImpl struct {
@@ -81,21 +81,39 @@ func (s *serviceImpl) buildInsightResponse(insights []MetaInsight, total int64, 
 
 // --- META API SYNC ---
 
-func (s *serviceImpl) SyncCampaignInsights(adAccountID string) (int, error) {
-	return s.syncInsightsInternal(adAccountID, "campaign", CampaignInsightFields)
+func (s *serviceImpl) SyncCampaignInsights(req dto.SyncInsightRequest) (int, error) {
+	return s.syncInsightsInternal(req, "campaign", CampaignInsightFields)
 }
 
-func (s *serviceImpl) SyncAdInsights(adAccountID string) (int, error) {
-	return s.syncInsightsInternal(adAccountID, "ad", AdInsightFields)
+func (s *serviceImpl) SyncAdInsights(req dto.SyncInsightRequest) (int, error) {
+	return s.syncInsightsInternal(req, "ad", AdInsightFields)
 }
 
-func (s *serviceImpl) syncInsightsInternal(adAccountID string, level string, fields string) (int, error) {
+func (s *serviceImpl) syncInsightsInternal(req dto.SyncInsightRequest, level string, fields string) (int, error) {
 	params := url.Values{}
 	params.Set("level", level)
 	params.Set("fields", fields)
-	params.Set("date_preset", "last_30d")
 
-	rawList, _, err := s.client.Get(adAccountID+"/insights", params, true)
+	if req.DateStart != "" && req.DateStop != "" {
+		// Custom date range
+		timeRange := fmt.Sprintf(`{"since":"%s","until":"%s"}`, req.DateStart, req.DateStop)
+		params.Set("time_range", timeRange)
+	} else if req.DatePreset != "" {
+		// Preset
+		params.Set("date_preset", req.DatePreset)
+	} else {
+		// Default
+		params.Set("date_preset", "last_30d")
+	}
+
+	// Default to daily breakdown unless specified
+	timeInc := req.TimeIncrement
+	if timeInc <= 0 {
+		timeInc = 1
+	}
+	params.Set("time_increment", strconv.Itoa(timeInc))
+
+	rawList, _, err := s.client.Get(req.AdAccountID+"/insights", params, true)
 	if err != nil {
 		return 0, fmt.Errorf("failed to fetch %s insights from Meta: %w", level, err)
 	}

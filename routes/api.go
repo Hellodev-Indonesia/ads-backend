@@ -85,20 +85,22 @@ func RegisterApiRoutes(router *gin.Engine) {
 		campaignHandler := campaign.NewHandler(campaignService)
 		adSetHandler := adset.NewHandler(adSetService)
 		adsHandler := ads.NewHandler(adsService)
-		insightHandler := insight.NewHandler(insightService)
 
 		dashboardRepo := dashboard.NewRepository(config.DB)
 		dashboardService := dashboard.NewService(dashboardRepo)
 		dashboardHandler := dashboard.NewHandler(dashboardService)
 
-		// Register Meta Routes
-		meta.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler, dashboardHandler)
-
 		// Centrifugo publisher for real-time sync events
 		centrifugoClient := centrifugo.NewClient(config.CentrifugoConfig.URL, config.CentrifugoConfig.APIKey)
 
-		// Sync job (manual trigger only — no background ticker)
+		// Sync job
 		syncJob := jobs.NewMetaAdsSyncJob(adAccountService, campaignService, adSetService, adsService, insightService, syncService, centrifugoClient)
+
+		insightHandler := insight.NewHandler(insightService)
+
+		// Register Meta Routes
+		meta.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler, dashboardHandler)
+
 		syncHandler := sync.NewHandler(syncJob, syncService)
 		sync.RegisterRoutes(v1, syncHandler)
 	}
