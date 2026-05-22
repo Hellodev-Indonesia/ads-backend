@@ -9,58 +9,76 @@ import (
 	"github.com/alex/ads_backend/pkg/response"
 )
 
-const DefaultFields = "id,name,account_status"
-
 type Service interface {
-	GetAdAccounts(fields string, limit string, after string, before string, autoPage bool) ([]dto.AdAccountResponse, *response.MetaPaging, error)
+	GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error)
+	SyncAdAccounts() (int, error)
 }
 
 type serviceImpl struct {
 	client *meta_client.Client
+	repo   Repository
 }
 
-func NewService(client *meta_client.Client) Service {
-	return &serviceImpl{client}
+func NewService(client *meta_client.Client, repo Repository) Service {
+	return &serviceImpl{client: client, repo: repo}
 }
 
-func (s *serviceImpl) GetAdAccounts(fields string, limit string, after string, before string, autoPage bool) ([]dto.AdAccountResponse, *response.MetaPaging, error) {
-	params := url.Values{}
-	params.Set("fields", fields)
-	if limit != "" {
-		params.Set("limit", limit)
-	}
-	if after != "" {
-		params.Set("after", after)
-	}
-	if before != "" {
-		params.Set("before", before)
-	}
-
-	rawList, paging, err := s.client.Get("me/adaccounts", params, autoPage)
+func (s *serviceImpl) GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error) {
+	accounts, total, err := s.repo.FindAll(filter)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	var result []dto.AdAccountResponse
+	for _, acc := range accounts {
+		result = append(result, dto.AdAccountResponse{
+			ID:            acc.ID,
+			Name:          acc.Name,
+			AccountStatus: acc.AccountStatus,
+		})
+	}
+
+	lastPage := int(total) / filter.Limit
+	if int(total)%filter.Limit != 0 {
+		lastPage++
+	}
+
+	meta := &response.Meta{
+		Page:     filter.Page,
+		Limit:    filter.Limit,
+		Total:    total,
+		LastPage: lastPage,
+	}
+
+	return result, meta, nil
+}
+
+func (s *serviceImpl) SyncAdAccounts() (int, error) {
+	params := url.Values{}
+	params.Set("fields", "id,name,account_status")
+	
+	rawList, _, err := s.client.Get("me/adaccounts", params, true)
+	if err != nil {
+		return 0, err
+	}
+
+	var models []MetaAdAccount
 	for _, raw := range rawList {
 		var item dto.AdAccountResponse
 		if err := json.Unmarshal(raw, &item); err != nil {
-			return nil, nil, err
+			return 0, err
 		}
-		result = append(result, item)
+		
+		models = append(models, MetaAdAccount{
+			ID:            item.ID,
+			Name:          item.Name,
+			AccountStatus: item.AccountStatus,
+		})
 	}
 
-	return result, mapPaging(paging), nil
-}
-
-func mapPaging(p *meta_client.Paging) *response.MetaPaging {
-	if p == nil {
-		return nil
+	if err := s.repo.UpsertBatch(models); err != nil {
+		return 0, err
 	}
-	res := &response.MetaPaging{}
-	res.Cursors.Before = p.Cursors.Before
-	res.Cursors.After = p.Cursors.After
-	res.HasPrevious = p.Previous != ""
-	res.HasNext = p.Next != ""
-	return res
+
+	return len(models), nil
 }

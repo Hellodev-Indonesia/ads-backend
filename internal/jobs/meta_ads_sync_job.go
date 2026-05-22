@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/alex/ads_backend/config"
+	"github.com/alex/ads_backend/internal/meta/ad_account"
 	"github.com/alex/ads_backend/internal/meta/ads"
 	"github.com/alex/ads_backend/internal/meta/adset"
 	"github.com/alex/ads_backend/internal/meta/campaign"
@@ -33,6 +34,7 @@ type syncEvent struct {
 }
 
 var stepLabels = map[string]string{
+	metasync.SyncTypeAdAccounts:      "ad accounts",
 	metasync.SyncTypeCampaigns:       "campaigns",
 	metasync.SyncTypeAdsets:          "ad sets",
 	metasync.SyncTypeAds:             "ads",
@@ -41,6 +43,7 @@ var stepLabels = map[string]string{
 }
 
 type MetaAdsSyncJob struct {
+	adAccountService ad_account.Service
 	campaignService campaign.Service
 	adSetService    adset.Service
 	adsService      ads.Service
@@ -51,6 +54,7 @@ type MetaAdsSyncJob struct {
 }
 
 func NewMetaAdsSyncJob(
+	adAccountService ad_account.Service,
 	campaignService campaign.Service,
 	adSetService adset.Service,
 	adsService ads.Service,
@@ -59,6 +63,7 @@ func NewMetaAdsSyncJob(
 	publisher Publisher,
 ) *MetaAdsSyncJob {
 	return &MetaAdsSyncJob{
+		adAccountService: adAccountService,
 		campaignService: campaignService,
 		adSetService:    adSetService,
 		adsService:      adsService,
@@ -119,6 +124,17 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch) {
 
 	hasError := false
 	var firstError error
+
+	adAccountsCount, err := j.runSyncStep(
+		ctx, batch.ID,
+		metasync.SyncTypeAdAccounts,
+		"/me/adaccounts",
+		func() (int, error) { return j.adAccountService.SyncAdAccounts() },
+	)
+	if err != nil {
+		hasError = true
+		firstError = setFirstError(firstError, err)
+	}
 
 	campaignCount, err := j.runSyncStep(
 		ctx, batch.ID,
@@ -207,8 +223,8 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch) {
 	}
 
 	log.Printf(
-		"Meta Ads sync finished in %s (campaigns: %d, adsets: %d, ads: %d, campaign_insights: %d, ad_insights: %d)",
-		elapsed, campaignCount, adSetCount, adsCount, campaignInsightCount, adInsightCount,
+		"Meta Ads sync finished in %s (ad_accounts: %d, campaigns: %d, adsets: %d, ads: %d, campaign_insights: %d, ad_insights: %d)",
+		elapsed, adAccountsCount, campaignCount, adSetCount, adsCount, campaignInsightCount, adInsightCount,
 	)
 }
 

@@ -50,10 +50,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		permHandler := permission.NewHandler(permService)
 
 		// Register Core Routes
-		core.RegisterAuthRoutes(v1, authHandler)
-		core.RegisterUserRoutes(v1, userHandler)
-		core.RegisterRoleRoutes(v1, roleHandler)
-		core.RegisterPermissionRoutes(v1, permHandler)
+		core.RegisterCoreRoutes(v1, authHandler, userHandler, roleHandler, permHandler)
 
 		// --- META DOMAIN ---
 		// Shared low-level client (single instance, injected into all sub-module services)
@@ -64,6 +61,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		)
 
 		// Repositories (DB access layer)
+		adAccountRepo := ad_account.NewRepository(config.DB)
 		campaignRepo := campaign.NewRepository(config.DB)
 		adSetRepo := adset.NewRepository(config.DB)
 		adsRepo := ads.NewRepository(config.DB)
@@ -71,7 +69,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		syncRepo := sync.NewRepository(config.DB)
 
 		// Services (Meta client + Repository)
-		adAccountService := ad_account.NewService(metaClient)
+		adAccountService := ad_account.NewService(metaClient, adAccountRepo)
 		campaignService := campaign.NewService(metaClient, campaignRepo)
 		adSetService := adset.NewService(metaClient, adSetRepo)
 		adsService := ads.NewService(metaClient, adsRepo)
@@ -96,7 +94,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		centrifugoClient := centrifugo.NewClient(config.CentrifugoConfig.URL, config.CentrifugoConfig.APIKey)
 
 		// Sync job (manual trigger only — no background ticker)
-		syncJob := jobs.NewMetaAdsSyncJob(campaignService, adSetService, adsService, insightService, syncService, centrifugoClient)
+		syncJob := jobs.NewMetaAdsSyncJob(adAccountService, campaignService, adSetService, adsService, insightService, syncService, centrifugoClient)
 		syncHandler := sync.NewHandler(syncJob, syncService)
 		sync.RegisterRoutes(v1, syncHandler)
 	}

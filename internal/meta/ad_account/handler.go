@@ -2,6 +2,7 @@ package ad_account
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/alex/ads_backend/internal/meta/ad_account/dto"
 	"github.com/alex/ads_backend/pkg/response"
@@ -24,28 +25,28 @@ var _ = dto.AdAccountResponse{}
 // @Tags         Meta Ad Accounts
 // @Accept       json
 // @Produce      json
-// @Param        fields   query     string  false  "Custom fields comma-separated preset"
-// @Param        limit    query     string  false  "Pagination limit"
-// @Param        after    query     string  false  "Cursor after"
-// @Param        before   query     string  false  "Cursor before"
-// @Success      200      {object}  response.Response{data=[]dto.AdAccountResponse,paging=response.MetaPaging}
+// @Param        search   query     string  false  "Search by name"
+// @Param        page     query     int     false  "Page number"
+// @Param        limit    query     int     false  "Items per page"
+// @Success      200      {object}  response.Response{data=[]dto.AdAccountResponse,meta=response.Meta}
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Router       /meta/ad-accounts [get]
 func (h *Handler) GetAdAccounts(c *gin.Context) {
-	fields := c.Query("fields")
-	if fields == "" {
-		fields = DefaultFields
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "25"))
+	search := c.Query("search")
+
+	filter := AdAccountFilter{
+		Search: search,
+		Page:   page,
+		Limit:  limit,
 	}
 
-	limit := c.Query("limit")
-	after := c.Query("after")
-	before := c.Query("before")
-
-	resp, paging, err := h.service.GetAdAccounts(fields, limit, after, before, false)
+	resp, meta, err := h.service.GetAdAccounts(filter)
 	if err != nil {
 		response.Error(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
-	response.SuccessWithPaging(c, "Successfully retrieved Meta ad accounts", resp, paging)
+	response.SuccessWithMeta(c, "Successfully retrieved Meta ad accounts", resp, *meta)
 }
