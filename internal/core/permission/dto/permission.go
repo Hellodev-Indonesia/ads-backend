@@ -10,3 +10,9 @@ type PermissionResponse struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
+
+type PermissionFilter struct {
+	Name  string `form:"name"`
+	Page  int    `form:"page"`
+	Limit int    `form:"limit"`
+}

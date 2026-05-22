@@ -130,6 +130,28 @@ func (s *Service) FailStep(ctx context.Context, stepID uint64, errInput error) e
 	return s.repo.UpdateStep(ctx, step)
 }
 
+func (s *Service) ListBatches(ctx context.Context, page, limit int) ([]MetaSyncBatch, int64, error) {
+	if limit <= 0 {
+		limit = 25
+	}
+	if page <= 0 {
+		page = 1
+	}
+	batches, err := s.repo.ListBatches(ctx, limit, (page-1)*limit)
+	if err != nil {
+		return nil, 0, err
+	}
+	total, err := s.repo.CountBatches(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	return batches, total, nil
+}
+
+func (s *Service) GetBatchByID(ctx context.Context, id uint64) (*MetaSyncBatch, error) {
+	return s.repo.FindBatchByID(ctx, id)
+}
+
 func (s *Service) RecalculateBatchSummary(ctx context.Context, batchID uint64) error {
 	batch, err := s.repo.FindBatchByID(ctx, batchID)
 	if err != nil {

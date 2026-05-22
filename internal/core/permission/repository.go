@@ -1,6 +1,9 @@
 package permission
 
-import "gorm.io/gorm"
+import (
+	"github.com/alex/ads_backend/internal/core/permission/dto"
+	"gorm.io/gorm"
+)
 
 type Repository interface {
 	Create(permission *Permission) error
@@ -8,6 +11,7 @@ type Repository interface {
 	Delete(id uint) error
 	FindByID(id uint) (*Permission, error)
 	FindAll() ([]Permission, error)
+	FindPaginated(filter dto.PermissionFilter) ([]Permission, int64, error)
 	FindByIDs(ids []uint) ([]Permission, error)
 }
 
@@ -41,6 +45,31 @@ func (r *repository) FindAll() ([]Permission, error) {
 	var permissions []Permission
 	err := r.db.Find(&permissions).Error
 	return permissions, err
+}
+
+func (r *repository) FindPaginated(filter dto.PermissionFilter) ([]Permission, int64, error) {
+	var permissions []Permission
+	var total int64
+
+	q := r.db.Model(&Permission{})
+	if filter.Name != "" {
+		q = q.Where("name LIKE ?", "%"+filter.Name+"%")
+	}
+	if err := q.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	limit := filter.Limit
+	page := filter.Page
+	if limit <= 0 {
+		limit = 25
+	}
+	if page <= 0 {
+		page = 1
+	}
+
+	err := q.Limit(limit).Offset((page - 1) * limit).Find(&permissions).Error
+	return permissions, total, err
 }
 
 func (r *repository) FindByIDs(ids []uint) ([]Permission, error) {

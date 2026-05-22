@@ -23,12 +23,21 @@ type Publisher interface {
 
 type syncEvent struct {
 	Event      string `json:"event"`
+	Message    string `json:"message"`
 	BatchID    uint64 `json:"batch_id,omitempty"`
 	BatchCode  string `json:"batch_code,omitempty"`
 	Step       string `json:"step,omitempty"`
 	Count      int    `json:"count,omitempty"`
 	DurationMs int64  `json:"duration_ms,omitempty"`
 	Error      string `json:"error,omitempty"`
+}
+
+var stepLabels = map[string]string{
+	metasync.SyncTypeCampaigns:       "campaigns",
+	metasync.SyncTypeAdsets:          "ad sets",
+	metasync.SyncTypeAds:             "ads",
+	metasync.SyncTypeCampaignInsights: "campaign insights",
+	metasync.SyncTypeAdInsights:      "ad insights",
 }
 
 type MetaAdsSyncJob struct {
@@ -86,6 +95,7 @@ func (j *MetaAdsSyncJob) Start(ctx context.Context) (*metasync.MetaSyncBatch, er
 
 	j.publish(ctx, syncEvent{
 		Event:     "sync:started",
+		Message:   "Meta Ads sync started",
 		BatchID:   batch.ID,
 		BatchCode: batch.BatchCode,
 	})
@@ -177,6 +187,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch) {
 		}
 		j.publish(ctx, syncEvent{
 			Event:      "sync:partial_failed",
+			Message:    fmt.Sprintf("Sync completed with errors in %.1fs", elapsed.Seconds()),
 			BatchID:    batch.ID,
 			BatchCode:  batch.BatchCode,
 			DurationMs: elapsed.Milliseconds(),
@@ -188,6 +199,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch) {
 		}
 		j.publish(ctx, syncEvent{
 			Event:      "sync:completed",
+			Message:    fmt.Sprintf("All data synced successfully in %.1fs", elapsed.Seconds()),
 			BatchID:    batch.ID,
 			BatchCode:  batch.BatchCode,
 			DurationMs: elapsed.Milliseconds(),
@@ -215,6 +227,7 @@ func (j *MetaAdsSyncJob) runSyncStep(
 
 	j.publish(ctx, syncEvent{
 		Event:   "sync:step:started",
+		Message: fmt.Sprintf("Syncing %s...", stepLabels[syncType]),
 		BatchID: batchID,
 		Step:    syncType,
 	})
@@ -230,6 +243,7 @@ func (j *MetaAdsSyncJob) runSyncStep(
 		}
 		j.publish(ctx, syncEvent{
 			Event:      "sync:step:failed",
+			Message:    fmt.Sprintf("Failed to sync %s", stepLabels[syncType]),
 			BatchID:    batchID,
 			Step:       syncType,
 			DurationMs: durationMs,
@@ -248,6 +262,7 @@ func (j *MetaAdsSyncJob) runSyncStep(
 
 	j.publish(ctx, syncEvent{
 		Event:      "sync:step:completed",
+		Message:    fmt.Sprintf("Synced %d %s in %.1fs", count, stepLabels[syncType], float64(durationMs)/1000),
 		BatchID:    batchID,
 		Step:       syncType,
 		Count:      count,

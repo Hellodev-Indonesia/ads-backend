@@ -503,6 +503,75 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/dashboard/campaigns": {
+            "get": {
+                "description": "Returns campaigns with performance metrics (spend, impressions, reach, actions) joined from insights and adsets",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Dashboard"
+                ],
+                "summary": "Campaign Dashboard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID (falls back to config)",
+                        "name": "ad_account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by campaign status (ACTIVE, PAUSED, etc)",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by campaign name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/insights/ad": {
             "get": {
                 "description": "Retrieve ad-level insights from local database (synced from Meta)",
@@ -738,6 +807,126 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/sync/batches": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns a paginated list of sync batches ordered by most recent first.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Sync"
+                ],
+                "summary": "List Sync Batches",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/sync.MetaSyncBatch"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/sync/batches/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns a single sync batch with its steps.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Sync"
+                ],
+                "summary": "Get Sync Batch",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Batch ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/sync.MetaSyncBatch"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/sync/status": {
             "get": {
                 "security": [
@@ -781,13 +970,35 @@ const docTemplate = `{
                     "Permission Management"
                 ],
                 "summary": "Get All Permissions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by name",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -989,13 +1200,35 @@ const docTemplate = `{
                     "Role Management"
                 ],
                 "summary": "Get All Roles",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by name",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1255,6 +1488,20 @@ const docTemplate = `{
                         "description": "Filter by email",
                         "name": "email",
                         "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1263,7 +1510,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -2029,6 +2276,23 @@ const docTemplate = `{
                 }
             }
         },
+        "response.PaginationResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string",
+                    "example": "Success"
+                },
+                "meta": {
+                    "$ref": "#/definitions/response.Meta"
+                },
+                "success": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
         "response.Response": {
             "type": "object",
             "properties": {
@@ -2059,6 +2323,166 @@ const docTemplate = `{
                 "success": {
                     "type": "boolean",
                     "example": true
+                }
+            }
+        },
+        "sync.MetaSyncBatch": {
+            "type": "object",
+            "properties": {
+                "ad_account_id": {
+                    "type": "string"
+                },
+                "ad_account_name": {
+                    "type": "string"
+                },
+                "batch_code": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "date_preset": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "date_stop": {
+                    "type": "string"
+                },
+                "duration_ms": {
+                    "type": "integer"
+                },
+                "error_message": {
+                    "type": "string"
+                },
+                "failed_count": {
+                    "type": "integer"
+                },
+                "finished_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "inserted_count": {
+                    "type": "integer"
+                },
+                "metadata": {
+                    "type": "object"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "rate_limit_hit": {
+                    "type": "boolean"
+                },
+                "request_count": {
+                    "type": "integer"
+                },
+                "skipped_count": {
+                    "type": "integer"
+                },
+                "started_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "steps": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sync.MetaSyncStep"
+                    }
+                },
+                "sync_mode": {
+                    "type": "string"
+                },
+                "sync_scope": {
+                    "type": "string"
+                },
+                "total_records": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "sync.MetaSyncStep": {
+            "type": "object",
+            "properties": {
+                "batch": {
+                    "$ref": "#/definitions/sync.MetaSyncBatch"
+                },
+                "batch_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "cursor_after": {
+                    "type": "string"
+                },
+                "cursor_before": {
+                    "type": "string"
+                },
+                "duration_ms": {
+                    "type": "integer"
+                },
+                "endpoint": {
+                    "type": "string"
+                },
+                "error_code": {
+                    "type": "string"
+                },
+                "error_message": {
+                    "type": "string"
+                },
+                "failed_count": {
+                    "type": "integer"
+                },
+                "finished_at": {
+                    "type": "string"
+                },
+                "has_next": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "inserted_count": {
+                    "type": "integer"
+                },
+                "metadata": {
+                    "type": "object"
+                },
+                "request_count": {
+                    "type": "integer"
+                },
+                "skipped_count": {
+                    "type": "integer"
+                },
+                "started_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "sync_type": {
+                    "type": "string"
+                },
+                "total_records": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_count": {
+                    "type": "integer"
                 }
             }
         }

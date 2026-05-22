@@ -11,6 +11,7 @@ import (
 	"github.com/alex/ads_backend/internal/meta/ads"
 	"github.com/alex/ads_backend/internal/meta/adset"
 	"github.com/alex/ads_backend/internal/meta/campaign"
+	"github.com/alex/ads_backend/internal/meta/dashboard"
 	"github.com/alex/ads_backend/internal/meta/insight"
 	"github.com/alex/ads_backend/internal/meta/sync"
 	"github.com/alex/ads_backend/pkg/centrifugo"
@@ -84,15 +85,19 @@ func RegisterApiRoutes(router *gin.Engine) {
 		adsHandler := ads.NewHandler(adsService)
 		insightHandler := insight.NewHandler(insightService)
 
+		dashboardRepo := dashboard.NewRepository(config.DB)
+		dashboardService := dashboard.NewService(dashboardRepo)
+		dashboardHandler := dashboard.NewHandler(dashboardService)
+
 		// Register Meta Routes
-		meta.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler)
+		meta.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler, dashboardHandler)
 
 		// Centrifugo publisher for real-time sync events
 		centrifugoClient := centrifugo.NewClient(config.CentrifugoConfig.URL, config.CentrifugoConfig.APIKey)
 
 		// Sync job (manual trigger only — no background ticker)
 		syncJob := jobs.NewMetaAdsSyncJob(campaignService, adSetService, adsService, insightService, syncService, centrifugoClient)
-		syncHandler := sync.NewHandler(syncJob)
+		syncHandler := sync.NewHandler(syncJob, syncService)
 		sync.RegisterRoutes(v1, syncHandler)
 	}
 }

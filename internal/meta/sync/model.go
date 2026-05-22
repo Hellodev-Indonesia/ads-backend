@@ -62,7 +62,7 @@ type MetaSyncBatch struct {
 	RateLimitHit bool `gorm:"not null;default:false" json:"rate_limit_hit"`
 
 	ErrorMessage *string        `gorm:"type:text" json:"error_message"`
-	Metadata     datatypes.JSON `gorm:"type:json" json:"metadata"`
+	Metadata     datatypes.JSON `gorm:"type:json" json:"metadata" swaggertype:"object"`
 
 	Steps []MetaSyncStep `gorm:"foreignKey:BatchID" json:"steps,omitempty"`
 
@@ -102,7 +102,7 @@ type MetaSyncStep struct {
 
 	ErrorCode    *string        `gorm:"size:100" json:"error_code"`
 	ErrorMessage *string        `gorm:"type:text" json:"error_message"`
-	Metadata     datatypes.JSON `gorm:"type:json" json:"metadata"`
+	Metadata     datatypes.JSON `gorm:"type:json" json:"metadata" swaggertype:"object"`
 
 	Batch MetaSyncBatch `gorm:"foreignKey:BatchID" json:"batch,omitempty"`
 

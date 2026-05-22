@@ -87,6 +87,12 @@ func (r *Repository) SumStepsByBatchID(ctx context.Context, batchID uint64) (*St
 	return &counts, nil
 }
 
+func (r *Repository) CountBatches(ctx context.Context) (int64, error) {
+	var count int64
+	err := r.db.WithContext(ctx).Model(&MetaSyncBatch{}).Count(&count).Error
+	return count, err
+}
+
 func (r *Repository) CountFailedStepsByBatchID(ctx context.Context, batchID uint64) (int64, error) {
 	var count int64
 	err := r.db.WithContext(ctx).

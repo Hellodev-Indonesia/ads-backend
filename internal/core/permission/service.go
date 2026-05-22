@@ -1,13 +1,16 @@
 package permission
 
-import "github.com/alex/ads_backend/internal/core/permission/dto"
+import (
+	"github.com/alex/ads_backend/internal/core/permission/dto"
+	"github.com/alex/ads_backend/pkg/response"
+)
 
 type Service interface {
 	Create(req dto.PermissionRequest) (*Permission, error)
 	Update(id uint, req dto.PermissionRequest) (*Permission, error)
 	Delete(id uint) error
 	FindByID(id uint) (*dto.PermissionResponse, error)
-	FindAll() ([]dto.PermissionResponse, error)
+	FindAll(filter dto.PermissionFilter) ([]dto.PermissionResponse, *response.PaginationMeta, error)
 }
 
 type service struct {
@@ -57,10 +60,17 @@ func (s *service) FindByID(id uint) (*dto.PermissionResponse, error) {
 	}, nil
 }
 
-func (s *service) FindAll() ([]dto.PermissionResponse, error) {
-	permissions, err := s.repo.FindAll()
+func (s *service) FindAll(filter dto.PermissionFilter) ([]dto.PermissionResponse, *response.PaginationMeta, error) {
+	if filter.Limit <= 0 {
+		filter.Limit = 25
+	}
+	if filter.Page <= 0 {
+		filter.Page = 1
+	}
+
+	permissions, total, err := s.repo.FindPaginated(filter)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var resp []dto.PermissionResponse
@@ -71,5 +81,17 @@ func (s *service) FindAll() ([]dto.PermissionResponse, error) {
 			Description: p.Description,
 		})
 	}
-	return resp, nil
+
+	lastPage := int(total) / filter.Limit
+	if int(total)%filter.Limit > 0 {
+		lastPage++
+	}
+
+	meta := &response.PaginationMeta{
+		Page:     filter.Page,
+		Limit:    filter.Limit,
+		Total:    int(total),
+		LastPage: lastPage,
+	}
+	return resp, meta, nil
 }
