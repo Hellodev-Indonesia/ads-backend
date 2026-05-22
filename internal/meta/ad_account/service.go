@@ -97,21 +97,21 @@ func (s *serviceImpl) GetUnassigned(filter AdAccountFilter) ([]dto.AdAccountResp
 }
 
 func (s *serviceImpl) AssignBrand(id string, brandID uint64) error {
-	account, err := s.repo.FindByID(id)
+	_, err := s.repo.FindByID(id)
 	if err != nil {
 		return err
 	}
-	account.BrandID = &brandID
-	return s.repo.Update(account)
+	// We rely on database Foreign Key constraint to validate if BrandID exists
+	// This avoids circular dependency between meta and core domains.
+	return s.repo.UpdateBrandID(id, &brandID)
 }
 
 func (s *serviceImpl) UnassignBrand(id string) error {
-	account, err := s.repo.FindByID(id)
+	_, err := s.repo.FindByID(id)
 	if err != nil {
 		return err
 	}
-	account.BrandID = nil
-	return s.repo.Update(account)
+	return s.repo.UpdateBrandID(id, nil)
 }
 
 func (s *serviceImpl) SyncAdAccounts() (int, error) {

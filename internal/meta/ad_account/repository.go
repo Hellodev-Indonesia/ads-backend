@@ -17,6 +17,7 @@ type Repository interface {
 	FindUnassigned(filter AdAccountFilter) ([]MetaAdAccount, int64, error)
 	FindByID(id string) (*MetaAdAccount, error)
 	Update(account *MetaAdAccount) error
+	UpdateBrandID(id string, brandID *uint64) error
 }
 
 type repository struct {
@@ -32,7 +33,16 @@ func (r *repository) UpsertBatch(accounts []MetaAdAccount) error {
 		return nil
 	}
 	return r.db.Clauses(clause.OnConflict{
-		UpdateAll: true,
+		Columns: []clause.Column{{Name: "id"}},
+		DoUpdates: clause.AssignmentColumns([]string{
+			"name",
+			"account_status",
+			"currency",
+			"timezone_name",
+			"business_id",
+			"is_active",
+			"synced_at",
+		}),
 	}).CreateInBatches(accounts, 100).Error
 }
 
@@ -68,6 +78,10 @@ func (r *repository) FindByID(id string) (*MetaAdAccount, error) {
 
 func (r *repository) Update(account *MetaAdAccount) error {
 	return r.db.Save(account).Error
+}
+
+func (r *repository) UpdateBrandID(id string, brandID *uint64) error {
+	return r.db.Model(&MetaAdAccount{}).Where("id = ?", id).Update("brand_id", brandID).Error
 }
 
 func (r *repository) FindUnassigned(filter AdAccountFilter) ([]MetaAdAccount, int64, error) {
