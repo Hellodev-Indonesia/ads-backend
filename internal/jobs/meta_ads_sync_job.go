@@ -34,23 +34,23 @@ type syncEvent struct {
 }
 
 var stepLabels = map[string]string{
-	metasync.SyncTypeAdAccounts:      "ad accounts",
-	metasync.SyncTypeCampaigns:       "campaigns",
-	metasync.SyncTypeAdsets:          "ad sets",
-	metasync.SyncTypeAds:             "ads",
+	metasync.SyncTypeAdAccounts:       "ad accounts",
+	metasync.SyncTypeCampaigns:        "campaigns",
+	metasync.SyncTypeAdsets:           "ad sets",
+	metasync.SyncTypeAds:              "ads",
 	metasync.SyncTypeCampaignInsights: "campaign insights",
-	metasync.SyncTypeAdInsights:      "ad insights",
+	metasync.SyncTypeAdInsights:       "ad insights",
 }
 
 type MetaAdsSyncJob struct {
 	adAccountService ad_account.Service
-	campaignService campaign.Service
-	adSetService    adset.Service
-	adsService      ads.Service
-	insightService  insight.Service
-	syncLogService  *metasync.Service
-	publisher       Publisher
-	running         atomic.Bool
+	campaignService  campaign.Service
+	adSetService     adset.Service
+	adsService       ads.Service
+	insightService   insight.Service
+	syncLogService   *metasync.Service
+	publisher        Publisher
+	running          atomic.Bool
 }
 
 func NewMetaAdsSyncJob(
@@ -64,50 +64,82 @@ func NewMetaAdsSyncJob(
 ) *MetaAdsSyncJob {
 	return &MetaAdsSyncJob{
 		adAccountService: adAccountService,
-		campaignService: campaignService,
-		adSetService:    adSetService,
-		adsService:      adsService,
-		insightService:  insightService,
-		syncLogService:  syncLogService,
-		publisher:       publisher,
+		campaignService:  campaignService,
+		adSetService:     adSetService,
+		adsService:       adsService,
+		insightService:   insightService,
+		syncLogService:   syncLogService,
+		publisher:        publisher,
 	}
 }
 
-// Start creates a sync batch and launches the job in the background.
+// Start creates sync batches and launches the job in the background.
 // Returns metasync.ErrAlreadyRunning if a sync is currently in progress.
-func (j *MetaAdsSyncJob) Start(ctx context.Context) (*metasync.MetaSyncBatch, error) {
+func (j *MetaAdsSyncJob) Start(ctx context.Context, requestedAdAccountID string) ([]*metasync.MetaSyncBatch, error) {
 	if !j.running.CompareAndSwap(false, true) {
 		return nil, metasync.ErrAlreadyRunning
 	}
 
-	adAccountID := config.MetaAdAccountID
-	if adAccountID == "" {
-		j.running.Store(false)
-		return nil, errors.New("META_AD_ACCOUNT_ID is not configured")
+	var accountIDs []string
+	if requestedAdAccountID != "" {
+		accountIDs = []string{requestedAdAccountID}
+	} else {
+		// Fetch all active ad accounts
+		// We use an empty filter to get all, then filter active. In production, we'd add an IsActive filter to the repo.
+		accounts, _, err := j.adAccountService.GetAdAccounts(ad_account.AdAccountFilter{Limit: 1000})
+		if err != nil {
+			j.running.Store(false)
+			return nil, fmt.Errorf("failed to fetch ad accounts: %v", err)
+		}
+		for _, acc := range accounts {
+			if acc.IsActive {
+				accountIDs = append(accountIDs, acc.ID)
+			}
+		}
+	}
+
+	if len(accountIDs) == 0 {
+		// Fallback to config if DB is empty
+		if config.MetaAdAccountID != "" {
+			accountIDs = []string{config.MetaAdAccountID}
+		} else {
+			j.running.Store(false)
+			return nil, errors.New("no active ad accounts found and META_AD_ACCOUNT_ID is not configured")
+		}
 	}
 
 	datePreset := "last_30d"
-	batch, err := j.syncLogService.StartBatch(ctx, metasync.StartBatchInput{
-		AdAccountID: adAccountID,
-		SyncMode:    "manual",
-		SyncScope:   "incremental",
-		DatePreset:  &datePreset,
-	})
-	if err != nil {
-		j.running.Store(false)
-		return nil, err
+	var batches []*metasync.MetaSyncBatch
+
+	for _, adAccountID := range accountIDs {
+		batch, err := j.syncLogService.StartBatch(ctx, metasync.StartBatchInput{
+			AdAccountID: adAccountID,
+			SyncMode:    "manual",
+			SyncScope:   "incremental",
+			DatePreset:  &datePreset,
+		})
+		if err != nil {
+			log.Printf("Failed to start batch for account %s: %v", adAccountID, err)
+			continue
+		}
+		batches = append(batches, batch)
+
+		j.publish(ctx, syncEvent{
+			Event:     "sync:started",
+			Message:   fmt.Sprintf("Meta Ads sync started for %s", adAccountID),
+			BatchID:   batch.ID,
+			BatchCode: batch.BatchCode,
+		})
 	}
 
-	j.publish(ctx, syncEvent{
-		Event:     "sync:started",
-		Message:   "Meta Ads sync started",
-		BatchID:   batch.ID,
-		BatchCode: batch.BatchCode,
-	})
+	if len(batches) == 0 {
+		j.running.Store(false)
+		return nil, errors.New("failed to start any sync batches")
+	}
 
-	go j.execute(batch)
+	go j.executeAll(batches)
 
-	return batch, nil
+	return batches, nil
 }
 
 // IsRunning reports whether a sync is currently in progress.
@@ -115,8 +147,14 @@ func (j *MetaAdsSyncJob) IsRunning() bool {
 	return j.running.Load()
 }
 
-func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch) {
+func (j *MetaAdsSyncJob) executeAll(batches []*metasync.MetaSyncBatch) {
 	defer j.running.Store(false)
+	for _, batch := range batches {
+		j.execute(batch)
+	}
+}
+
+func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch) {
 
 	ctx := context.Background()
 	adAccountID := batch.AdAccountID

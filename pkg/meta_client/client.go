@@ -66,12 +66,12 @@ func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json
 	}
 
 	fullURL := fmt.Sprintf("%s/%s/%s", c.BaseURL, c.Version, path)
-	
+
 	u, err := url.Parse(fullURL)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to parse URL: %w", err)
 	}
-	
+
 	q := u.Query()
 	for k, v := range queryParams {
 		for _, val := range v {
@@ -105,12 +105,12 @@ func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json
 
 		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 			log.Printf("Meta API returned status %d for GET %s", resp.StatusCode, path)
-			
+
 			var wrap errorWrapper
 			if err := json.Unmarshal(bodyBytes, &wrap); err == nil && wrap.Error != nil {
 				return nil, nil, wrap.Error
 			}
-			
+
 			return nil, nil, fmt.Errorf("Meta API returned status %d: %s", resp.StatusCode, string(bodyBytes))
 		}
 

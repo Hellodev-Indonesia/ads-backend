@@ -5,11 +5,21 @@ definitions:
       account_status:
         example: 1
         type: integer
+      brand_id:
+        type: integer
+      business_id:
+        type: string
+      currency:
+        type: string
       id:
         example: act_123456789
         type: string
+      is_active:
+        type: boolean
       name:
         example: My Ad Account
+        type: string
+      timezone_name:
         type: string
     type: object
   dto.AdResponse:
@@ -84,6 +94,13 @@ definitions:
         example: "2026-05-11T12:00:00Z"
         type: string
     type: object
+  dto.AssignBrandRequest:
+    properties:
+      brand_id:
+        type: integer
+    required:
+    - brand_id
+    type: object
   dto.AssignPermissionRequest:
     properties:
       permission_ids:
@@ -100,6 +117,23 @@ definitions:
       id:
         type: integer
       name:
+        type: string
+    type: object
+  dto.BrandResponse:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      name:
+        type: string
+      photo:
+        type: string
+      updated_at:
         type: string
     type: object
   dto.CampaignResponse:
@@ -152,6 +186,21 @@ definitions:
       updated_time:
         example: "2026-05-11T12:00:00Z"
         type: string
+    type: object
+  dto.CreateBrandRequest:
+    properties:
+      description:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        maxLength: 255
+        type: string
+      photo:
+        maxLength: 255
+        type: string
+    required:
+    - name
     type: object
   dto.CreativeRef:
     properties:
@@ -327,6 +376,19 @@ definitions:
         items:
           $ref: '#/definitions/dto.PermissionResponse'
         type: array
+    type: object
+  dto.UpdateBrandRequest:
+    properties:
+      description:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        maxLength: 255
+        type: string
+      photo:
+        maxLength: 255
+        type: string
     type: object
   dto.UserRequest:
     properties:
@@ -602,28 +664,212 @@ paths:
       summary: Logout
       tags:
       - Authentication
+  /core/brands:
+    get:
+      description: Get a paginated list of brands
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search by name
+        in: query
+        name: name
+        type: string
+      - description: Filter by active status
+        in: query
+        name: is_active
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.BrandResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List Brands
+      tags:
+      - Core / Brand
+    post:
+      consumes:
+      - application/json
+      description: Create a new brand
+      parameters:
+      - description: Create Brand Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateBrandRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.BrandResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create Brand
+      tags:
+      - Core / Brand
+  /core/brands/{id}:
+    delete:
+      description: Soft delete a brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete Brand
+      tags:
+      - Core / Brand
+    get:
+      description: Get details of a specific brand by ID
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.BrandResponse'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Brand Details
+      tags:
+      - Core / Brand
+    put:
+      consumes:
+      - application/json
+      description: Update an existing brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Brand Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateBrandRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.BrandResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update Brand
+      tags:
+      - Core / Brand
   /meta/ad-accounts:
     get:
       consumes:
       - application/json
       description: Retrieve all ad accounts associated with the system user token
       parameters:
-      - description: Custom fields comma-separated preset
+      - description: Search by name
         in: query
-        name: fields
+        name: search
         type: string
-      - description: Pagination limit
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
         in: query
         name: limit
-        type: string
-      - description: Cursor after
-        in: query
-        name: after
-        type: string
-      - description: Cursor before
-        in: query
-        name: before
-        type: string
+        type: integer
       produces:
       - application/json
       responses:
@@ -637,8 +883,8 @@ paths:
                   items:
                     $ref: '#/definitions/dto.AdAccountResponse'
                   type: array
-                paging:
-                  $ref: '#/definitions/response.MetaPaging'
+                meta:
+                  $ref: '#/definitions/response.Meta'
               type: object
         "400":
           description: Bad Request
@@ -649,6 +895,121 @@ paths:
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Get Meta Ad Accounts
+      tags:
+      - Meta Ad Accounts
+  /meta/ad-accounts/{id}/assign-brand:
+    put:
+      consumes:
+      - application/json
+      description: Assign a brand to a specific Meta ad account
+      parameters:
+      - description: Ad Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Assign Brand Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AssignBrandRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Assign Brand to Ad Account
+      tags:
+      - Meta Ad Accounts
+  /meta/ad-accounts/{id}/unassign-brand:
+    put:
+      description: Remove a brand assignment from a specific Meta ad account
+      parameters:
+      - description: Ad Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Unassign Brand from Ad Account
+      tags:
+      - Meta Ad Accounts
+  /meta/ad-accounts/unassigned:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all ad accounts not assigned to any brand
+      parameters:
+      - description: Search by name
+        in: query
+        name: search
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.AdAccountResponse'
+                  type: array
+                meta:
+                  $ref: '#/definitions/response.Meta'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Unassigned Meta Ad Accounts
       tags:
       - Meta Ad Accounts
   /meta/ads:
@@ -1036,8 +1397,14 @@ paths:
     post:
       description: Manually trigger a full Meta Ads sync. Returns immediately; subscribe
         to the Centrifugo channel for real-time progress.
-      produces:
-      - application/json
+      parameters:
+      - description: Sync Request (optional ad_account_id)
+        in: body
+        name: request
+        schema:
+          additionalProperties:
+            type: string
+          type: object
       responses:
         "202":
           description: Accepted

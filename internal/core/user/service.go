@@ -26,7 +26,7 @@ func NewService(repo Repository, roleRepo role.Repository) Service {
 
 func (s *service) Create(req dto.UserRequest) (*User, error) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	
+
 	roles, err := s.roleRepo.FindByIDs(req.RoleIDs)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *service) Update(id uint, req dto.UserRequest) (*User, error) {
 	if req.Email != "" {
 		user.Email = req.Email
 	}
-	
+
 	if len(req.RoleIDs) > 0 {
 		roles, err := s.roleRepo.FindByIDs(req.RoleIDs)
 		if err != nil {

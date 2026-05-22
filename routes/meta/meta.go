@@ -2,8 +2,8 @@ package meta
 
 import (
 	"github.com/alex/ads_backend/internal/meta/ad_account"
-	"github.com/alex/ads_backend/internal/meta/adset"
 	"github.com/alex/ads_backend/internal/meta/ads"
+	"github.com/alex/ads_backend/internal/meta/adset"
 	"github.com/alex/ads_backend/internal/meta/campaign"
 	"github.com/alex/ads_backend/internal/meta/dashboard"
 	"github.com/alex/ads_backend/internal/meta/insight"

@@ -11,6 +11,9 @@ import (
 
 type Service interface {
 	GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error)
+	GetUnassigned(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error)
+	AssignBrand(id string, brandID uint64) error
+	UnassignBrand(id string) error
 	SyncAdAccounts() (int, error)
 }
 
@@ -35,6 +38,11 @@ func (s *serviceImpl) GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResp
 			ID:            acc.ID,
 			Name:          acc.Name,
 			AccountStatus: acc.AccountStatus,
+			BrandID:       acc.BrandID,
+			Currency:      acc.Currency,
+			TimezoneName:  acc.TimezoneName,
+			BusinessID:    acc.BusinessID,
+			IsActive:      acc.IsActive,
 		})
 	}
 
@@ -53,10 +61,63 @@ func (s *serviceImpl) GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResp
 	return result, meta, nil
 }
 
+func (s *serviceImpl) GetUnassigned(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error) {
+	accounts, total, err := s.repo.FindUnassigned(filter)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var result []dto.AdAccountResponse
+	for _, acc := range accounts {
+		result = append(result, dto.AdAccountResponse{
+			ID:            acc.ID,
+			Name:          acc.Name,
+			AccountStatus: acc.AccountStatus,
+			BrandID:       acc.BrandID,
+			Currency:      acc.Currency,
+			TimezoneName:  acc.TimezoneName,
+			BusinessID:    acc.BusinessID,
+			IsActive:      acc.IsActive,
+		})
+	}
+
+	lastPage := int(total) / filter.Limit
+	if filter.Limit > 0 && int(total)%filter.Limit != 0 {
+		lastPage++
+	}
+
+	meta := &response.Meta{
+		Page:     filter.Page,
+		Limit:    filter.Limit,
+		Total:    total,
+		LastPage: lastPage,
+	}
+
+	return result, meta, nil
+}
+
+func (s *serviceImpl) AssignBrand(id string, brandID uint64) error {
+	account, err := s.repo.FindByID(id)
+	if err != nil {
+		return err
+	}
+	account.BrandID = &brandID
+	return s.repo.Update(account)
+}
+
+func (s *serviceImpl) UnassignBrand(id string) error {
+	account, err := s.repo.FindByID(id)
+	if err != nil {
+		return err
+	}
+	account.BrandID = nil
+	return s.repo.Update(account)
+}
+
 func (s *serviceImpl) SyncAdAccounts() (int, error) {
 	params := url.Values{}
-	params.Set("fields", "id,name,account_status")
-	
+	params.Set("fields", "id,name,account_status,currency,timezone_name,business")
+
 	rawList, _, err := s.client.Get("me/adaccounts", params, true)
 	if err != nil {
 		return 0, err
@@ -64,15 +125,43 @@ func (s *serviceImpl) SyncAdAccounts() (int, error) {
 
 	var models []MetaAdAccount
 	for _, raw := range rawList {
-		var item dto.AdAccountResponse
+		var item struct {
+			ID            string `json:"id"`
+			Name          string `json:"name"`
+			AccountStatus int    `json:"account_status"`
+			Currency      string `json:"currency"`
+			TimezoneName  string `json:"timezone_name"`
+			Business      struct {
+				ID string `json:"id"`
+			} `json:"business"`
+		}
 		if err := json.Unmarshal(raw, &item); err != nil {
 			return 0, err
 		}
-		
+
+		var currency *string
+		if item.Currency != "" {
+			currency = &item.Currency
+		}
+
+		var timezone *string
+		if item.TimezoneName != "" {
+			timezone = &item.TimezoneName
+		}
+
+		var businessID *string
+		if item.Business.ID != "" {
+			businessID = &item.Business.ID
+		}
+
 		models = append(models, MetaAdAccount{
 			ID:            item.ID,
 			Name:          item.Name,
 			AccountStatus: item.AccountStatus,
+			Currency:      currency,
+			TimezoneName:  timezone,
+			BusinessID:    businessID,
+			IsActive:      item.AccountStatus == 1,
 		})
 	}
 

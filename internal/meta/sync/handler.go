@@ -12,7 +12,7 @@ import (
 
 // JobTrigger is the subset of MetaAdsSyncJob the handler needs.
 type JobTrigger interface {
-	Start(ctx context.Context) (*MetaSyncBatch, error)
+	Start(ctx context.Context, requestedAdAccountID string) ([]*MetaSyncBatch, error)
 	IsRunning() bool
 }
 
@@ -29,14 +29,19 @@ func NewHandler(job JobTrigger, service *Service) *Handler {
 // @Summary      Trigger Meta Ads Sync
 // @Description  Manually trigger a full Meta Ads sync. Returns immediately; subscribe to the Centrifugo channel for real-time progress.
 // @Tags         Meta Sync
-// @Produce      json
+// @Param        request  body      map[string]string  false  "Sync Request (optional ad_account_id)"
 // @Success      202  {object}  response.Response
 // @Failure      409  {object}  response.ErrorResponse  "Sync already in progress"
 // @Failure      500  {object}  response.ErrorResponse
 // @Security     BearerAuth
 // @Router       /meta/sync [post]
 func (h *Handler) TriggerSync(c *gin.Context) {
-	batch, err := h.job.Start(c.Request.Context())
+	var req struct {
+		AdAccountID string `json:"ad_account_id"`
+	}
+	_ = c.ShouldBindJSON(&req)
+
+	batches, err := h.job.Start(c.Request.Context(), req.AdAccountID)
 	if err != nil {
 		if errors.Is(err, ErrAlreadyRunning) {
 			response.Error(c, http.StatusConflict, "Sync is already in progress", nil)
@@ -46,12 +51,19 @@ func (h *Handler) TriggerSync(c *gin.Context) {
 		return
 	}
 
+	var batchIDs []uint64
+	var batchCodes []string
+	for _, b := range batches {
+		batchIDs = append(batchIDs, b.ID)
+		batchCodes = append(batchCodes, b.BatchCode)
+	}
+
 	c.JSON(http.StatusAccepted, gin.H{
 		"message": "Sync started",
 		"data": gin.H{
-			"batch_id":   batch.ID,
-			"batch_code": batch.BatchCode,
-			"channel":    Channel,
+			"batch_ids":   batchIDs,
+			"batch_codes": batchCodes,
+			"channel":     Channel,
 		},
 	})
 }

@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/alex/ads_backend/config"
 	"github.com/alex/ads_backend/internal/core/auth"
+	"github.com/alex/ads_backend/internal/core/brand"
 	"github.com/alex/ads_backend/internal/core/permission"
 	"github.com/alex/ads_backend/internal/core/role"
 	"github.com/alex/ads_backend/internal/core/user"
@@ -36,21 +37,24 @@ func RegisterApiRoutes(router *gin.Engine) {
 		userRepo := user.NewRepository(config.DB)
 		roleRepo := role.NewRepository(config.DB)
 		permRepo := permission.NewRepository(config.DB)
+		brandRepo := brand.NewRepository(config.DB)
 
 		// Services
 		permService := permission.NewService(permRepo)
 		roleService := role.NewService(roleRepo, permRepo)
 		userService := user.NewService(userRepo, roleRepo)
 		authService := auth.NewService(userRepo, permRepo)
+		brandService := brand.NewService(brandRepo)
 
 		// Handlers
 		authHandler := auth.NewHandler(authService)
 		userHandler := user.NewHandler(userService)
 		roleHandler := role.NewHandler(roleService)
 		permHandler := permission.NewHandler(permService)
+		brandHandler := brand.NewHandler(brandService)
 
 		// Register Core Routes
-		core.RegisterCoreRoutes(v1, authHandler, userHandler, roleHandler, permHandler)
+		core.RegisterCoreRoutes(v1, authHandler, userHandler, roleHandler, permHandler, brandHandler)
 
 		// --- META DOMAIN ---
 		// Shared low-level client (single instance, injected into all sub-module services)
