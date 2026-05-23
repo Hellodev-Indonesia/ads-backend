@@ -4,10 +4,13 @@ import (
 	"github.com/alex/ads_backend/config"
 	"github.com/alex/ads_backend/internal/core/auth"
 	"github.com/alex/ads_backend/internal/core/brand"
+	"github.com/alex/ads_backend/internal/core/brand_whitelist_rule"
+	fraudlog "github.com/alex/ads_backend/internal/core/fraud_log"
 	"github.com/alex/ads_backend/internal/core/permission"
 	"github.com/alex/ads_backend/internal/core/role"
 	"github.com/alex/ads_backend/internal/core/user"
 	"github.com/alex/ads_backend/internal/jobs"
+	adcreative "github.com/alex/ads_backend/internal/meta/ad_creative"
 	"github.com/alex/ads_backend/internal/meta/ad_account"
 	"github.com/alex/ads_backend/internal/meta/ads"
 	"github.com/alex/ads_backend/internal/meta/adset"
@@ -15,6 +18,7 @@ import (
 	"github.com/alex/ads_backend/internal/meta/dashboard"
 	"github.com/alex/ads_backend/internal/meta/insight"
 	"github.com/alex/ads_backend/internal/meta/sync"
+	"github.com/alex/ads_backend/internal/notification/alert"
 	"github.com/alex/ads_backend/pkg/centrifugo"
 	"github.com/alex/ads_backend/pkg/meta_client"
 	"github.com/alex/ads_backend/pkg/swagger"
@@ -38,6 +42,9 @@ func RegisterApiRoutes(router *gin.Engine) {
 		roleRepo := role.NewRepository(config.DB)
 		permRepo := permission.NewRepository(config.DB)
 		brandRepo := brand.NewRepository(config.DB)
+		whitelistRepo := brand_whitelist_rule.NewRepository(config.DB)
+		fraudLogRepo := fraudlog.NewRepository(config.DB)
+		alertRepo := alert.NewRepository(config.DB)
 
 		// Services
 		permService := permission.NewService(permRepo)
@@ -45,6 +52,9 @@ func RegisterApiRoutes(router *gin.Engine) {
 		userService := user.NewService(userRepo, roleRepo)
 		authService := auth.NewService(userRepo, permRepo)
 		brandService := brand.NewService(brandRepo)
+		whitelistSvc := brand_whitelist_rule.NewService(whitelistRepo)
+		fraudLogSvc := fraudlog.NewService(fraudLogRepo)
+		alertSvc := alert.NewService(alertRepo)
 
 		// Handlers
 		authHandler := auth.NewHandler(authService)
@@ -52,9 +62,12 @@ func RegisterApiRoutes(router *gin.Engine) {
 		roleHandler := role.NewHandler(roleService)
 		permHandler := permission.NewHandler(permService)
 		brandHandler := brand.NewHandler(brandService)
+		whitelistHandler := brand_whitelist_rule.NewHandler(whitelistSvc)
+		fraudLogHandler := fraudlog.NewHandler(fraudLogSvc)
+		alertHandler := alert.NewHandler(alertSvc)
 
 		// Register Core Routes
-		core.RegisterCoreRoutes(v1, authHandler, userHandler, roleHandler, permHandler, brandHandler)
+		core.RegisterCoreRoutes(v1, authHandler, userHandler, roleHandler, permHandler, brandHandler, whitelistHandler, fraudLogHandler, alertHandler)
 
 		// --- META DOMAIN ---
 		// Shared low-level client (single instance, injected into all sub-module services)
@@ -71,6 +84,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		adsRepo := ads.NewRepository(config.DB)
 		insightRepo := insight.NewRepository(config.DB)
 		syncRepo := sync.NewRepository(config.DB)
+		adCreativeRepo := adcreative.NewRepository(config.DB)
 
 		// Services (Meta client + Repository)
 		adAccountService := ad_account.NewService(metaClient, adAccountRepo)
@@ -79,6 +93,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		adsService := ads.NewService(metaClient, adsRepo)
 		insightService := insight.NewService(metaClient, insightRepo)
 		syncService := sync.NewService(syncRepo)
+		adCreativeService := adcreative.NewService(metaClient, adCreativeRepo, adAccountRepo, whitelistSvc, fraudLogSvc, alertSvc)
 
 		// Sub-module handlers
 		adAccountHandler := ad_account.NewHandler(adAccountService)
@@ -94,7 +109,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		centrifugoClient := centrifugo.NewClient(config.CentrifugoConfig.URL, config.CentrifugoConfig.APIKey)
 
 		// Sync job
-		syncJob := jobs.NewMetaAdsSyncJob(adAccountService, campaignService, adSetService, adsService, insightService, syncService, centrifugoClient)
+		syncJob := jobs.NewMetaAdsSyncJob(adAccountService, campaignService, adSetService, adsService, insightService, syncService, centrifugoClient, adCreativeService)
 
 		insightHandler := insight.NewHandler(insightService)
 

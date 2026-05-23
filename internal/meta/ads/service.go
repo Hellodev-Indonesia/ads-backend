@@ -24,6 +24,7 @@ type Service interface {
 
 	// Meta API sync (used by sync job)
 	SyncAds(adAccountID string) (int, error)
+	SyncAdsWithList(adAccountID string) (int, []MetaAd, error)
 }
 
 type serviceImpl struct {
@@ -95,12 +96,17 @@ func (s *serviceImpl) GetCreative(creativeID string, fields string) (*dto.Creati
 // --- META API SYNC ---
 
 func (s *serviceImpl) SyncAds(adAccountID string) (int, error) {
+	count, _, err := s.SyncAdsWithList(adAccountID)
+	return count, err
+}
+
+func (s *serviceImpl) SyncAdsWithList(adAccountID string) (int, []MetaAd, error) {
 	params := url.Values{}
 	params.Set("fields", DefaultAdFields)
 
 	rawList, _, err := s.client.Get(adAccountID+"/ads", params, true)
 	if err != nil {
-		return 0, fmt.Errorf("failed to fetch ads from Meta: %w", err)
+		return 0, nil, fmt.Errorf("failed to fetch ads from Meta: %w", err)
 	}
 
 	var models []MetaAd
@@ -114,10 +120,10 @@ func (s *serviceImpl) SyncAds(adAccountID string) (int, error) {
 	}
 
 	if err := s.repo.UpsertBatch(models); err != nil {
-		return 0, fmt.Errorf("failed to upsert ads: %w", err)
+		return 0, nil, fmt.Errorf("failed to upsert ads: %w", err)
 	}
 
-	return len(models), nil
+	return len(models), models, nil
 }
 
 // --- MAPPERS ---

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/alex/ads_backend/config"
+	adcreative "github.com/alex/ads_backend/internal/meta/ad_creative"
 	"github.com/alex/ads_backend/internal/meta/ad_account"
 	"github.com/alex/ads_backend/internal/meta/ads"
 	"github.com/alex/ads_backend/internal/meta/adset"
@@ -40,19 +41,21 @@ var stepLabels = map[string]string{
 	metasync.SyncTypeCampaigns:        "campaigns",
 	metasync.SyncTypeAdsets:           "ad sets",
 	metasync.SyncTypeAds:              "ads",
+	metasync.SyncTypeAdCreatives:      "ad creatives",
 	metasync.SyncTypeCampaignInsights: "campaign insights",
 	metasync.SyncTypeAdInsights:       "ad insights",
 }
 
 type MetaAdsSyncJob struct {
-	adAccountService ad_account.Service
-	campaignService  campaign.Service
-	adSetService     adset.Service
-	adsService       ads.Service
-	insightService   insight.Service
-	syncLogService   *metasync.Service
-	publisher        Publisher
-	running          atomic.Bool
+	adAccountService  ad_account.Service
+	campaignService   campaign.Service
+	adSetService      adset.Service
+	adsService        ads.Service
+	insightService    insight.Service
+	adCreativeService adcreative.Service
+	syncLogService    *metasync.Service
+	publisher         Publisher
+	running           atomic.Bool
 }
 
 func NewMetaAdsSyncJob(
@@ -63,15 +66,17 @@ func NewMetaAdsSyncJob(
 	insightService insight.Service,
 	syncLogService *metasync.Service,
 	publisher Publisher,
+	adCreativeService adcreative.Service,
 ) *MetaAdsSyncJob {
 	return &MetaAdsSyncJob{
-		adAccountService: adAccountService,
-		campaignService:  campaignService,
-		adSetService:     adSetService,
-		adsService:       adsService,
-		insightService:   insightService,
-		syncLogService:   syncLogService,
-		publisher:        publisher,
+		adAccountService:  adAccountService,
+		campaignService:   campaignService,
+		adSetService:      adSetService,
+		adsService:        adsService,
+		insightService:    insightService,
+		adCreativeService: adCreativeService,
+		syncLogService:    syncLogService,
+		publisher:         publisher,
 	}
 }
 
@@ -174,7 +179,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 
 	hasError := false
 	var firstError error
-	var adAccountsCount, campaignCount, adSetCount, adsCount, campaignInsightCount, adInsightCount int
+	var adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount int
 	var err error
 
 	if !insightsOnly {
@@ -211,11 +216,41 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			firstError = setFirstError(firstError, err)
 		}
 
+		var syncedAds []ads.MetaAd
 		adsCount, err = j.runSyncStep(
 			ctx, batch.ID,
 			metasync.SyncTypeAds,
 			fmt.Sprintf("/%s/ads", adAccountID),
-			func() (int, error) { return j.adsService.SyncAds(adAccountID) },
+			func() (int, error) {
+				count, models, e := j.adsService.SyncAdsWithList(adAccountID)
+				if e == nil {
+					syncedAds = models
+				}
+				return count, e
+			},
+		)
+		if err != nil {
+			hasError = true
+			firstError = setFirstError(firstError, err)
+		}
+
+		adRecords := make([]adcreative.AdRecord, 0, len(syncedAds))
+		for _, a := range syncedAds {
+			if a.CreativeID != "" {
+				adRecords = append(adRecords, adcreative.AdRecord{
+					ID:         a.ID,
+					CreativeID: a.CreativeID,
+					AdSetID:    a.AdSetID,
+					CampaignID: a.CampaignID,
+				})
+			}
+		}
+
+		adCreativeCount, err = j.runSyncStep(
+			ctx, batch.ID,
+			metasync.SyncTypeAdCreatives,
+			fmt.Sprintf("/%s/creatives", adAccountID),
+			func() (int, error) { return j.adCreativeService.SyncCreatives(adAccountID, adRecords) },
 		)
 		if err != nil {
 			hasError = true
@@ -290,8 +325,8 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 	}
 
 	log.Printf(
-		"Meta Ads sync finished in %s (ad_accounts: %d, campaigns: %d, adsets: %d, ads: %d, campaign_insights: %d, ad_insights: %d)",
-		elapsed, adAccountsCount, campaignCount, adSetCount, adsCount, campaignInsightCount, adInsightCount,
+		"Meta Ads sync finished in %s (ad_accounts: %d, campaigns: %d, adsets: %d, ads: %d, ad_creatives: %d, campaign_insights: %d, ad_insights: %d)",
+		elapsed, adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount,
 	)
 }
 

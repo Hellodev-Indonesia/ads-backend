@@ -1,0 +1,1 @@
+{"nodes": [{"id": "insight_dto_syncrequest_syncinsightrequest", "label": "SyncInsightRequest DTO", "file_type": "code", "source_file": "internal/meta/insight/dto/sync_request.go", "source_location": "3:11", "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}
