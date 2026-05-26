@@ -17,6 +17,25 @@ func NewHandler(service Service) *Handler {
 	return &Handler{service}
 }
 
+// FindAll godoc
+// @Summary      Get fraud logs
+// @Description  Get a list of fraud logs with pagination and filters
+// @Tags         Fraud Logs
+// @Accept       json
+// @Produce      json
+// @Param        page          query     int     false  "Page number"
+// @Param        limit         query     int     false  "Limit per page"
+// @Param        brand_id      query     int     false  "Brand ID"
+// @Param        ad_account_id query     string  false  "Ad Account ID"
+// @Param        campaign_id   query     string  false  "Campaign ID"
+// @Param        creative_id   query     string  false  "Creative ID"
+// @Param        severity      query     string  false  "Severity"
+// @Param        status        query     string  false  "Status"
+// @Param        date_start    query     string  false  "Date Start"
+// @Param        date_stop     query     string  false  "Date Stop"
+// @Success      200  {object}  response.PaginationResponse{data=[]dto.FraudLogResponse}
+// @Router       /fraud-logs [get]
+// @Security     BearerAuth
 func (h *Handler) FindAll(c *gin.Context) {
 	var filter dto.FraudLogFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -51,6 +70,16 @@ func (h *Handler) FindAll(c *gin.Context) {
 	})
 }
 
+// FindByID godoc
+// @Summary      Get fraud log by ID
+// @Description  Get a fraud log by its ID
+// @Tags         Fraud Logs
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Fraud Log ID"
+// @Success      200  {object}  response.SuccessResponse{data=dto.FraudLogResponse}
+// @Router       /fraud-logs/{id} [get]
+// @Security     BearerAuth
 func (h *Handler) FindByID(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -67,6 +96,16 @@ func (h *Handler) FindByID(c *gin.Context) {
 	response.Success(c, "Successfully retrieved fraud log", log)
 }
 
+// Resolve godoc
+// @Summary      Resolve a fraud log
+// @Description  Mark a fraud log as resolved
+// @Tags         Fraud Logs
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Fraud Log ID"
+// @Success      200  {object}  response.SuccessResponse{data=dto.FraudLogResponse}
+// @Router       /fraud-logs/{id}/resolve [put]
+// @Security     BearerAuth
 func (h *Handler) Resolve(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {

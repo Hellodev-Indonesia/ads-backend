@@ -56,7 +56,7 @@ func (h *Handler) GetAds(c *gin.Context) {
 
 // GetCreative godoc
 // @Summary      Get Ad Creative
-// @Description  Retrieve details of a specific ad creative (direct Meta API call)
+// @Description  Retrieve details of a specific ad creative from the local database (synced from Meta)
 // @Tags         Meta Ads
 // @Accept       json
 // @Produce      json

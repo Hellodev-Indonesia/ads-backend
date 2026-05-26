@@ -21,9 +21,15 @@ func NewRepository(db *gorm.DB) Repository {
 }
 
 func (r *repository) FindByCreativeID(creativeID string) (*AdCreative, error) {
-	var creative AdCreative
-	err := r.db.Where("creative_id = ?", creativeID).First(&creative).Error
-	return &creative, err
+	var creatives []AdCreative
+	err := r.db.Where("creative_id = ?", creativeID).Limit(1).Find(&creatives).Error
+	if err != nil {
+		return nil, err
+	}
+	if len(creatives) == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return &creatives[0], nil
 }
 
 func (r *repository) Upsert(creative *AdCreative) error {
@@ -42,7 +48,13 @@ func (r *repository) CreateVersion(version *AdCreativeVersion) error {
 }
 
 func (r *repository) FindLatestVersionByCreativeID(creativeID string) (*AdCreativeVersion, error) {
-	var version AdCreativeVersion
-	err := r.db.Where("creative_id = ?", creativeID).Order("created_at DESC").First(&version).Error
-	return &version, err
+	var versions []AdCreativeVersion
+	err := r.db.Where("creative_id = ?", creativeID).Order("created_at DESC").Limit(1).Find(&versions).Error
+	if err != nil {
+		return nil, err
+	}
+	if len(versions) == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return &versions[0], nil
 }

@@ -94,6 +94,27 @@ definitions:
         example: "2026-05-11T12:00:00Z"
         type: string
     type: object
+  dto.AlertResponse:
+    properties:
+      brand_id:
+        type: integer
+      created_at:
+        type: string
+      fraud_log_id:
+        type: integer
+      id:
+        type: integer
+      is_read:
+        type: boolean
+      message:
+        type: string
+      severity:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
   dto.AssignBrandRequest:
     properties:
       brand_id:
@@ -187,6 +208,28 @@ definitions:
         example: "2026-05-11T12:00:00Z"
         type: string
     type: object
+  dto.CheckURLRequest:
+    properties:
+      scope:
+        enum:
+        - destination_url
+        - display_url
+        - url_tags
+        - domain
+        type: string
+      url:
+        type: string
+    required:
+    - scope
+    - url
+    type: object
+  dto.CheckURLResponse:
+    properties:
+      allowed:
+        type: boolean
+      matched_rule:
+        $ref: '#/definitions/dto.WhitelistRuleResponse'
+    type: object
   dto.CreateBrandRequest:
     properties:
       description:
@@ -201,6 +244,36 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  dto.CreateWhitelistRuleRequest:
+    properties:
+      allow_subdomains:
+        type: boolean
+      description:
+        type: string
+      is_active:
+        type: boolean
+      match_type:
+        enum:
+        - exact_url
+        - domain
+        - path_prefix
+        - contains
+        - regex
+        type: string
+      scope:
+        enum:
+        - destination_url
+        - display_url
+        - url_tags
+        - domain
+        type: string
+      value:
+        type: string
+    required:
+    - match_type
+    - scope
+    - value
     type: object
   dto.CreativeRef:
     properties:
@@ -232,6 +305,45 @@ definitions:
         type: string
       url_tags:
         example: utm_source=facebook&utm_medium=cpc
+        type: string
+    type: object
+  dto.FraudLogResponse:
+    properties:
+      ad_account_id:
+        type: string
+      ad_id:
+        type: string
+      adset_id:
+        type: string
+      brand_id:
+        type: integer
+      campaign_id:
+        type: string
+      created_at:
+        type: string
+      creative_id:
+        type: string
+      detected_at:
+        type: string
+      event_type:
+        type: string
+      id:
+        type: integer
+      matched_rule_id:
+        type: integer
+      message:
+        type: string
+      new_value:
+        type: string
+      old_value:
+        type: string
+      resolved_at:
+        type: string
+      severity:
+        type: string
+      status:
+        type: string
+      updated_at:
         type: string
     type: object
   dto.InsightResponse:
@@ -402,6 +514,32 @@ definitions:
         maxLength: 255
         type: string
     type: object
+  dto.UpdateWhitelistRuleRequest:
+    properties:
+      allow_subdomains:
+        type: boolean
+      description:
+        type: string
+      is_active:
+        type: boolean
+      match_type:
+        enum:
+        - exact_url
+        - domain
+        - path_prefix
+        - contains
+        - regex
+        type: string
+      scope:
+        enum:
+        - destination_url
+        - display_url
+        - url_tags
+        - domain
+        type: string
+      value:
+        type: string
+    type: object
   dto.UserRequest:
     properties:
       email:
@@ -433,6 +571,31 @@ definitions:
         items:
           $ref: '#/definitions/dto.RoleBrief'
         type: array
+    type: object
+  dto.WhitelistRuleResponse:
+    properties:
+      allow_subdomains:
+        type: boolean
+      brand_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      match_type:
+        type: string
+      normalized_value:
+        type: string
+      scope:
+        type: string
+      updated_at:
+        type: string
+      value:
+        type: string
     type: object
   response.ErrorResponse:
     properties:
@@ -628,6 +791,115 @@ info:
   title: Ads Backend API
   version: "1.0"
 paths:
+  /alerts:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of alerts with pagination and filters
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      - description: Brand ID
+        in: query
+        name: brand_id
+        type: integer
+      - description: Severity
+        in: query
+        name: severity
+        type: string
+      - description: Is Read
+        in: query
+        name: is_read
+        type: boolean
+      - description: Date Start
+        in: query
+        name: date_start
+        type: string
+      - description: Date Stop
+        in: query
+        name: date_stop
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.AlertResponse'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get alerts
+      tags:
+      - Alerts
+  /alerts/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an alert by its ID
+      parameters:
+      - description: Alert ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AlertResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get alert by ID
+      tags:
+      - Alerts
+  /alerts/{id}/read:
+    put:
+      consumes:
+      - application/json
+      description: Mark an alert as read
+      parameters:
+      - description: Alert ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AlertResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Mark alert as read
+      tags:
+      - Alerts
   /auth/login:
     post:
       consumes:
@@ -757,6 +1029,221 @@ paths:
       summary: Create Brand
       tags:
       - Brand
+  /brands/{brand_id}/whitelist-rules:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of whitelist rules for a brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      - description: Scope
+        in: query
+        name: scope
+        type: string
+      - description: Match Type
+        in: query
+        name: match_type
+        type: string
+      - description: Is Active
+        in: query
+        name: is_active
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.WhitelistRuleResponse'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get whitelist rules
+      tags:
+      - Brand Whitelist Rules
+    post:
+      consumes:
+      - application/json
+      description: Create a new whitelist rule for a brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Create Whitelist Rule Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateWhitelistRuleRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.WhitelistRuleResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Create whitelist rule
+      tags:
+      - Brand Whitelist Rules
+  /brands/{brand_id}/whitelist-rules/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a whitelist rule
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Whitelist Rule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete whitelist rule
+      tags:
+      - Brand Whitelist Rules
+    get:
+      consumes:
+      - application/json
+      description: Get a whitelist rule by its ID
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Whitelist Rule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.WhitelistRuleResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get whitelist rule by ID
+      tags:
+      - Brand Whitelist Rules
+    put:
+      consumes:
+      - application/json
+      description: Update an existing whitelist rule
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Whitelist Rule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Whitelist Rule Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateWhitelistRuleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.WhitelistRuleResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Update whitelist rule
+      tags:
+      - Brand Whitelist Rules
+  /brands/{brand_id}/whitelist-rules/check-url:
+    post:
+      consumes:
+      - application/json
+      description: Check if a URL is allowed by the whitelist rules
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Check URL Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CheckURLRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CheckURLResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Check URL against whitelist
+      tags:
+      - Brand Whitelist Rules
   /brands/{id}:
     delete:
       description: Soft delete a brand
@@ -864,6 +1351,127 @@ paths:
       summary: Update Brand
       tags:
       - Brand
+  /fraud-logs:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of fraud logs with pagination and filters
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      - description: Brand ID
+        in: query
+        name: brand_id
+        type: integer
+      - description: Ad Account ID
+        in: query
+        name: ad_account_id
+        type: string
+      - description: Campaign ID
+        in: query
+        name: campaign_id
+        type: string
+      - description: Creative ID
+        in: query
+        name: creative_id
+        type: string
+      - description: Severity
+        in: query
+        name: severity
+        type: string
+      - description: Status
+        in: query
+        name: status
+        type: string
+      - description: Date Start
+        in: query
+        name: date_start
+        type: string
+      - description: Date Stop
+        in: query
+        name: date_stop
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.FraudLogResponse'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get fraud logs
+      tags:
+      - Fraud Logs
+  /fraud-logs/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a fraud log by its ID
+      parameters:
+      - description: Fraud Log ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.FraudLogResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get fraud log by ID
+      tags:
+      - Fraud Logs
+  /fraud-logs/{id}/resolve:
+    put:
+      consumes:
+      - application/json
+      description: Mark a fraud log as resolved
+      parameters:
+      - description: Fraud Log ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.FraudLogResponse'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Resolve a fraud log
+      tags:
+      - Fraud Logs
   /meta/ad-accounts:
     get:
       consumes:

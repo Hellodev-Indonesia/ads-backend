@@ -84,52 +84,32 @@ func (h *Handler) GetUnassignedAdAccounts(c *gin.Context) {
 }
 
 // AssignBrand godoc
-// @Summary      Assign Brand to Ad Account
-// @Description  Assign a brand to a specific Meta ad account
+// @Summary      Assign or Unassign Brand to Ad Accounts
+// @Description  Assign a brand to multiple Meta ad accounts (or unassign if brand_id is null)
 // @Tags         Meta Ad Accounts
 // @Accept       json
 // @Produce      json
-// @Param        id       path      string                  true  "Ad Account ID"
 // @Param        request  body      dto.AssignBrandRequest  true  "Assign Brand Request"
 // @Success      200      {object}  response.SuccessResponse
 // @Failure      400      {object}  response.ErrorResponse
-// @Failure      404      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
-// @Router       /meta/ad-accounts/{id}/assign-brand [put]
+// @Router       /meta/ad-accounts/brand [put]
 func (h *Handler) AssignBrand(c *gin.Context) {
-	id := c.Param("id")
 	var req dto.AssignBrandRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.Error(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 
-	if err := h.service.AssignBrand(id, req.BrandID); err != nil {
+	if err := h.service.BulkAssignBrand(req.AdAccountIDs, req.BrandID); err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
-	response.Success(c, "Successfully assigned brand to ad account", nil)
-}
-
-// UnassignBrand godoc
-// @Summary      Unassign Brand from Ad Account
-// @Description  Remove a brand assignment from a specific Meta ad account
-// @Tags         Meta Ad Accounts
-// @Produce      json
-// @Param        id       path      string  true  "Ad Account ID"
-// @Success      200      {object}  response.SuccessResponse
-// @Failure      400      {object}  response.ErrorResponse
-// @Failure      404      {object}  response.ErrorResponse
-// @Failure      500      {object}  response.ErrorResponse
-// @Router       /meta/ad-accounts/{id}/unassign-brand [put]
-func (h *Handler) UnassignBrand(c *gin.Context) {
-	id := c.Param("id")
-
-	if err := h.service.UnassignBrand(id); err != nil {
-		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+	if req.BrandID == nil {
+		response.Success(c, "Successfully unassigned brand from ad accounts", nil)
 		return
 	}
 
-	response.Success(c, "Successfully unassigned brand from ad account", nil)
+	response.Success(c, "Successfully assigned brand to ad accounts", nil)
 }

@@ -11,7 +11,6 @@ func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
 	{
 		group.GET("", h.GetAdAccounts)
 		group.GET("/unassigned", h.GetUnassignedAdAccounts)
-		group.PUT("/:id/assign-brand", h.AssignBrand)
-		group.PUT("/:id/unassign-brand", h.UnassignBrand)
+		group.PUT("/brand", h.AssignBrand)
 	}
 }

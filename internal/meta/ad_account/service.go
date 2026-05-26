@@ -12,8 +12,7 @@ import (
 type Service interface {
 	GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error)
 	GetUnassigned(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error)
-	AssignBrand(id string, brandID uint64) error
-	UnassignBrand(id string) error
+	BulkAssignBrand(ids []string, brandID *uint64) error
 	SyncAdAccounts() (int, error)
 }
 
@@ -96,22 +95,10 @@ func (s *serviceImpl) GetUnassigned(filter AdAccountFilter) ([]dto.AdAccountResp
 	return result, meta, nil
 }
 
-func (s *serviceImpl) AssignBrand(id string, brandID uint64) error {
-	_, err := s.repo.FindByID(id)
-	if err != nil {
-		return err
-	}
+func (s *serviceImpl) BulkAssignBrand(ids []string, brandID *uint64) error {
 	// We rely on database Foreign Key constraint to validate if BrandID exists
 	// This avoids circular dependency between meta and core domains.
-	return s.repo.UpdateBrandID(id, &brandID)
-}
-
-func (s *serviceImpl) UnassignBrand(id string) error {
-	_, err := s.repo.FindByID(id)
-	if err != nil {
-		return err
-	}
-	return s.repo.UpdateBrandID(id, nil)
+	return s.repo.UpdateBrandIDBatch(ids, brandID)
 }
 
 func (s *serviceImpl) SyncAdAccounts() (int, error) {

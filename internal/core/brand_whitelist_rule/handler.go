@@ -17,6 +17,17 @@ func NewHandler(service Service) *Handler {
 	return &Handler{service}
 }
 
+// Create godoc
+// @Summary      Create whitelist rule
+// @Description  Create a new whitelist rule for a brand
+// @Tags         Brand Whitelist Rules
+// @Accept       json
+// @Produce      json
+// @Param        brand_id path      int  true  "Brand ID"
+// @Param        request  body      dto.CreateWhitelistRuleRequest  true  "Create Whitelist Rule Request"
+// @Success      201      {object}  response.SuccessResponse{data=dto.WhitelistRuleResponse}
+// @Router       /brands/{brand_id}/whitelist-rules [post]
+// @Security     BearerAuth
 func (h *Handler) Create(c *gin.Context) {
 	brandID, err := parseBrandID(c)
 	if err != nil {
@@ -39,6 +50,21 @@ func (h *Handler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"success": true, "message": "Whitelist rule created", "data": rule})
 }
 
+// FindAll godoc
+// @Summary      Get whitelist rules
+// @Description  Get a list of whitelist rules for a brand
+// @Tags         Brand Whitelist Rules
+// @Accept       json
+// @Produce      json
+// @Param        brand_id      path      int     true   "Brand ID"
+// @Param        page          query     int     false  "Page number"
+// @Param        limit         query     int     false  "Limit per page"
+// @Param        scope         query     string  false  "Scope"
+// @Param        match_type    query     string  false  "Match Type"
+// @Param        is_active     query     bool    false  "Is Active"
+// @Success      200  {object}  response.PaginationResponse{data=[]dto.WhitelistRuleResponse}
+// @Router       /brands/{brand_id}/whitelist-rules [get]
+// @Security     BearerAuth
 func (h *Handler) FindAll(c *gin.Context) {
 	brandID, err := parseBrandID(c)
 	if err != nil {
@@ -79,6 +105,17 @@ func (h *Handler) FindAll(c *gin.Context) {
 	})
 }
 
+// FindByID godoc
+// @Summary      Get whitelist rule by ID
+// @Description  Get a whitelist rule by its ID
+// @Tags         Brand Whitelist Rules
+// @Accept       json
+// @Produce      json
+// @Param        brand_id path      int  true  "Brand ID"
+// @Param        id       path      int  true  "Whitelist Rule ID"
+// @Success      200      {object}  response.SuccessResponse{data=dto.WhitelistRuleResponse}
+// @Router       /brands/{brand_id}/whitelist-rules/{id} [get]
+// @Security     BearerAuth
 func (h *Handler) FindByID(c *gin.Context) {
 	brandID, err := parseBrandID(c)
 	if err != nil {
@@ -101,6 +138,18 @@ func (h *Handler) FindByID(c *gin.Context) {
 	response.Success(c, "Successfully retrieved whitelist rule", rule)
 }
 
+// Update godoc
+// @Summary      Update whitelist rule
+// @Description  Update an existing whitelist rule
+// @Tags         Brand Whitelist Rules
+// @Accept       json
+// @Produce      json
+// @Param        brand_id path      int  true  "Brand ID"
+// @Param        id       path      int  true  "Whitelist Rule ID"
+// @Param        request  body      dto.UpdateWhitelistRuleRequest  true  "Update Whitelist Rule Request"
+// @Success      200      {object}  response.SuccessResponse{data=dto.WhitelistRuleResponse}
+// @Router       /brands/{brand_id}/whitelist-rules/{id} [put]
+// @Security     BearerAuth
 func (h *Handler) Update(c *gin.Context) {
 	brandID, err := parseBrandID(c)
 	if err != nil {
@@ -129,6 +178,17 @@ func (h *Handler) Update(c *gin.Context) {
 	response.Success(c, "Successfully updated whitelist rule", rule)
 }
 
+// Delete godoc
+// @Summary      Delete whitelist rule
+// @Description  Delete a whitelist rule
+// @Tags         Brand Whitelist Rules
+// @Accept       json
+// @Produce      json
+// @Param        brand_id path      int  true  "Brand ID"
+// @Param        id       path      int  true  "Whitelist Rule ID"
+// @Success      200      {object}  response.SuccessResponse
+// @Router       /brands/{brand_id}/whitelist-rules/{id} [delete]
+// @Security     BearerAuth
 func (h *Handler) Delete(c *gin.Context) {
 	brandID, err := parseBrandID(c)
 	if err != nil {
@@ -150,6 +210,17 @@ func (h *Handler) Delete(c *gin.Context) {
 	response.Success(c, "Successfully deleted whitelist rule", nil)
 }
 
+// CheckURL godoc
+// @Summary      Check URL against whitelist
+// @Description  Check if a URL is allowed by the whitelist rules
+// @Tags         Brand Whitelist Rules
+// @Accept       json
+// @Produce      json
+// @Param        brand_id path      int  true  "Brand ID"
+// @Param        request  body      dto.CheckURLRequest  true  "Check URL Request"
+// @Success      200      {object}  response.SuccessResponse{data=dto.CheckURLResponse}
+// @Router       /brands/{brand_id}/whitelist-rules/check-url [post]
+// @Security     BearerAuth
 func (h *Handler) CheckURL(c *gin.Context) {
 	brandID, err := parseBrandID(c)
 	if err != nil {

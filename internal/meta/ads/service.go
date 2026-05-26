@@ -70,24 +70,19 @@ func (s *serviceImpl) GetAds(filter AdFilter) ([]dto.AdResponse, *response.Pagin
 	return result, meta, nil
 }
 
-// --- DIRECT META API CALL (creatives not synced) ---
+// --- LOCAL DB READ (creatives are synced in background) ---
 
 func (s *serviceImpl) GetCreative(creativeID string, fields string) (*dto.CreativeResponse, error) {
-	params := url.Values{}
-	params.Set("fields", fields)
-
-	rawList, _, err := s.client.Get(creativeID, params, false)
+	// The fields parameter is ignored since we return the exact JSON payload
+	// that was synced to the local database in the background job.
+	payload, err := s.repo.FindCreativeRawPayload(creativeID)
 	if err != nil {
-		return nil, err
-	}
-
-	if len(rawList) == 0 {
-		return nil, nil
+		return nil, fmt.Errorf("creative not found in database: %w", err)
 	}
 
 	var item dto.CreativeResponse
-	if err := json.Unmarshal(rawList[0], &item); err != nil {
-		return nil, err
+	if err := json.Unmarshal([]byte(payload), &item); err != nil {
+		return nil, fmt.Errorf("failed to parse creative JSON from db: %w", err)
 	}
 
 	return &item, nil

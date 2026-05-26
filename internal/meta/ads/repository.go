@@ -19,6 +19,7 @@ type Repository interface {
 	Upsert(ad *MetaAd) error
 	UpsertBatch(ads []MetaAd) error
 	FindAll(filter AdFilter) ([]MetaAd, int64, error)
+	FindCreativeRawPayload(creativeID string) (string, error)
 }
 
 type repository struct {
@@ -75,4 +76,12 @@ func (r *repository) FindAll(filter AdFilter) ([]MetaAd, int64, error) {
 
 	err := query.Order("created_time DESC").Limit(filter.Limit).Offset(offset).Find(&adsList).Error
 	return adsList, total, err
+}
+
+func (r *repository) FindCreativeRawPayload(creativeID string) (string, error) {
+	var result struct {
+		RawPayload string
+	}
+	err := r.db.Table("ad_creatives").Select("raw_payload").Where("creative_id = ? AND deleted_at IS NULL", creativeID).First(&result).Error
+	return result.RawPayload, err
 }

@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/alex/ads_backend/config"
 	"github.com/alex/ads_backend/internal/meta/campaign/dto"
 	"github.com/alex/ads_backend/pkg/response"
 	"github.com/gin-gonic/gin"
@@ -19,14 +18,6 @@ func NewHandler(service Service) *Handler {
 }
 
 var _ = dto.CampaignResponse{}
-
-func (h *Handler) getAdAccountID(c *gin.Context) string {
-	id := c.Query("ad_account_id")
-	if id != "" {
-		return id
-	}
-	return config.MetaAdAccountID
-}
 
 // GetCampaigns godoc
 // @Summary      Get Campaigns
@@ -44,11 +35,7 @@ func (h *Handler) getAdAccountID(c *gin.Context) string {
 // @Failure      500            {object}  response.ErrorResponse
 // @Router       /meta/campaigns [get]
 func (h *Handler) GetCampaigns(c *gin.Context) {
-	adAccountID := h.getAdAccountID(c)
-	if adAccountID == "" {
-		response.Error(c, http.StatusBadRequest, "Ad Account ID is required", nil)
-		return
-	}
+	adAccountID := c.Query("ad_account_id")
 
 	filter := CampaignFilter{
 		AccountID: adAccountID,
