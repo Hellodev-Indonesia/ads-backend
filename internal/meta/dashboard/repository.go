@@ -28,8 +28,10 @@ type campaignDashboardScan struct {
 	Status            string          `gorm:"column:status"`
 	EffectiveStatus   string          `gorm:"column:effective_status"`
 	Objective         string          `gorm:"column:objective"`
-	DailyBudget       float64         `gorm:"column:daily_budget"`
-	LifetimeBudget    float64         `gorm:"column:lifetime_budget"`
+	DailyBudget         float64         `gorm:"column:daily_budget"`
+	LifetimeBudget      float64         `gorm:"column:lifetime_budget"`
+	AdsetDailyBudget    float64         `gorm:"column:adset_daily_budget"`
+	AdsetLifetimeBudget float64         `gorm:"column:adset_lifetime_budget"`
 	StopTime          *time.Time      `gorm:"column:stop_time"`
 	Spend             *float64        `gorm:"column:spend"`
 	Impressions       *int64          `gorm:"column:impressions"`
@@ -143,7 +145,9 @@ SELECT
   c.daily_budget,
   c.lifetime_budget,
   c.stop_time,
-  a.attribution_spec
+  a.attribution_spec,
+  COALESCE(s_sum.sum_daily, 0) AS adset_daily_budget,
+  COALESCE(s_sum.sum_lifetime, 0) AS adset_lifetime_budget
 FROM meta_campaigns c
 LEFT JOIN (
   SELECT a1.campaign_id, a1.attribution_spec
@@ -155,6 +159,11 @@ LEFT JOIN (
   ) first_ad ON a1.campaign_id = first_ad.campaign_id
            AND a1.id           = first_ad.min_id
 ) a ON c.id = a.campaign_id
+LEFT JOIN (
+  SELECT campaign_id, SUM(daily_budget) as sum_daily, SUM(lifetime_budget) as sum_lifetime
+  FROM meta_ad_sets
+  GROUP BY campaign_id
+) s_sum ON c.id = s_sum.campaign_id
 ` + where + ` ORDER BY c.created_time DESC LIMIT ? OFFSET ?`
 
 	queryArgs := append(args, filter.Limit, offset)

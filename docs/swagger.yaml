@@ -117,10 +117,14 @@ definitions:
     type: object
   dto.AssignBrandRequest:
     properties:
+      ad_account_ids:
+        items:
+          type: string
+        type: array
       brand_id:
         type: integer
     required:
-    - brand_id
+    - ad_account_ids
     type: object
   dto.AssignPermissionRequest:
     properties:
@@ -1517,17 +1521,13 @@ paths:
       summary: Get Meta Ad Accounts
       tags:
       - Meta Ad Accounts
-  /meta/ad-accounts/{id}/assign-brand:
+  /meta/ad-accounts/brand:
     put:
       consumes:
       - application/json
-      description: Assign a brand to a specific Meta ad account
+      description: Assign a brand to multiple Meta ad accounts (or unassign if brand_id
+        is null)
       parameters:
-      - description: Ad Account ID
-        in: path
-        name: id
-        required: true
-        type: string
       - description: Assign Brand Request
         in: body
         name: request
@@ -1545,46 +1545,11 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Assign Brand to Ad Account
-      tags:
-      - Meta Ad Accounts
-  /meta/ad-accounts/{id}/unassign-brand:
-    put:
-      description: Remove a brand assignment from a specific Meta ad account
-      parameters:
-      - description: Ad Account ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      summary: Unassign Brand from Ad Account
+      summary: Assign or Unassign Brand to Ad Accounts
       tags:
       - Meta Ad Accounts
   /meta/ad-accounts/unassigned:
@@ -1805,7 +1770,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieve details of a specific ad creative (direct Meta API call)
+      description: Retrieve details of a specific ad creative from the local database
+        (synced from Meta)
       parameters:
       - description: Creative ID
         in: path

@@ -1224,6 +1224,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/ad-accounts/brand": {
+            "put": {
+                "description": "Assign a brand to multiple Meta ad accounts (or unassign if brand_id is null)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Ad Accounts"
+                ],
+                "summary": "Assign or Unassign Brand to Ad Accounts",
+                "parameters": [
+                    {
+                        "description": "Assign Brand Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AssignBrandRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/ad-accounts/unassigned": {
             "get": {
                 "description": "Retrieve all ad accounts not assigned to any brand",
@@ -1284,112 +1330,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/meta/ad-accounts/{id}/assign-brand": {
-            "put": {
-                "description": "Assign a brand to a specific Meta ad account",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Meta Ad Accounts"
-                ],
-                "summary": "Assign Brand to Ad Account",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Ad Account ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Assign Brand Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.AssignBrandRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/meta/ad-accounts/{id}/unassign-brand": {
-            "put": {
-                "description": "Remove a brand assignment from a specific Meta ad account",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Meta Ad Accounts"
-                ],
-                "summary": "Unassign Brand from Ad Account",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Ad Account ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }
@@ -1672,7 +1612,7 @@ const docTemplate = `{
         },
         "/meta/creatives/{id}": {
             "get": {
-                "description": "Retrieve details of a specific ad creative (direct Meta API call)",
+                "description": "Retrieve details of a specific ad creative from the local database (synced from Meta)",
                 "consumes": [
                     "application/json"
                 ],
@@ -3307,9 +3247,15 @@ const docTemplate = `{
         "dto.AssignBrandRequest": {
             "type": "object",
             "required": [
-                "brand_id"
+                "ad_account_ids"
             ],
             "properties": {
+                "ad_account_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "brand_id": {
                     "type": "integer"
                 }

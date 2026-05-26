@@ -3,6 +3,7 @@ package dashboard
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"strconv"
 
 	"github.com/alex/ads_backend/internal/meta/dashboard/dto"
@@ -12,7 +13,7 @@ import (
 // Action type keys used by Meta Graph API
 const (
 	actionTotalMessaging = "onsite_conversion.total_messaging_connection"
-	actionNewMessaging   = "onsite_conversion.new_messaging_connection"
+	actionNewMessaging   = "onsite_conversion.messaging_first_reply"
 	actionPurchase       = "purchase"
 )
 
@@ -75,13 +76,20 @@ func (s *serviceImpl) GetCampaignDashboard(filter DashboardFilter) ([]dto.Campai
 }
 
 func mapScanToDTO(r campaignDashboardScan) dto.CampaignDashboardRow {
+	var budgetStr string
+	if r.DailyBudget == 0 && r.LifetimeBudget == 0 {
+		budgetStr = resolveBudget(r.AdsetDailyBudget, r.AdsetLifetimeBudget)
+	} else {
+		budgetStr = resolveBudget(r.DailyBudget, r.LifetimeBudget)
+	}
+
 	row := dto.CampaignDashboardRow{
 		CampaignID:      r.CampaignID,
 		CampaignName:    r.CampaignName,
 		Status:          r.Status,
 		EffectiveStatus: r.EffectiveStatus,
 		Objective:       r.Objective,
-		Budget:          resolveBudget(r.DailyBudget, r.LifetimeBudget),
+		Budget:          budgetStr,
 		AmountSpent:     formatNullFloat(r.Spend),
 		Impressions:     formatNullInt(r.Impressions),
 		Reach:           formatNullInt(r.Reach),
@@ -103,15 +111,41 @@ func mapScanToDTO(r campaignDashboardScan) dto.CampaignDashboardRow {
 	row.NewMessagingConnections = findAction(actions, actionNewMessaging)
 	row.Purchases = findAction(actions, actionPurchase)
 
-	// Results = first action value (primary objective metric)
+	var primaryActionType string
 	if len(actions) > 0 {
 		row.Results = actions[0].Value
+		primaryActionType = actions[0].ActionType
 	}
 
-	// Cost per result = first cost_per_action_type value
+	if val := findAction(actions, actionNewMessaging); val != "0" {
+		row.Results = val
+		primaryActionType = actionNewMessaging
+	} else if val := findAction(actions, actionTotalMessaging); val != "0" {
+		row.Results = val
+		primaryActionType = actionTotalMessaging
+	} else if val := findAction(actions, actionPurchase); val != "0" {
+		row.Results = val
+		primaryActionType = actionPurchase
+	}
+
 	costs := parseActions(r.CostPerActionType)
-	if len(costs) > 0 {
+	if primaryActionType != "" {
+		row.CostPerResult = findAction(costs, primaryActionType)
+	} else if len(costs) > 0 {
 		row.CostPerResult = costs[0].Value
+	}
+
+	if row.CostPerResult == "" || row.CostPerResult == "0" {
+		spent, _ := strconv.ParseFloat(row.AmountSpent, 64)
+		results, _ := strconv.ParseFloat(row.Results, 64)
+		if results > 0 {
+			row.CostPerResult = formatFloat(math.Ceil(spent / results))
+		} else {
+			row.CostPerResult = "0"
+		}
+	} else {
+		val, _ := strconv.ParseFloat(row.CostPerResult, 64)
+		row.CostPerResult = formatFloat(math.Ceil(val))
 	}
 
 	// Attribution spec from adset
@@ -239,13 +273,41 @@ func mapAdSetScanToDTO(r adSetDashboardScan) dto.AdSetDashboardRow {
 	row.NewMessagingConnections = findAction(actions, actionNewMessaging)
 	row.Purchases = findAction(actions, actionPurchase)
 
+	var primaryActionType string
 	if len(actions) > 0 {
 		row.Results = actions[0].Value
+		primaryActionType = actions[0].ActionType
+	}
+
+	if val := findAction(actions, actionNewMessaging); val != "0" {
+		row.Results = val
+		primaryActionType = actionNewMessaging
+	} else if val := findAction(actions, actionTotalMessaging); val != "0" {
+		row.Results = val
+		primaryActionType = actionTotalMessaging
+	} else if val := findAction(actions, actionPurchase); val != "0" {
+		row.Results = val
+		primaryActionType = actionPurchase
 	}
 
 	costs := parseActions(r.CostPerActionType)
-	if len(costs) > 0 {
+	if primaryActionType != "" {
+		row.CostPerResult = findAction(costs, primaryActionType)
+	} else if len(costs) > 0 {
 		row.CostPerResult = costs[0].Value
+	}
+
+	if row.CostPerResult == "" || row.CostPerResult == "0" {
+		spent, _ := strconv.ParseFloat(row.AmountSpent, 64)
+		results, _ := strconv.ParseFloat(row.Results, 64)
+		if results > 0 {
+			row.CostPerResult = formatFloat(math.Ceil(spent / results))
+		} else {
+			row.CostPerResult = "0"
+		}
+	} else {
+		val, _ := strconv.ParseFloat(row.CostPerResult, 64)
+		row.CostPerResult = formatFloat(math.Ceil(val))
 	}
 
 	if r.AttributionSpec != nil {
@@ -325,13 +387,41 @@ func mapAdScanToDTO(r adDashboardScan) dto.AdDashboardRow {
 	row.NewMessagingConnections = findAction(actions, actionNewMessaging)
 	row.Purchases = findAction(actions, actionPurchase)
 
+	var primaryActionType string
 	if len(actions) > 0 {
 		row.Results = actions[0].Value
+		primaryActionType = actions[0].ActionType
+	}
+
+	if val := findAction(actions, actionNewMessaging); val != "0" {
+		row.Results = val
+		primaryActionType = actionNewMessaging
+	} else if val := findAction(actions, actionTotalMessaging); val != "0" {
+		row.Results = val
+		primaryActionType = actionTotalMessaging
+	} else if val := findAction(actions, actionPurchase); val != "0" {
+		row.Results = val
+		primaryActionType = actionPurchase
 	}
 
 	costs := parseActions(r.CostPerActionType)
-	if len(costs) > 0 {
+	if primaryActionType != "" {
+		row.CostPerResult = findAction(costs, primaryActionType)
+	} else if len(costs) > 0 {
 		row.CostPerResult = costs[0].Value
+	}
+
+	if row.CostPerResult == "" || row.CostPerResult == "0" {
+		spent, _ := strconv.ParseFloat(row.AmountSpent, 64)
+		results, _ := strconv.ParseFloat(row.Results, 64)
+		if results > 0 {
+			row.CostPerResult = formatFloat(math.Ceil(spent / results))
+		} else {
+			row.CostPerResult = "0"
+		}
+	} else {
+		val, _ := strconv.ParseFloat(row.CostPerResult, 64)
+		row.CostPerResult = formatFloat(math.Ceil(val))
 	}
 
 	return row
