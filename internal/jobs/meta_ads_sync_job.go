@@ -290,7 +290,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 		if req.DateStart == "" && req.DateStop == "" && req.DatePreset == "" {
 			req.DatePreset = "last_30d"
 		}
-		req.TimeIncrement = 1
+		req.TimeIncrement = "all_days"
 	}
 
 	if (req.Level == "" || req.Level == "campaign") && !hasError {

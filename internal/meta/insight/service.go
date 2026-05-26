@@ -108,10 +108,10 @@ func (s *serviceImpl) syncInsightsInternal(req dto.SyncInsightRequest, level str
 
 	// Default to daily breakdown unless specified
 	timeInc := req.TimeIncrement
-	if timeInc <= 0 {
-		timeInc = 1
+	if timeInc == "" {
+		timeInc = "1"
 	}
-	params.Set("time_increment", strconv.Itoa(timeInc))
+	params.Set("time_increment", timeInc)
 
 	rawList, _, err := s.client.Get(req.AdAccountID+"/insights", params, true)
 	if err != nil {
@@ -124,6 +124,10 @@ func (s *serviceImpl) syncInsightsInternal(req dto.SyncInsightRequest, level str
 		if err := json.Unmarshal(raw, &item); err != nil {
 			log.Printf("Warning: skipping insight unmarshal error: %v", err)
 			continue
+		}
+		if timeInc == "all_days" {
+			item.DateStart = "2000-01-01"
+			item.DateStop = "2099-12-31"
 		}
 		models = append(models, mapDTOToModel(item, level))
 	}

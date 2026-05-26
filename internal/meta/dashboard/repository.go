@@ -183,18 +183,9 @@ LEFT JOIN (
 		campaignIDs = append(campaignIDs, r.CampaignID)
 	}
 
-	// Fetch insights
-	insightWhere := "level = 'campaign' AND campaign_id IN ?"
+	// Always fetch lifetime deduplicated metrics (magic date)
+	insightWhere := "level = 'campaign' AND campaign_id IN ? AND date_start = '2000-01-01'"
 	insightArgs := []interface{}{campaignIDs}
-
-	if filter.DateStart != "" {
-		insightWhere += " AND date_start >= ?"
-		insightArgs = append(insightArgs, filter.DateStart)
-	}
-	if filter.DateStop != "" {
-		insightWhere += " AND date_stop <= ?"
-		insightArgs = append(insightArgs, filter.DateStop)
-	}
 
 	type rawInsight struct {
 		CampaignID        string
@@ -376,17 +367,9 @@ JOIN meta_campaigns c ON s.campaign_id = c.id
 		adSetIDs = append(adSetIDs, r.AdSetID)
 	}
 
-	insightWhere := "level = 'ad' AND adset_id IN ?"
+	// Always fetch lifetime deduplicated metrics (magic date)
+	insightWhere := "level = 'ad' AND adset_id IN ? AND date_start = '2000-01-01'"
 	insightArgs := []interface{}{adSetIDs}
-
-	if filter.DateStart != "" {
-		insightWhere += " AND date_start >= ?"
-		insightArgs = append(insightArgs, filter.DateStart)
-	}
-	if filter.DateStop != "" {
-		insightWhere += " AND date_stop <= ?"
-		insightArgs = append(insightArgs, filter.DateStop)
-	}
 
 	type rawInsight struct {
 		AdSetID           string `gorm:"column:adset_id"`
@@ -556,17 +539,9 @@ JOIN meta_campaigns c ON a.campaign_id = c.id
 		adIDs = append(adIDs, r.AdID)
 	}
 
-	insightWhere := "level = 'ad' AND ad_id IN ?"
+	// Always fetch lifetime deduplicated metrics (magic date)
+	insightWhere := "level = 'ad' AND ad_id IN ? AND date_start = '2000-01-01'"
 	insightArgs := []interface{}{adIDs}
-
-	if filter.DateStart != "" {
-		insightWhere += " AND date_start >= ?"
-		insightArgs = append(insightArgs, filter.DateStart)
-	}
-	if filter.DateStop != "" {
-		insightWhere += " AND date_stop <= ?"
-		insightArgs = append(insightArgs, filter.DateStop)
-	}
 
 	type rawInsight struct {
 		AdID              string `gorm:"column:ad_id"`
