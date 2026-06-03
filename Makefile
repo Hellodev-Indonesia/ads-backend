@@ -37,3 +37,20 @@ migrate-fresh: ## Drop all tables and run all migrations from scratch
 build: ## Build the application binaries
 	go build -o bin/api cmd/api/main.go
 	go build -o bin/seed cmd/seed/main.go
+
+mock: ## Generate mocks using mockery
+	go run github.com/vektra/mockery/v2@latest --all --dir=internal --inpackage
+
+TEST_PKGS = $(shell go list -f '{{if or (len .TestGoFiles) (len .XTestGoFiles)}}{{.ImportPath}}{{end}}' ./...)
+
+test: ## Run all tests
+	@if [ -n "$(TEST_PKGS)" ]; then go test -v $(TEST_PKGS); else echo "No tests found"; fi
+
+test-unit: ## Run only unit tests
+	@if [ -n "$(TEST_PKGS)" ]; then go test -v -short $(TEST_PKGS); else echo "No tests found"; fi
+
+test-integration: ## Run only integration tests
+	@if [ -n "$(TEST_PKGS)" ]; then go test -v -run Integration $(TEST_PKGS); else echo "No tests found"; fi
+
+test-coverage: ## Run tests and show coverage
+	@if [ -n "$(TEST_PKGS)" ]; then go test -v -coverprofile=coverage.out $(TEST_PKGS); go tool cover -html=coverage.out; else echo "No tests found"; fi
