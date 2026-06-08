@@ -9,10 +9,11 @@ import (
 
 func main() {
 	config.LoadEnv()
-	
+	config.InitMeta()
+
 	redisHost := config.GetEnv("REDIS_HOST", "localhost")
 	redisPort := config.GetEnv("REDIS_PORT", "6379")
-	
+
 	srv := asynq.NewServer(
 		asynq.RedisClientOpt{Addr: redisHost + ":" + redisPort},
 		asynq.Config{

@@ -105,7 +105,9 @@ func (h *Handler) Delete(c *gin.Context) {
 // @Security     BearerAuth
 // @Param        name     query     string  false  "Filter by name"
 // @Param        email    query     string  false  "Filter by email"
-// @Success      200      {object}  response.SuccessResponse{data=[]dto.UserResponse}
+// @Param        page     query     int     false  "Page number" default(1)
+// @Param        limit    query     int     false  "Items per page" default(25)
+// @Success      200      {object}  response.PaginationResponse{data=[]dto.UserResponse}
 // @Router       /users [get]
 func (h *Handler) FindAll(c *gin.Context) {
 	var filter dto.UserFilter
@@ -114,12 +116,12 @@ func (h *Handler) FindAll(c *gin.Context) {
 		return
 	}
 
-	users, err := h.service.FindAll(filter)
+	users, meta, err := h.service.FindAll(filter)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
-	response.Success(c, "Users retrieved successfully", users)
+	response.SuccessWithPagination(c, "Users retrieved successfully", users, meta)
 }
 
 // FindByID godoc

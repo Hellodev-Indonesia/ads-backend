@@ -17,3 +17,9 @@ type RoleResponse struct {
 type AssignPermissionRequest struct {
 	PermissionIDs []uint `json:"permission_ids" binding:"required"`
 }
+
+type RoleFilter struct {
+	Name  string `form:"name"`
+	Page  int    `form:"page"`
+	Limit int    `form:"limit"`
+}

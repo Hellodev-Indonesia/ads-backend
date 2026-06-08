@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/alex/ads_backend/internal/core/role"
 	"github.com/alex/ads_backend/internal/core/user/dto"
+	"github.com/alex/ads_backend/pkg/response"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -10,7 +11,7 @@ type Service interface {
 	Create(req dto.UserRequest) (*User, error)
 	Update(id uint, req dto.UserRequest) (*User, error)
 	Delete(id uint) error
-	FindAll(filter dto.UserFilter) ([]dto.UserResponse, error)
+	FindAll(filter dto.UserFilter) ([]dto.UserResponse, *response.PaginationMeta, error)
 	FindByID(id uint) (*dto.UserResponse, error)
 }
 
@@ -25,7 +26,7 @@ func NewService(repo Repository, roleRepo role.Repository) Service {
 
 func (s *service) Create(req dto.UserRequest) (*User, error) {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	
+
 	roles, err := s.roleRepo.FindByIDs(req.RoleIDs)
 	if err != nil {
 		return nil, err
@@ -54,7 +55,7 @@ func (s *service) Update(id uint, req dto.UserRequest) (*User, error) {
 	if req.Email != "" {
 		user.Email = req.Email
 	}
-	
+
 	if len(req.RoleIDs) > 0 {
 		roles, err := s.roleRepo.FindByIDs(req.RoleIDs)
 		if err != nil {
@@ -71,10 +72,17 @@ func (s *service) Delete(id uint) error {
 	return s.repo.Delete(id)
 }
 
-func (s *service) FindAll(filter dto.UserFilter) ([]dto.UserResponse, error) {
-	users, err := s.repo.FindAll(filter)
+func (s *service) FindAll(filter dto.UserFilter) ([]dto.UserResponse, *response.PaginationMeta, error) {
+	if filter.Limit <= 0 {
+		filter.Limit = 25
+	}
+	if filter.Page <= 0 {
+		filter.Page = 1
+	}
+
+	users, total, err := s.repo.FindAll(filter)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var resp []dto.UserResponse
@@ -91,7 +99,19 @@ func (s *service) FindAll(filter dto.UserFilter) ([]dto.UserResponse, error) {
 			CreatedAt: u.CreatedAt,
 		})
 	}
-	return resp, nil
+
+	lastPage := int(total) / filter.Limit
+	if int(total)%filter.Limit > 0 {
+		lastPage++
+	}
+
+	meta := &response.PaginationMeta{
+		Page:     filter.Page,
+		Limit:    filter.Limit,
+		Total:    int(total),
+		LastPage: lastPage,
+	}
+	return resp, meta, nil
 }
 
 func (s *service) FindByID(id uint) (*dto.UserResponse, error) {

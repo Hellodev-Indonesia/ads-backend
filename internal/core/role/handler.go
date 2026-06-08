@@ -24,15 +24,24 @@ func NewHandler(service Service) *Handler {
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Success      200  {object}  response.SuccessResponse{data=[]dto.RoleResponse}
+// @Param        name   query     string  false  "Filter by name"
+// @Param        page   query     int     false  "Page number" default(1)
+// @Param        limit  query     int     false  "Items per page" default(25)
+// @Success      200    {object}  response.PaginationResponse{data=[]dto.RoleResponse}
 // @Router       /roles [get]
 func (h *Handler) FindAll(c *gin.Context) {
-	roles, err := h.service.FindAll()
+	var filter dto.RoleFilter
+	if err := c.ShouldBindQuery(&filter); err != nil {
+		response.Error(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+
+	roles, meta, err := h.service.FindAll(filter)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
-	response.Success(c, "Roles retrieved successfully", roles)
+	response.SuccessWithPagination(c, "Roles retrieved successfully", roles, meta)
 }
 
 // FindByID godoc

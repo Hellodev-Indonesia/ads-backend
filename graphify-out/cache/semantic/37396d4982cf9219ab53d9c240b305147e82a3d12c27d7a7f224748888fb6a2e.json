@@ -1,0 +1,1 @@
+{"nodes": [{"id": "insight_model_metainsight", "label": "MetaInsight Model", "file_type": "code", "source_file": "internal/meta/insight/model.go", "source_location": "8:40", "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}

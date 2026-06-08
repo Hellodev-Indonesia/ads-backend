@@ -13,6 +13,7 @@ type Response struct {
 	Data    interface{} `json:"data,omitempty"`
 	Errors  interface{} `json:"errors,omitempty"`
 	Meta    *Meta       `json:"meta,omitempty"`
+	Paging  *MetaPaging `json:"paging,omitempty"`
 }
 
 // SuccessResponse is used for Swagger documentation only
@@ -44,6 +45,23 @@ type Meta struct {
 	LastPage int   `json:"last_page"`
 }
 
+// PaginationMeta is used for DB-backed paginated endpoints
+type PaginationMeta struct {
+	Page     int `json:"page"`
+	Limit    int `json:"limit"`
+	Total    int `json:"total"`
+	LastPage int `json:"last_page"`
+}
+
+type MetaPaging struct {
+	Cursors struct {
+		Before string `json:"before"`
+		After  string `json:"after"`
+	} `json:"cursors"`
+	HasPrevious bool `json:"has_previous"`
+	HasNext     bool `json:"has_next"`
+}
+
 func Success(c *gin.Context, message string, data interface{}) {
 	if data == nil {
 		data = gin.H{}
@@ -69,6 +87,40 @@ func SuccessWithMeta(c *gin.Context, message string, data interface{}, meta Meta
 		Message: message,
 		Data:    data,
 		Meta:    &meta,
+	})
+}
+
+func SuccessWithPaging(c *gin.Context, message string, data interface{}, paging *MetaPaging) {
+	if data == nil {
+		data = []interface{}{}
+	} else {
+		val := reflect.ValueOf(data)
+		if val.Kind() == reflect.Slice && val.IsNil() {
+			data = []interface{}{}
+		}
+	}
+	c.JSON(http.StatusOK, Response{
+		Success: true,
+		Message: message,
+		Data:    data,
+		Paging:  paging,
+	})
+}
+
+func SuccessWithPagination(c *gin.Context, message string, data interface{}, meta *PaginationMeta) {
+	if data == nil {
+		data = []interface{}{}
+	} else {
+		val := reflect.ValueOf(data)
+		if val.Kind() == reflect.Slice && val.IsNil() {
+			data = []interface{}{}
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": message,
+		"data":    data,
+		"meta":    meta,
 	})
 }
 

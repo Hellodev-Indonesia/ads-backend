@@ -27,7 +27,7 @@ services:
       - "8000:8000"
     command: centrifugo --config=config.json
     volumes:
-      - ./config.json:/centrifugo/config.json
+      - ./centrifugo/config.json:/centrifugo/config.json
 
 volumes:
   mysql_data:

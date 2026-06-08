@@ -36,7 +36,7 @@ func GenerateToken(userID uint, email string, roles, permissions []string) (stri
 
 func GenerateCentrifugoToken(userID string) (string, error) {
 	secret := config.GetEnv("CENTRIFUGO_TOKEN_SECRET", "centrifugo_secret")
-	
+
 	claims := jwt.MapClaims{
 		"sub": userID,
 		"exp": time.Now().Add(24 * time.Hour).Unix(),
@@ -48,7 +48,7 @@ func GenerateCentrifugoToken(userID string) (string, error) {
 
 func ValidateToken(tokenString string) (*JWTClaims, error) {
 	secret := config.GetEnv("JWT_SECRET", "secret")
-	
+
 	token, err := jwt.ParseWithClaims(tokenString, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
 	})

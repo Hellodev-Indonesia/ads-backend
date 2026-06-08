@@ -12,6 +12,8 @@ type UserRequest struct {
 type UserFilter struct {
 	Name  string `form:"name"`
 	Email string `form:"email"`
+	Page  int    `form:"page"`
+	Limit int    `form:"limit"`
 }
 
 type UserResponse struct {

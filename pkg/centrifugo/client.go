@@ -1,0 +1,59 @@
+package centrifugo
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"time"
+)
+
+type Client struct {
+	url    string
+	apiKey string
+	http   *http.Client
+}
+
+func NewClient(url, apiKey string) *Client {
+	return &Client{
+		url:    url,
+		apiKey: apiKey,
+		http:   &http.Client{Timeout: 5 * time.Second},
+	}
+}
+
+func (c *Client) Publish(ctx context.Context, channel string, data any) error {
+	payload := map[string]any{
+		"method": "publish",
+		"params": map[string]any{
+			"channel": channel,
+			"data":    data,
+		},
+	}
+
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.url+"/api", bytes.NewReader(body))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-API-Key", c.apiKey)
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("centrifugo returned status %d", resp.StatusCode)
+	}
+
+	return nil
+}

@@ -1,0 +1,99 @@
+package ads
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/alex/ads_backend/internal/meta/ads/dto"
+	"github.com/alex/ads_backend/pkg/response"
+	"github.com/gin-gonic/gin"
+)
+
+type Handler struct {
+	service Service
+}
+
+func NewHandler(service Service) *Handler {
+	return &Handler{service}
+}
+
+var _ = dto.AdResponse{}
+var _ = dto.CreativeResponse{}
+
+// GetAds godoc
+// @Summary      Get Ads
+// @Description  Retrieve ads from local database (synced from Meta)
+// @Tags         Meta Ads
+// @Accept       json
+// @Produce      json
+// @Param        campaign_id    query     string  false  "Filter by campaign ID"
+// @Param        adset_id       query     string  false  "Filter by adset ID"
+// @Param        status         query     string  false  "Filter by status (ACTIVE, PAUSED, etc)"
+// @Param        search         query     string  false  "Search by ad name"
+// @Param        page           query     int     false  "Page number" default(1)
+// @Param        limit          query     int     false  "Items per page" default(25)
+// @Success      200            {object}  response.Response{data=[]dto.AdResponse,meta=response.PaginationMeta}
+// @Failure      400            {object}  response.ErrorResponse
+// @Failure      500            {object}  response.ErrorResponse
+// @Router       /meta/ads [get]
+func (h *Handler) GetAds(c *gin.Context) {
+	filter := AdFilter{
+		CampaignID: c.Query("campaign_id"),
+		AdSetID:    c.Query("adset_id"),
+		Status:     c.Query("status"),
+		Search:     c.Query("search"),
+		Page:       parseQueryInt(c, "page", 1),
+		Limit:      parseQueryInt(c, "limit", 25),
+	}
+
+	resp, meta, err := h.service.GetAds(filter)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	response.SuccessWithPagination(c, "Successfully retrieved ads", resp, meta)
+}
+
+// GetCreative godoc
+// @Summary      Get Ad Creative
+// @Description  Retrieve details of a specific ad creative from the local database (synced from Meta)
+// @Tags         Meta Ads
+// @Accept       json
+// @Produce      json
+// @Param        id       path      string  true   "Creative ID"
+// @Param        fields   query     string  false  "Custom fields comma-separated preset"
+// @Success      200      {object}  response.Response{data=dto.CreativeResponse}
+// @Failure      400      {object}  response.ErrorResponse
+// @Failure      500      {object}  response.ErrorResponse
+// @Router       /meta/creatives/{id} [get]
+func (h *Handler) GetCreative(c *gin.Context) {
+	creativeID := c.Param("id")
+	if creativeID == "" {
+		response.Error(c, http.StatusBadRequest, "Creative ID is required", nil)
+		return
+	}
+
+	fields := c.Query("fields")
+	if fields == "" {
+		fields = DefaultCreativeFields
+	}
+
+	resp, err := h.service.GetCreative(creativeID, fields)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+	response.Success(c, "Successfully retrieved ad creative", resp)
+}
+
+func parseQueryInt(c *gin.Context, key string, defaultVal int) int {
+	val := c.Query(key)
+	if val == "" {
+		return defaultVal
+	}
+	v, err := strconv.Atoi(val)
+	if err != nil || v <= 0 {
+		return defaultVal
+	}
+	return v
+}

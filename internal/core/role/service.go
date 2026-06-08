@@ -4,13 +4,14 @@ import (
 	"github.com/alex/ads_backend/internal/core/permission"
 	permDto "github.com/alex/ads_backend/internal/core/permission/dto"
 	"github.com/alex/ads_backend/internal/core/role/dto"
+	"github.com/alex/ads_backend/pkg/response"
 )
 
 type Service interface {
 	Create(req dto.RoleRequest) (*Role, error)
 	Update(id uint, req dto.RoleRequest) (*Role, error)
 	Delete(id uint) error
-	FindAll() ([]dto.RoleResponse, error)
+	FindAll(filter dto.RoleFilter) ([]dto.RoleResponse, *response.PaginationMeta, error)
 	FindByID(id uint) (*dto.RoleResponse, error)
 	AssignPermissions(roleID uint, req dto.AssignPermissionRequest) error
 }
@@ -50,10 +51,17 @@ func (s *service) Delete(id uint) error {
 	return s.repo.Delete(id)
 }
 
-func (s *service) FindAll() ([]dto.RoleResponse, error) {
-	roles, err := s.repo.FindAll()
+func (s *service) FindAll(filter dto.RoleFilter) ([]dto.RoleResponse, *response.PaginationMeta, error) {
+	if filter.Limit <= 0 {
+		filter.Limit = 25
+	}
+	if filter.Page <= 0 {
+		filter.Page = 1
+	}
+
+	roles, total, err := s.repo.FindAll(filter)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var resp []dto.RoleResponse
@@ -73,7 +81,19 @@ func (s *service) FindAll() ([]dto.RoleResponse, error) {
 			Permissions: perms,
 		})
 	}
-	return resp, nil
+
+	lastPage := int(total) / filter.Limit
+	if int(total)%filter.Limit > 0 {
+		lastPage++
+	}
+
+	meta := &response.PaginationMeta{
+		Page:     filter.Page,
+		Limit:    filter.Limit,
+		Total:    int(total),
+		LastPage: lastPage,
+	}
+	return resp, meta, nil
 }
 
 func (s *service) FindByID(id uint) (*dto.RoleResponse, error) {

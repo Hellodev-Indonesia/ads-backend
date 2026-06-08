@@ -10,7 +10,7 @@ type Repository interface {
 	Update(user *User) error
 	Delete(id uint) error
 	FindByID(id uint) (*User, error)
-	FindAll(filter dto.UserFilter) ([]User, error)
+	FindAll(filter dto.UserFilter) ([]User, int64, error)
 	FindByEmail(email string) (*User, error)
 }
 
@@ -40,10 +40,26 @@ func (r *repository) FindByID(id uint) (*User, error) {
 	return &user, err
 }
 
-func (r *repository) FindAll(filter dto.UserFilter) ([]User, error) {
+func (r *repository) FindAll(filter dto.UserFilter) ([]User, int64, error) {
 	var users []User
-	err := r.db.Scopes(FilterUser(filter)).Preload("Roles").Find(&users).Error
-	return users, err
+	var total int64
+
+	q := r.db.Model(&User{}).Scopes(FilterUser(filter))
+	if err := q.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	limit := filter.Limit
+	page := filter.Page
+	if limit <= 0 {
+		limit = 25
+	}
+	if page <= 0 {
+		page = 1
+	}
+
+	err := q.Preload("Roles").Limit(limit).Offset((page - 1) * limit).Find(&users).Error
+	return users, total, err
 }
 
 func (r *repository) FindByEmail(email string) (*User, error) {
