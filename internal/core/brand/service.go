@@ -102,12 +102,13 @@ func (s *service) FindAll(filter dto.BrandFilter) ([]dto.BrandResponse, int64, e
 
 func toBrandResponse(b Brand) dto.BrandResponse {
 	return dto.BrandResponse{
-		ID:          b.ID,
-		Name:        b.Name,
-		Photo:       b.Photo,
-		Description: b.Description,
-		IsActive:    b.IsActive,
-		CreatedAt:   b.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt:   b.UpdatedAt.Format("2006-01-02 15:04:05"),
+		ID:             b.ID,
+		Name:           b.Name,
+		Photo:          b.Photo,
+		Description:    b.Description,
+		IsActive:       b.IsActive,
+		AdAccountCount: b.AdAccountCount,
+		CreatedAt:      b.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:      b.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 }

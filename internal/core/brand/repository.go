@@ -47,7 +47,7 @@ func (r *repository) Delete(id uint64) error {
 
 func (r *repository) FindByID(id uint64) (*Brand, error) {
 	var brand Brand
-	err := r.db.First(&brand, id).Error
+	err := r.db.Select("brands.*, (SELECT count(id) FROM meta_ad_accounts WHERE brand_id = brands.id) as ad_account_count").First(&brand, id).Error
 	return &brand, err
 }
 
@@ -69,6 +69,6 @@ func (r *repository) FindAll(filter dto.BrandFilter) ([]Brand, int64, error) {
 		page = 1
 	}
 
-	err := q.Limit(limit).Offset((page - 1) * limit).Order("created_at desc").Find(&brands).Error
+	err := q.Select("brands.*, (SELECT count(id) FROM meta_ad_accounts WHERE brand_id = brands.id) as ad_account_count").Limit(limit).Offset((page - 1) * limit).Order("created_at desc").Find(&brands).Error
 	return brands, total, err
 }

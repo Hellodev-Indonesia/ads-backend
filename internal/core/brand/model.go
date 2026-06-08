@@ -13,8 +13,9 @@ type Brand struct {
 	Description *string        `type:"text" json:"description,omitempty"`
 	IsActive    bool           `gorm:"not null;default:true" json:"is_active"`
 	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
+	UpdatedAt      time.Time      `json:"updated_at"`
+	DeletedAt      gorm.DeletedAt `gorm:"index" json:"-"`
+	AdAccountCount int64          `gorm:"->;-:migration" json:"ad_account_count"`
 }
 
 func (Brand) TableName() string {

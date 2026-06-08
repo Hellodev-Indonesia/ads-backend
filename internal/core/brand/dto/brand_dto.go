@@ -19,9 +19,10 @@ type BrandResponse struct {
 	Name        string  `json:"name"`
 	Photo       *string `json:"photo,omitempty"`
 	Description *string `json:"description,omitempty"`
-	IsActive    bool    `json:"is_active"`
-	CreatedAt   string  `json:"created_at"`
-	UpdatedAt   string  `json:"updated_at"`
+	IsActive       bool    `json:"is_active"`
+	AdAccountCount int64   `json:"ad_account_count"`
+	CreatedAt      string  `json:"created_at"`
+	UpdatedAt      string  `json:"updated_at"`
 }
 
 type BrandListResponse struct {
