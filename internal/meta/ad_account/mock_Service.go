@@ -32,6 +32,24 @@ func (_m *MockService) BulkAssignBrand(ids []string, brandID *uint64) error {
 	return r0
 }
 
+// DisconnectBrand provides a mock function with given fields: id
+func (_m *MockService) DisconnectBrand(id string) error {
+	ret := _m.Called(id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DisconnectBrand")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAdAccounts provides a mock function with given fields: filter
 func (_m *MockService) GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error) {
 	ret := _m.Called(filter)

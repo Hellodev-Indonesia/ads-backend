@@ -13,5 +13,6 @@ func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
 		group.GET("/businesses", h.GetBusinessOptions)
 		group.GET("/unassigned", h.GetUnassignedAdAccounts)
 		group.PUT("/brand", h.AssignBrand)
+		group.PUT("/:id/disconnect", h.DisconnectBrand)
 	}
 }

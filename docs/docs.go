@@ -1438,6 +1438,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/ad-accounts/{id}/disconnect": {
+            "put": {
+                "description": "Disconnect a brand from a specific Meta ad account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Ad Accounts"
+                ],
+                "summary": "Disconnect Brand from Ad Account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.SuccessResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/ads": {
             "get": {
                 "description": "Retrieve ads from local database (synced from Meta)",

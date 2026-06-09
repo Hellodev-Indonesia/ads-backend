@@ -1533,6 +1533,35 @@ paths:
       summary: Get Meta Ad Accounts
       tags:
       - Meta Ad Accounts
+  /meta/ad-accounts/{id}/disconnect:
+    put:
+      consumes:
+      - application/json
+      description: Disconnect a brand from a specific Meta ad account
+      parameters:
+      - description: Ad Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Disconnect Brand from Ad Account
+      tags:
+      - Meta Ad Accounts
   /meta/ad-accounts/brand:
     put:
       consumes:

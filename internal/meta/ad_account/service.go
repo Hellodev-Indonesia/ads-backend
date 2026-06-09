@@ -13,6 +13,7 @@ type Service interface {
 	GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error)
 	GetUnassigned(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error)
 	BulkAssignBrand(ids []string, brandID *uint64) error
+	DisconnectBrand(id string) error
 	SyncAdAccounts() (int, error)
 	GetBusinessOptions() ([]dto.BusinessOptionResponse, error)
 }
@@ -102,6 +103,10 @@ func (s *serviceImpl) BulkAssignBrand(ids []string, brandID *uint64) error {
 	// We rely on database Foreign Key constraint to validate if BrandID exists
 	// This avoids circular dependency between meta and core domains.
 	return s.repo.UpdateBrandIDBatch(ids, brandID)
+}
+
+func (s *serviceImpl) DisconnectBrand(id string) error {
+	return s.repo.UpdateBrandIDBatch([]string{id}, nil)
 }
 
 func (s *serviceImpl) GetBusinessOptions() ([]dto.BusinessOptionResponse, error) {

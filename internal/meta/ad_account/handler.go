@@ -145,6 +145,32 @@ func (h *Handler) AssignBrand(c *gin.Context) {
 	response.Success(c, "Successfully assigned brand to ad accounts", nil)
 }
 
+// DisconnectBrand godoc
+// @Summary      Disconnect Brand from Ad Account
+// @Description  Disconnect a brand from a specific Meta ad account
+// @Tags         Meta Ad Accounts
+// @Accept       json
+// @Produce      json
+// @Param        id   path      string  true  "Ad Account ID"
+// @Success      200  {object}  response.SuccessResponse
+// @Failure      400  {object}  response.ErrorResponse
+// @Failure      500  {object}  response.ErrorResponse
+// @Router       /meta/ad-accounts/{id}/disconnect [put]
+func (h *Handler) DisconnectBrand(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		response.Error(c, http.StatusBadRequest, "ad account id is required", nil)
+		return
+	}
+
+	if err := h.service.DisconnectBrand(id); err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	response.Success(c, "Successfully disconnected brand from ad account", nil)
+}
+
 // GetBusinessOptions gets the unique business options
 // @Summary Get Business Options
 // @Description Get unique business options available in ad accounts
