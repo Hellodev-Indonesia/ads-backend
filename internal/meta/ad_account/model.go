@@ -12,6 +12,7 @@ type MetaAdAccount struct {
 	Currency      *string   `gorm:"column:currency" json:"currency,omitempty"`
 	TimezoneName  *string   `gorm:"column:timezone_name" json:"timezone_name,omitempty"`
 	BusinessID    *string   `gorm:"column:business_id" json:"business_id,omitempty"`
+	BusinessName  *string   `gorm:"column:business_name" json:"business_name,omitempty"`
 	IsActive      bool      `gorm:"column:is_active;not null;default:true" json:"is_active"`
 	SyncedAt      time.Time `gorm:"column:synced_at;autoUpdateTime" json:"synced_at"`
 }

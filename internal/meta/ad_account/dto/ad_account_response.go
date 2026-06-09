@@ -8,5 +8,6 @@ type AdAccountResponse struct {
 	Currency      *string `json:"currency,omitempty"`
 	TimezoneName  *string `json:"timezone_name,omitempty"`
 	BusinessID    *string `json:"business_id,omitempty"`
+	BusinessName  *string `json:"business_name,omitempty"`
 	IsActive      bool    `json:"is_active"`
 }

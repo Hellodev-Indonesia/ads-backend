@@ -1,0 +1,1 @@
+ALTER TABLE meta_ad_accounts DROP COLUMN business_name;

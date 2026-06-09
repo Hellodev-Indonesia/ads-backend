@@ -41,6 +41,7 @@ func (s *serviceImpl) GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResp
 			Currency:      acc.Currency,
 			TimezoneName:  acc.TimezoneName,
 			BusinessID:    acc.BusinessID,
+			BusinessName:  acc.BusinessName,
 			IsActive:      acc.IsActive,
 		})
 	}
@@ -76,6 +77,7 @@ func (s *serviceImpl) GetUnassigned(filter AdAccountFilter) ([]dto.AdAccountResp
 			Currency:      acc.Currency,
 			TimezoneName:  acc.TimezoneName,
 			BusinessID:    acc.BusinessID,
+			BusinessName:  acc.BusinessName,
 			IsActive:      acc.IsActive,
 		})
 	}
@@ -124,7 +126,8 @@ func (s *serviceImpl) SyncAdAccounts() (int, error) {
 			Currency      string `json:"currency"`
 			TimezoneName  string `json:"timezone_name"`
 			Business      struct {
-				ID string `json:"id"`
+				ID   string `json:"id"`
+				Name string `json:"name"`
 			} `json:"business"`
 		}
 		if err := json.Unmarshal(raw, &item); err != nil {
@@ -142,8 +145,10 @@ func (s *serviceImpl) SyncAdAccounts() (int, error) {
 		}
 
 		var businessID *string
+		var businessName *string
 		if item.Business.ID != "" {
 			businessID = &item.Business.ID
+			businessName = &item.Business.Name
 		}
 
 		models = append(models, MetaAdAccount{
@@ -153,6 +158,7 @@ func (s *serviceImpl) SyncAdAccounts() (int, error) {
 			Currency:      currency,
 			TimezoneName:  timezone,
 			BusinessID:    businessID,
+			BusinessName:  businessName,
 			IsActive:      item.AccountStatus == 1,
 		})
 	}

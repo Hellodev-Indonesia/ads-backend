@@ -1,0 +1,1 @@
+ALTER TABLE meta_ad_accounts ADD COLUMN business_name VARCHAR(255) NULL AFTER business_id;
