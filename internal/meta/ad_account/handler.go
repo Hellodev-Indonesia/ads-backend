@@ -77,12 +77,18 @@ func (h *Handler) GetAdAccounts(c *gin.Context) {
 func (h *Handler) GetUnassignedAdAccounts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "25"))
-	search := c.Query("search")
+
+	businessID := c.Query("business_id")
+	var businessIDPtr *string
+	if businessID != "" {
+		businessIDPtr = &businessID
+	}
 
 	filter := AdAccountFilter{
-		Search: search,
-		Page:   page,
-		Limit:  limit,
+		Search:     c.Query("search"),
+		Page:       page,
+		Limit:      limit,
+		BusinessID: businessIDPtr,
 	}
 
 	resp, meta, err := h.service.GetUnassigned(filter)
@@ -111,12 +117,12 @@ func (h *Handler) AssignBrand(c *gin.Context) {
 		return
 	}
 
-	if len(req.AdAccountIDs) == 0 && req.BusinessID == nil {
-		response.Error(c, http.StatusBadRequest, "Either ad_account_ids or business_id must be provided", nil)
+	if len(req.AdAccountIDs) == 0 {
+		response.Error(c, http.StatusBadRequest, "ad_account_ids is required", nil)
 		return
 	}
 
-	if err := h.service.BulkAssignBrand(req); err != nil {
+	if err := h.service.BulkAssignBrand(req.AdAccountIDs, req.BrandID); err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
@@ -127,4 +133,23 @@ func (h *Handler) AssignBrand(c *gin.Context) {
 	}
 
 	response.Success(c, "Successfully assigned brand to ad accounts", nil)
+}
+
+// GetBusinessOptions gets the unique business options
+// @Summary Get Business Options
+// @Description Get unique business options available in ad accounts
+// @Tags Meta Ad Accounts
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} response.SuccessResponse{data=[]dto.BusinessOptionResponse}
+// @Router /meta/ad-accounts/businesses [get]
+func (h *Handler) GetBusinessOptions(c *gin.Context) {
+	businesses, err := h.service.GetBusinessOptions()
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	response.Success(c, "Business options retrieved successfully", businesses)
 }

@@ -14,17 +14,17 @@ type MockService struct {
 	mock.Mock
 }
 
-// BulkAssignBrand provides a mock function with given fields: req
-func (_m *MockService) BulkAssignBrand(req dto.AssignBrandRequest) error {
-	ret := _m.Called(req)
+// BulkAssignBrand provides a mock function with given fields: ids, brandID
+func (_m *MockService) BulkAssignBrand(ids []string, brandID *uint64) error {
+	ret := _m.Called(ids, brandID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for BulkAssignBrand")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(dto.AssignBrandRequest) error); ok {
-		r0 = rf(req)
+	if rf, ok := ret.Get(0).(func([]string, *uint64) error); ok {
+		r0 = rf(ids, brandID)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -69,6 +69,36 @@ func (_m *MockService) GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountRes
 	}
 
 	return r0, r1, r2
+}
+
+// GetBusinessOptions provides a mock function with no fields
+func (_m *MockService) GetBusinessOptions() ([]dto.BusinessOptionResponse, error) {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetBusinessOptions")
+	}
+
+	var r0 []dto.BusinessOptionResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func() ([]dto.BusinessOptionResponse, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() []dto.BusinessOptionResponse); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dto.BusinessOptionResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // GetUnassigned provides a mock function with given fields: filter

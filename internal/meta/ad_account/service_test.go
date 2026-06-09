@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/alex/ads_backend/internal/meta/ad_account"
-	"github.com/alex/ads_backend/internal/meta/ad_account/dto"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -67,32 +66,9 @@ func TestService_BulkAssignBrand(t *testing.T) {
 	ids := []string{"act_1", "act_2"}
 	brandID := uint64(1)
 
-	req := dto.AssignBrandRequest{
-		AdAccountIDs: ids,
-		BrandID:      &brandID,
-	}
-
 	mockRepo.On("UpdateBrandIDBatch", ids, &brandID).Return(nil)
 
-	err := svc.BulkAssignBrand(req)
-
-	assert.NoError(t, err)
-}
-
-func TestService_BulkAssignBrandByBusiness(t *testing.T) {
-	mockRepo, svc := setupService(t)
-
-	brandID := uint64(1)
-	businessID := "bus_1"
-
-	req := dto.AssignBrandRequest{
-		BusinessID:   &businessID,
-		BrandID:      &brandID,
-	}
-
-	mockRepo.On("UpdateBrandIDByBusiness", businessID, &brandID).Return(nil)
-
-	err := svc.BulkAssignBrand(req)
+	err := svc.BulkAssignBrand(ids, &brandID)
 
 	assert.NoError(t, err)
 }

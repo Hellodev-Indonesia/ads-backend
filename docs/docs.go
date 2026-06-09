@@ -3205,6 +3205,9 @@ const docTemplate = `{
                 "business_id": {
                     "type": "string"
                 },
+                "business_name": {
+                    "type": "string"
+                },
                 "currency": {
                     "type": "string"
                 },

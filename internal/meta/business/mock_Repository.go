@@ -76,6 +76,36 @@ func (_m *MockRepository) FindByID(id string) (*MetaBusiness, error) {
 	return r0, r1
 }
 
+// GetUniqueBusinessIDsFromAdAccounts provides a mock function with no fields
+func (_m *MockRepository) GetUniqueBusinessIDsFromAdAccounts() ([]string, error) {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUniqueBusinessIDsFromAdAccounts")
+	}
+
+	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func() ([]string, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() []string); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // UpsertBatch provides a mock function with given fields: businesses
 func (_m *MockRepository) UpsertBatch(businesses []MetaBusiness) error {
 	ret := _m.Called(businesses)

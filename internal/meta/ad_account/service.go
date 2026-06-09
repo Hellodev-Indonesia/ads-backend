@@ -12,8 +12,9 @@ import (
 type Service interface {
 	GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error)
 	GetUnassigned(filter AdAccountFilter) ([]dto.AdAccountResponse, *response.Meta, error)
-	BulkAssignBrand(req dto.AssignBrandRequest) error
+	BulkAssignBrand(ids []string, brandID *uint64) error
 	SyncAdAccounts() (int, error)
+	GetBusinessOptions() ([]dto.BusinessOptionResponse, error)
 }
 
 type serviceImpl struct {
@@ -97,15 +98,14 @@ func (s *serviceImpl) GetUnassigned(filter AdAccountFilter) ([]dto.AdAccountResp
 	return result, meta, nil
 }
 
-func (s *serviceImpl) BulkAssignBrand(req dto.AssignBrandRequest) error {
+func (s *serviceImpl) BulkAssignBrand(ids []string, brandID *uint64) error {
 	// We rely on database Foreign Key constraint to validate if BrandID exists
 	// This avoids circular dependency between meta and core domains.
-	if len(req.AdAccountIDs) > 0 {
-		return s.repo.UpdateBrandIDBatch(req.AdAccountIDs, req.BrandID)
-	} else if req.BusinessID != nil {
-		return s.repo.UpdateBrandIDByBusiness(*req.BusinessID, req.BrandID)
-	}
-	return nil
+	return s.repo.UpdateBrandIDBatch(ids, brandID)
+}
+
+func (s *serviceImpl) GetBusinessOptions() ([]dto.BusinessOptionResponse, error) {
+	return s.repo.GetUniqueBusinesses()
 }
 
 func (s *serviceImpl) SyncAdAccounts() (int, error) {

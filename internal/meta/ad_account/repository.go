@@ -1,15 +1,17 @@
 package ad_account
 
 import (
+	"github.com/alex/ads_backend/internal/meta/ad_account/dto"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type AdAccountFilter struct {
-	Search  string
-	Page    int
-	Limit   int
-	BrandID *uint64
+	Search     string
+	Page       int
+	Limit      int
+	BrandID    *uint64
+	BusinessID *string
 }
 
 type Repository interface {
@@ -17,6 +19,7 @@ type Repository interface {
 	FindAll(filter AdAccountFilter) ([]MetaAdAccount, int64, error)
 	FindUnassigned(filter AdAccountFilter) ([]MetaAdAccount, int64, error)
 	FindByID(id string) (*MetaAdAccount, error)
+	GetUniqueBusinesses() ([]dto.BusinessOptionResponse, error)
 	Update(account *MetaAdAccount) error
 	UpdateBrandID(id string, brandID *uint64) error
 	UpdateBrandIDBatch(ids []string, brandID *uint64) error
@@ -43,6 +46,7 @@ func (r *repository) UpsertBatch(accounts []MetaAdAccount) error {
 			"currency",
 			"timezone_name",
 			"business_id",
+			"business_name",
 			"is_active",
 			"synced_at",
 		}),
@@ -59,6 +63,10 @@ func (r *repository) FindAll(filter AdAccountFilter) ([]MetaAdAccount, int64, er
 		query = query.Where("name LIKE ?", "%"+filter.Search+"%")
 	}
 	
+	if filter.BusinessID != nil {
+		query = query.Where("business_id = ?", *filter.BusinessID)
+	}
+
 	if filter.BrandID != nil {
 		query = query.Where("brand_id = ?", *filter.BrandID)
 	}
@@ -96,6 +104,16 @@ func (r *repository) UpdateBrandIDBatch(ids []string, brandID *uint64) error {
 		return nil
 	}
 	return r.db.Model(&MetaAdAccount{}).Where("id IN ?", ids).Update("brand_id", brandID).Error
+}
+
+func (r *repository) GetUniqueBusinesses() ([]dto.BusinessOptionResponse, error) {
+	var businesses []dto.BusinessOptionResponse
+	err := r.db.Model(&MetaAdAccount{}).
+		Select("business_id, business_name").
+		Where("business_id IS NOT NULL AND business_id != ''").
+		Group("business_id, business_name").
+		Find(&businesses).Error
+	return businesses, err
 }
 
 func (r *repository) UpdateBrandIDByBusiness(businessID string, brandID *uint64) error {
