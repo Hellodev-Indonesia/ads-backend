@@ -172,13 +172,6 @@ definitions:
       business_name:
         type: string
     type: object
-  dto.BusinessResponse:
-    properties:
-      business_id:
-        type: string
-      business_name:
-        type: string
-    type: object
   dto.CampaignResponse:
     properties:
       account_id:
@@ -1628,30 +1621,6 @@ paths:
       summary: Get Business Options
       tags:
       - Meta Ad Accounts
-  /meta/ad-accounts/businesses:
-    get:
-      consumes:
-      - application/json
-      description: Get unique business options available in ad accounts
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.SuccessResponse'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/dto.BusinessOptionResponse'
-                  type: array
-              type: object
-      security:
-      - BearerAuth: []
-      summary: Get Business Options
-      tags:
-      - Meta Ad Accounts
   /meta/ad-accounts/unassigned:
     get:
       consumes:
@@ -1822,6 +1791,66 @@ paths:
       summary: Get AdSets
       tags:
       - Meta AdSets
+  /meta/brands/{brand_id}/ad-accounts:
+    get:
+      consumes:
+      - application/json
+      description: Get paginated list of Meta ad accounts for a specific brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Search by name
+        in: query
+        name: search
+        type: string
+      - description: Filter by Account Status (1=Active, 2=Disabled, etc.)
+        in: query
+        name: status
+        type: integer
+      - description: Filter by Business ID
+        in: query
+        name: business_id
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.AdAccountResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Ad Accounts by Brand
+      tags:
+      - Meta Ad Accounts
   /meta/campaigns:
     get:
       consumes:

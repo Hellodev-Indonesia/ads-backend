@@ -191,6 +191,66 @@ func (h *Handler) DisconnectBrand(c *gin.Context) {
 	response.Success(c, "Successfully disconnected brand from ad account", nil)
 }
 
+// GetAdAccountsByBrand godoc
+// @Summary      Get Ad Accounts by Brand
+// @Description  Get paginated list of Meta ad accounts for a specific brand
+// @Tags         Meta Ad Accounts
+// @Accept       json
+// @Produce      json
+// @Param        brand_id  path      int     true   "Brand ID"
+// @Param        search    query     string  false  "Search by name"
+// @Param        status    query     int     false  "Filter by Account Status (1=Active, 2=Disabled, etc.)"
+// @Param        business_id query   string  false  "Filter by Business ID"
+// @Param        page      query     int     false  "Page number"
+// @Param        limit     query     int     false  "Items per page"
+// @Success      200       {object}  response.PaginationResponse{data=[]dto.AdAccountResponse}
+// @Failure      400       {object}  response.ErrorResponse
+// @Failure      401       {object}  response.ErrorResponse
+// @Failure      500       {object}  response.ErrorResponse
+// @Router       /meta/brands/{brand_id}/ad-accounts [get]
+func (h *Handler) GetAdAccountsByBrand(c *gin.Context) {
+	brandIDStr := c.Param("brand_id")
+	brandID, err := strconv.ParseUint(brandIDStr, 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "invalid brand_id format", nil)
+		return
+	}
+
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "25"))
+	search := c.Query("search")
+
+	businessID := c.Query("business_id")
+	var businessIDPtr *string
+	if businessID != "" {
+		businessIDPtr = &businessID
+	}
+
+	statusStr := c.Query("status")
+	var accountStatus *int
+	if statusStr != "" {
+		if val, err := strconv.Atoi(statusStr); err == nil {
+			accountStatus = &val
+		}
+	}
+
+	filter := AdAccountFilter{
+		Search:        search,
+		Page:          page,
+		Limit:         limit,
+		BrandID:       &brandID,
+		BusinessID:    businessIDPtr,
+		AccountStatus: accountStatus,
+	}
+
+	resp, meta, err := h.service.GetAdAccounts(filter)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, err.Error(), nil)
+		return
+	}
+	response.SuccessWithMeta(c, "Successfully retrieved brand Meta ad accounts", resp, *meta)
+}
+
 // GetBusinessOptions gets the unique business options
 // @Summary Get Business Options
 // @Description Get unique business options available in ad accounts

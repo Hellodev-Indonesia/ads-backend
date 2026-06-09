@@ -15,4 +15,9 @@ func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
 		group.PUT("/brand", h.AssignBrand)
 		group.PUT("/:id/disconnect", h.DisconnectBrand)
 	}
+
+	brandGroup := r.Group("/brands/:brand_id/ad-accounts", middleware.AuthMiddleware())
+	{
+		brandGroup.GET("", h.GetAdAccountsByBrand)
+	}
 }
