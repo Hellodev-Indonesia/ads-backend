@@ -1204,6 +1204,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
+                        "description": "Filter by Brand ID",
+                        "name": "brand_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
                         "description": "Page number",
                         "name": "page",
                         "in": "query"

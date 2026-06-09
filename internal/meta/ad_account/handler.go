@@ -26,6 +26,7 @@ var _ = dto.AdAccountResponse{}
 // @Accept       json
 // @Produce      json
 // @Param        search   query     string  false  "Search by name"
+// @Param        brand_id query     int     false  "Filter by Brand ID"
 // @Param        page     query     int     false  "Page number"
 // @Param        limit    query     int     false  "Items per page"
 // @Success      200      {object}  response.Response{data=[]dto.AdAccountResponse,meta=response.Meta}
@@ -36,11 +37,20 @@ func (h *Handler) GetAdAccounts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "25"))
 	search := c.Query("search")
+	
+	var brandID *uint64
+	brandIDStr := c.Query("brand_id")
+	if brandIDStr != "" {
+		if id, err := strconv.ParseUint(brandIDStr, 10, 64); err == nil {
+			brandID = &id
+		}
+	}
 
 	filter := AdAccountFilter{
-		Search: search,
-		Page:   page,
-		Limit:  limit,
+		Search:  search,
+		Page:    page,
+		Limit:   limit,
+		BrandID: brandID,
 	}
 
 	resp, meta, err := h.service.GetAdAccounts(filter)

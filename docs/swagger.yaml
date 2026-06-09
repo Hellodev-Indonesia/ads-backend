@@ -1483,6 +1483,10 @@ paths:
         in: query
         name: search
         type: string
+      - description: Filter by Brand ID
+        in: query
+        name: brand_id
+        type: integer
       - description: Page number
         in: query
         name: page

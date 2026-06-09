@@ -6,9 +6,10 @@ import (
 )
 
 type AdAccountFilter struct {
-	Search string
-	Page   int
-	Limit  int
+	Search  string
+	Page    int
+	Limit   int
+	BrandID *uint64
 }
 
 type Repository interface {
@@ -55,6 +56,10 @@ func (r *repository) FindAll(filter AdAccountFilter) ([]MetaAdAccount, int64, er
 
 	if filter.Search != "" {
 		query = query.Where("name LIKE ?", "%"+filter.Search+"%")
+	}
+	
+	if filter.BrandID != nil {
+		query = query.Where("brand_id = ?", *filter.BrandID)
 	}
 
 	query.Count(&total)
