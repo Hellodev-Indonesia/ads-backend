@@ -15,8 +15,8 @@ help: ## Show this help message
 	@echo "Targets:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-dev: ## Run the API development server
-	go run cmd/api/main.go
+dev: ## Run the API development server with hot-reload
+	go run github.com/air-verse/air@latest -c .air.toml
 
 seed: ## Run database seeders
 	go run cmd/seed/main.go
