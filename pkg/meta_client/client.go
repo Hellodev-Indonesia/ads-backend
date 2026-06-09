@@ -86,32 +86,62 @@ func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json
 	var lastPaging *Paging
 
 	for nextURL != "" {
-		req, err := http.NewRequest("GET", nextURL, nil)
-		if err != nil {
-			return nil, nil, fmt.Errorf("failed to create request: %w", err)
-		}
+		var resp *http.Response
+		var bodyBytes []byte
+		var reqErr error
 
-		resp, err := c.HTTPClient.Do(req)
-		if err != nil {
-			log.Printf("Meta API Request failed: GET %s - Error: %v", path, err)
-			return nil, nil, fmt.Errorf("failed to execute request: %w", err)
-		}
-		defer resp.Body.Close()
-
-		bodyBytes, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return nil, nil, fmt.Errorf("failed to read response body: %w", err)
-		}
-
-		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-			log.Printf("Meta API returned status %d for GET %s", resp.StatusCode, path)
-
-			var wrap errorWrapper
-			if err := json.Unmarshal(bodyBytes, &wrap); err == nil && wrap.Error != nil {
-				return nil, nil, wrap.Error
+		maxRetries := 5
+		for attempt := 0; attempt <= maxRetries; attempt++ {
+			req, err := http.NewRequest("GET", nextURL, nil)
+			if err != nil {
+				return nil, nil, fmt.Errorf("failed to create request: %w", err)
 			}
 
-			return nil, nil, fmt.Errorf("Meta API returned status %d: %s", resp.StatusCode, string(bodyBytes))
+			resp, err = c.HTTPClient.Do(req)
+			if err != nil {
+				reqErr = fmt.Errorf("failed to execute request: %w", err)
+				log.Printf("Meta API Request failed: GET %s (attempt %d) - Error: %v", path, attempt+1, err)
+			} else {
+				bodyBytes, err = io.ReadAll(resp.Body)
+				resp.Body.Close()
+				if err != nil {
+					reqErr = fmt.Errorf("failed to read response body: %w", err)
+				} else if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+					var wrap errorWrapper
+					isRateLimit := false
+					if jsonErr := json.Unmarshal(bodyBytes, &wrap); jsonErr == nil && wrap.Error != nil {
+						// 17: User limit, 4: App limit, 80004: Ads API limit, 613: Custom limit, 32: Page limit, 1/2: Temporary errors
+						if wrap.Error.Code == 17 || wrap.Error.Code == 4 || wrap.Error.Code == 80004 || wrap.Error.Code == 613 || wrap.Error.Code == 32 || wrap.Error.Code == 1 || wrap.Error.Code == 2 {
+							isRateLimit = true
+						}
+					}
+
+					if isRateLimit {
+						reqErr = wrap.Error
+						log.Printf("Meta API Rate limit hit: %v", reqErr)
+					} else {
+						// Not a rate limit error, don't retry
+						if wrap.Error != nil {
+							return nil, nil, wrap.Error
+						}
+						return nil, nil, fmt.Errorf("Meta API returned status %d: %s", resp.StatusCode, string(bodyBytes))
+					}
+				} else {
+					// Success
+					reqErr = nil
+					break
+				}
+			}
+
+			if attempt < maxRetries {
+				sleepDuration := time.Duration(1<<attempt) * 10 * time.Second // 10s, 20s, 40s, 80s, 160s
+				log.Printf("Retrying Meta API request in %v...", sleepDuration)
+				time.Sleep(sleepDuration)
+			}
+		}
+
+		if reqErr != nil {
+			return nil, nil, reqErr
 		}
 
 		var base BaseResponse
@@ -129,6 +159,8 @@ func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json
 
 		if autoPage && base.Paging != nil && base.Paging.Next != "" {
 			nextURL = base.Paging.Next
+			// Add a small delay between pages to prevent hitting rate limits too quickly
+			time.Sleep(500 * time.Millisecond)
 		} else {
 			nextURL = ""
 		}
