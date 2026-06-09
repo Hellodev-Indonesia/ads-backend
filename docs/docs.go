@@ -1216,6 +1216,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
+                        "description": "Filter by Account Status (1=Active, 2=Disabled, etc.)",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
                         "description": "Page number",
                         "name": "page",
                         "in": "query"
@@ -1435,6 +1441,12 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Filter by Business ID",
                         "name": "business_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter by Account Status (1=Active, 2=Disabled, etc.)",
+                        "name": "status",
                         "in": "query"
                     }
                 ],

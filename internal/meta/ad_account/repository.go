@@ -10,8 +10,9 @@ type AdAccountFilter struct {
 	Search     string
 	Page       int
 	Limit      int
-	BrandID    *uint64
-	BusinessID *string
+	BrandID       *uint64
+	BusinessID    *string
+	AccountStatus *int
 }
 
 type Repository interface {
@@ -69,6 +70,10 @@ func (r *repository) FindAll(filter AdAccountFilter) ([]MetaAdAccount, int64, er
 
 	if filter.BrandID != nil {
 		query = query.Where("brand_id = ?", *filter.BrandID)
+	}
+
+	if filter.AccountStatus != nil {
+		query = query.Where("account_status = ?", *filter.AccountStatus)
 	}
 
 	query.Count(&total)
@@ -132,6 +137,10 @@ func (r *repository) FindUnassigned(filter AdAccountFilter) ([]MetaAdAccount, in
 
 	if filter.BusinessID != nil {
 		query = query.Where("business_id = ?", *filter.BusinessID)
+	}
+
+	if filter.AccountStatus != nil {
+		query = query.Where("account_status = ?", *filter.AccountStatus)
 	}
 
 	query.Count(&total)

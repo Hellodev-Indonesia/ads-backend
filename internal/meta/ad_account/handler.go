@@ -28,6 +28,7 @@ var _ = dto.AdAccountResponse{}
 // @Param        search   query     string  false  "Search by name"
 // @Param        brand_id query     int     false  "Filter by Brand ID"
 // @Param        business_id query  string  false  "Filter by Business ID"
+// @Param        status   query     int     false  "Filter by Account Status (1=Active, 2=Disabled, etc.)"
 // @Param        page     query     int     false  "Page number"
 // @Param        limit    query     int     false  "Items per page"
 // @Success      200      {object}  response.Response{data=[]dto.AdAccountResponse,meta=response.Meta}
@@ -53,12 +54,21 @@ func (h *Handler) GetAdAccounts(c *gin.Context) {
 		businessIDPtr = &businessID
 	}
 
+	statusStr := c.Query("status")
+	var accountStatus *int
+	if statusStr != "" {
+		if val, err := strconv.Atoi(statusStr); err == nil {
+			accountStatus = &val
+		}
+	}
+
 	filter := AdAccountFilter{
-		Search:     search,
-		Page:       page,
-		Limit:      limit,
-		BrandID:    brandID,
-		BusinessID: businessIDPtr,
+		Search:        search,
+		Page:          page,
+		Limit:         limit,
+		BrandID:       brandID,
+		BusinessID:    businessIDPtr,
+		AccountStatus: accountStatus,
 	}
 
 	resp, meta, err := h.service.GetAdAccounts(filter)
@@ -79,6 +89,7 @@ func (h *Handler) GetAdAccounts(c *gin.Context) {
 // @Param        page      query     int     false  "Page number"
 // @Param        limit     query     int     false  "Items per page"
 // @Param        business_id query   string  false  "Filter by Business ID"
+// @Param        status    query     int     false  "Filter by Account Status (1=Active, 2=Disabled, etc.)"
 // @Success      200       {object}  response.PaginationResponse{data=[]dto.AdAccountResponse}
 // @Failure      400       {object}  response.ErrorResponse
 // @Failure      401       {object}  response.ErrorResponse
@@ -94,11 +105,20 @@ func (h *Handler) GetUnassignedAdAccounts(c *gin.Context) {
 		businessIDPtr = &businessID
 	}
 
+	statusStr := c.Query("status")
+	var accountStatus *int
+	if statusStr != "" {
+		if val, err := strconv.Atoi(statusStr); err == nil {
+			accountStatus = &val
+		}
+	}
+
 	filter := AdAccountFilter{
-		Search:     c.Query("search"),
-		Page:       page,
-		Limit:      limit,
-		BusinessID: businessIDPtr,
+		Search:        c.Query("search"),
+		Page:          page,
+		Limit:         limit,
+		BusinessID:    businessIDPtr,
+		AccountStatus: accountStatus,
 	}
 
 	resp, meta, err := h.service.GetUnassigned(filter)

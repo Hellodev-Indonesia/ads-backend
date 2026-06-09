@@ -1505,6 +1505,10 @@ paths:
         in: query
         name: business_id
         type: string
+      - description: Filter by Account Status (1=Active, 2=Disabled, etc.)
+        in: query
+        name: status
+        type: integer
       - description: Page number
         in: query
         name: page
@@ -1671,6 +1675,10 @@ paths:
         in: query
         name: business_id
         type: string
+      - description: Filter by Account Status (1=Active, 2=Disabled, etc.)
+        in: query
+        name: status
+        type: integer
       produces:
       - application/json
       responses:
