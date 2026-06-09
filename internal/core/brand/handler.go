@@ -29,7 +29,7 @@ func NewHandler(service Service) *Handler {
 // @Success      200       {object}  response.PaginationResponse{data=[]dto.BrandResponse}
 // @Failure      500       {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /brands [get]
+// @Router       /core/brands [get]
 func (h *Handler) FindAll(c *gin.Context) {
 	var filter dto.BrandFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -74,7 +74,7 @@ func (h *Handler) FindAll(c *gin.Context) {
 // @Success      200  {object}  response.SuccessResponse{data=dto.BrandResponse}
 // @Failure      404  {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /brands/{id} [get]
+// @Router       /core/brands/{id} [get]
 func (h *Handler) FindByID(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -102,7 +102,7 @@ func (h *Handler) FindByID(c *gin.Context) {
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /brands [post]
+// @Router       /core/brands [post]
 func (h *Handler) Create(c *gin.Context) {
 	var req dto.CreateBrandRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -132,7 +132,7 @@ func (h *Handler) Create(c *gin.Context) {
 // @Failure      404      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /brands/{id} [put]
+// @Router       /core/brands/{id} [put]
 func (h *Handler) Update(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -166,7 +166,7 @@ func (h *Handler) Update(c *gin.Context) {
 // @Failure      404  {object}  response.ErrorResponse
 // @Failure      500  {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /brands/{id} [delete]
+// @Router       /core/brands/{id} [delete]
 func (h *Handler) Delete(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
