@@ -737,7 +737,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "file",
-                        "description": "Brand Photo (max 2MB)",
+                        "description": "Brand Photo (max 10MB)",
                         "name": "photo",
                         "in": "formData"
                     },
@@ -872,7 +872,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "file",
-                        "description": "Brand Photo (max 2MB)",
+                        "description": "Brand Photo (max 10MB)",
                         "name": "photo",
                         "in": "formData"
                     },

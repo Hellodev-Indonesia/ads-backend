@@ -20,9 +20,9 @@ func ProcessBrandPhoto(fileHeader *multipart.FileHeader, slug string) (string, e
 		return "", errors.New("file is nil")
 	}
 
-	// 1. Check max size (2MB)
-	if fileHeader.Size > 2*1024*1024 {
-		return "", errors.New("file size exceeds 2MB limit")
+	// 1. Check max size (10MB to allow auto-resize to handle large files)
+	if fileHeader.Size > 10*1024*1024 {
+		return "", errors.New("file size exceeds 10MB limit")
 	}
 
 	file, err := fileHeader.Open()

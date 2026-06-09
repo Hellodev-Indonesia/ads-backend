@@ -1198,7 +1198,7 @@ paths:
         name: name
         required: true
         type: string
-      - description: Brand Photo (max 2MB)
+      - description: Brand Photo (max 10MB)
         in: formData
         name: photo
         type: file
@@ -1311,7 +1311,7 @@ paths:
         in: formData
         name: name
         type: string
-      - description: Brand Photo (max 2MB)
+      - description: Brand Photo (max 10MB)
         in: formData
         name: photo
         type: file

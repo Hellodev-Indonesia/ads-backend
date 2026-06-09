@@ -33,6 +33,9 @@ func RegisterApiRoutes(router *gin.Engine) {
 
 	// Dev tool: Centrifugo listener page
 	router.StaticFile("/centrifugo-listen", "./centrifugo-listen.html")
+	
+	// Serve public uploads directory
+	router.Static("/uploads", "./public/uploads")
 
 	v1 := router.Group("/api/v1")
 	{

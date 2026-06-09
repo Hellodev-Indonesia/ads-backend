@@ -97,7 +97,7 @@ func (h *Handler) FindBySlug(c *gin.Context) {
 // @Accept       multipart/form-data
 // @Produce      json
 // @Param        name         formData  string  true  "Brand Name"
-// @Param        photo        formData  file    false "Brand Photo (max 2MB)"
+// @Param        photo        formData  file    false "Brand Photo (max 10MB)"
 // @Param        description  formData  string  false "Brand Description"
 // @Param        is_active    formData  bool    false "Is Active"
 // @Success      201      {object}  response.SuccessResponse{data=dto.BrandResponse}
@@ -129,7 +129,7 @@ func (h *Handler) Create(c *gin.Context) {
 // @Produce      json
 // @Param        slug         path      string  true  "Brand Slug"
 // @Param        name         formData  string  false "Brand Name"
-// @Param        photo        formData  file    false "Brand Photo (max 2MB)"
+// @Param        photo        formData  file    false "Brand Photo (max 10MB)"
 // @Param        description  formData  string  false "Brand Description"
 // @Param        is_active    formData  bool    false "Is Active"
 // @Success      200      {object}  response.SuccessResponse{data=dto.BrandResponse}
