@@ -6,7 +6,7 @@ import (
 )
 
 func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
-	brands := r.Group("/core/brands")
+	brands := r.Group("/brands")
 	brands.Use(middleware.AuthMiddleware())
 	{
 		brands.GET("", middleware.RequirePermission("core.brand.view"), h.FindAll)

@@ -5,6 +5,7 @@ import (
 
 	"github.com/alex/ads_backend/config"
 	"github.com/alex/ads_backend/routes"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,6 +31,12 @@ func main() {
 
 	// Setup Gin
 	router := gin.Default()
+
+	// CORS Middleware
+	configCORS := cors.DefaultConfig()
+	configCORS.AllowAllOrigins = true
+	configCORS.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
+	router.Use(cors.New(configCORS))
 
 	// Register routes (Pure Gin)
 	routes.RegisterApiRoutes(router)
