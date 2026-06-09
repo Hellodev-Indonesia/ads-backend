@@ -66,7 +66,7 @@ func (s *service) Update(brandSlug string, req dto.UpdateBrandRequest) (dto.Bran
 		brand.Name = *req.Name
 		brand.Slug = slug.Make(*req.Name) // Update slug if name changes
 	}
-	
+
 	if req.Photo != nil {
 		photoUrl, err := utils.ProcessBrandPhoto(req.Photo, brand.Slug)
 		if err != nil {
@@ -74,7 +74,7 @@ func (s *service) Update(brandSlug string, req dto.UpdateBrandRequest) (dto.Bran
 		}
 		brand.Photo = &photoUrl
 	}
-	
+
 	if req.Description != nil {
 		brand.Description = req.Description
 	}

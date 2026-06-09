@@ -1356,6 +1356,49 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/ad-accounts/businesses": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get unique business options available in ad accounts",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Ad Accounts"
+                ],
+                "summary": "Get Business Options",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.BusinessOptionResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/meta/ad-accounts/unassigned": {
             "get": {
                 "description": "Get paginated list of Meta ad accounts that are not assigned to any brand",
@@ -3461,6 +3504,17 @@ const docTemplate = `{
             }
         },
         "dto.BusinessOptionResponse": {
+            "type": "object",
+            "properties": {
+                "business_id": {
+                    "type": "string"
+                },
+                "business_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.BusinessResponse": {
             "type": "object",
             "properties": {
                 "business_id": {

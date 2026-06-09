@@ -54,3 +54,6 @@ test-integration: ## Run only integration tests
 
 test-coverage: ## Run tests and show coverage
 	@if [ -n "$(TEST_PKGS)" ]; then go test -v -coverprofile=coverage.out $(TEST_PKGS); go tool cover -html=coverage.out; else echo "No tests found"; fi
+centrifugo: ## Run centrifugo locally
+	centrifugo --config=centrifugo/config.json
+

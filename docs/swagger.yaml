@@ -172,6 +172,13 @@ definitions:
       business_name:
         type: string
     type: object
+  dto.BusinessResponse:
+    properties:
+      business_id:
+        type: string
+      business_name:
+        type: string
+    type: object
   dto.CampaignResponse:
     properties:
       account_id:
@@ -1591,6 +1598,30 @@ paths:
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       summary: Assign or Unassign Brand to Ad Accounts
+      tags:
+      - Meta Ad Accounts
+  /meta/ad-accounts/businesses:
+    get:
+      consumes:
+      - application/json
+      description: Get unique business options available in ad accounts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.BusinessOptionResponse'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get Business Options
       tags:
       - Meta Ad Accounts
   /meta/ad-accounts/businesses:
