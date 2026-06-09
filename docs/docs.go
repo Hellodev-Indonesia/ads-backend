@@ -1560,6 +1560,79 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/businesses": {
+            "get": {
+                "description": "Retrieve all business portfolios synced from Meta API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Businesses"
+                ],
+                "summary": "Get Meta Businesses (Portfolios)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search by name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.BusinessResponse"
+                                            }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/definitions/response.Meta"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/campaigns": {
             "get": {
                 "description": "Retrieve campaigns from local database (synced from Meta)",
@@ -3283,9 +3356,6 @@ const docTemplate = `{
         },
         "dto.AssignBrandRequest": {
             "type": "object",
-            "required": [
-                "ad_account_ids"
-            ],
             "properties": {
                 "ad_account_ids": {
                     "type": "array",
@@ -3295,6 +3365,9 @@ const docTemplate = `{
                 },
                 "brand_id": {
                     "type": "integer"
+                },
+                "business_id": {
+                    "type": "string"
                 }
             }
         },
@@ -3355,6 +3428,29 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.BusinessResponse": {
+            "type": "object",
+            "properties": {
+                "created_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "profile_picture_uri": {
+                    "type": "string"
+                },
+                "synced_at": {
+                    "type": "string"
+                },
+                "timezone_id": {
+                    "type": "integer"
                 }
             }
         },

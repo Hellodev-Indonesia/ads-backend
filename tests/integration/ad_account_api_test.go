@@ -80,7 +80,7 @@ func TestAdAccountAPI_AssignBrand(t *testing.T) {
 	}
 	body, _ := json.Marshal(reqPayload)
 
-	mockService.On("BulkAssignBrand", []string{"act_1", "act_2"}, &brandID).Return(nil)
+	mockService.On("BulkAssignBrand", reqPayload).Return(nil)
 
 	req, _ := http.NewRequest(http.MethodPut, "/meta/ad-accounts/brand", bytes.NewBuffer(body))
 	req.Header.Set("Content-Type", "application/json")
@@ -99,7 +99,7 @@ func TestAdAccountAPI_UnassignBrand(t *testing.T) {
 	}
 	body, _ := json.Marshal(reqPayload)
 
-	mockService.On("BulkAssignBrand", []string{"act_1", "act_2"}, (*uint64)(nil)).Return(nil)
+	mockService.On("BulkAssignBrand", reqPayload).Return(nil)
 
 	req, _ := http.NewRequest(http.MethodPut, "/meta/ad-accounts/brand", bytes.NewBuffer(body))
 	req.Header.Set("Content-Type", "application/json")

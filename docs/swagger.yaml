@@ -123,8 +123,8 @@ definitions:
         type: array
       brand_id:
         type: integer
-    required:
-    - ad_account_ids
+      business_id:
+        type: string
     type: object
   dto.AssignPermissionRequest:
     properties:
@@ -164,6 +164,21 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  dto.BusinessResponse:
+    properties:
+      created_time:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      profile_picture_uri:
+        type: string
+      synced_at:
+        type: string
+      timezone_id:
+        type: integer
     type: object
   dto.CampaignResponse:
     properties:
@@ -1712,6 +1727,51 @@ paths:
       summary: Get AdSets
       tags:
       - Meta AdSets
+  /meta/businesses:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all business portfolios synced from Meta API
+      parameters:
+      - description: Search by name
+        in: query
+        name: search
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.BusinessResponse'
+                  type: array
+                meta:
+                  $ref: '#/definitions/response.Meta'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Meta Businesses (Portfolios)
+      tags:
+      - Meta Businesses
   /meta/campaigns:
     get:
       consumes:

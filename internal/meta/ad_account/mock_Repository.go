@@ -167,6 +167,24 @@ func (_m *MockRepository) UpdateBrandIDBatch(ids []string, brandID *uint64) erro
 	return r0
 }
 
+// UpdateBrandIDByBusiness provides a mock function with given fields: businessID, brandID
+func (_m *MockRepository) UpdateBrandIDByBusiness(businessID string, brandID *uint64) error {
+	ret := _m.Called(businessID, brandID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateBrandIDByBusiness")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, *uint64) error); ok {
+		r0 = rf(businessID, brandID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // UpsertBatch provides a mock function with given fields: accounts
 func (_m *MockRepository) UpsertBatch(accounts []MetaAdAccount) error {
 	ret := _m.Called(accounts)

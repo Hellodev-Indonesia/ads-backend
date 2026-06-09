@@ -20,6 +20,7 @@ type Repository interface {
 	Update(account *MetaAdAccount) error
 	UpdateBrandID(id string, brandID *uint64) error
 	UpdateBrandIDBatch(ids []string, brandID *uint64) error
+	UpdateBrandIDByBusiness(businessID string, brandID *uint64) error
 }
 
 type repository struct {
@@ -95,6 +96,10 @@ func (r *repository) UpdateBrandIDBatch(ids []string, brandID *uint64) error {
 		return nil
 	}
 	return r.db.Model(&MetaAdAccount{}).Where("id IN ?", ids).Update("brand_id", brandID).Error
+}
+
+func (r *repository) UpdateBrandIDByBusiness(businessID string, brandID *uint64) error {
+	return r.db.Model(&MetaAdAccount{}).Where("business_id = ?", businessID).Update("brand_id", brandID).Error
 }
 
 func (r *repository) FindUnassigned(filter AdAccountFilter) ([]MetaAdAccount, int64, error) {

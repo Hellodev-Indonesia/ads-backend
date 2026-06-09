@@ -111,7 +111,12 @@ func (h *Handler) AssignBrand(c *gin.Context) {
 		return
 	}
 
-	if err := h.service.BulkAssignBrand(req.AdAccountIDs, req.BrandID); err != nil {
+	if len(req.AdAccountIDs) == 0 && req.BusinessID == nil {
+		response.Error(c, http.StatusBadRequest, "Either ad_account_ids or business_id must be provided", nil)
+		return
+	}
+
+	if err := h.service.BulkAssignBrand(req); err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}

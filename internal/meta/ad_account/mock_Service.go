@@ -14,17 +14,17 @@ type MockService struct {
 	mock.Mock
 }
 
-// BulkAssignBrand provides a mock function with given fields: ids, brandID
-func (_m *MockService) BulkAssignBrand(ids []string, brandID *uint64) error {
-	ret := _m.Called(ids, brandID)
+// BulkAssignBrand provides a mock function with given fields: req
+func (_m *MockService) BulkAssignBrand(req dto.AssignBrandRequest) error {
+	ret := _m.Called(req)
 
 	if len(ret) == 0 {
 		panic("no return value specified for BulkAssignBrand")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func([]string, *uint64) error); ok {
-		r0 = rf(ids, brandID)
+	if rf, ok := ret.Get(0).(func(dto.AssignBrandRequest) error); ok {
+		r0 = rf(req)
 	} else {
 		r0 = ret.Error(0)
 	}
