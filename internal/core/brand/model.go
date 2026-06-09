@@ -7,12 +7,13 @@ import (
 )
 
 type Brand struct {
-	ID          uint64         `gorm:"primaryKey" json:"id"`
-	Name        string         `gorm:"size:255;not null" json:"name"`
-	Photo       *string        `gorm:"size:255" json:"photo,omitempty"`
-	Description *string        `type:"text" json:"description,omitempty"`
-	IsActive    bool           `gorm:"not null;default:true" json:"is_active"`
-	CreatedAt   time.Time      `json:"created_at"`
+	ID             uint64         `gorm:"primaryKey" json:"id"`
+	Slug           string         `gorm:"size:255;not null;uniqueIndex" json:"slug"`
+	Name           string         `gorm:"size:255;not null;uniqueIndex" json:"name"`
+	Photo          *string        `gorm:"size:255" json:"photo,omitempty"`
+	Description    *string        `type:"text" json:"description,omitempty"`
+	IsActive       bool           `gorm:"not null;default:true" json:"is_active"`
+	CreatedAt      time.Time      `json:"created_at"`
 	UpdatedAt      time.Time      `json:"updated_at"`
 	DeletedAt      gorm.DeletedAt `gorm:"index" json:"-"`
 	AdAccountCount int64          `gorm:"->;-:migration" json:"ad_account_count"`

@@ -2,7 +2,6 @@ package brand
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/alex/ads_backend/internal/core/brand/dto"
 	"github.com/alex/ads_backend/pkg/response"
@@ -65,24 +64,24 @@ func (h *Handler) FindAll(c *gin.Context) {
 	})
 }
 
-// FindByID godoc
+// FindBySlug godoc
 // @Summary      Get Brand Details
-// @Description  Get details of a specific brand by ID
+// @Description  Get details of a specific brand by Slug
 // @Tags         Brand
 // @Produce      json
-// @Param        id   path      int  true  "Brand ID"
+// @Param        slug   path      string  true  "Brand Slug"
 // @Success      200  {object}  response.SuccessResponse{data=dto.BrandResponse}
 // @Failure      404  {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /core/brands/{id} [get]
-func (h *Handler) FindByID(c *gin.Context) {
-	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
-	if err != nil {
-		response.Error(c, http.StatusBadRequest, "Invalid ID", nil)
+// @Router       /core/brands/{slug} [get]
+func (h *Handler) FindBySlug(c *gin.Context) {
+	slug := c.Param("slug")
+	if slug == "" {
+		response.Error(c, http.StatusBadRequest, "Invalid slug", nil)
 		return
 	}
 
-	brand, err := h.service.FindByID(id)
+	brand, err := h.service.FindBySlug(slug)
 	if err != nil {
 		response.Error(c, http.StatusNotFound, err.Error(), nil)
 		return
@@ -93,11 +92,14 @@ func (h *Handler) FindByID(c *gin.Context) {
 
 // Create godoc
 // @Summary      Create Brand
-// @Description  Create a new brand
+// @Description  Create a new brand with optional photo upload
 // @Tags         Brand
-// @Accept       json
+// @Accept       multipart/form-data
 // @Produce      json
-// @Param        request  body      dto.CreateBrandRequest  true  "Create Brand Request"
+// @Param        name         formData  string  true  "Brand Name"
+// @Param        photo        formData  file    false "Brand Photo (max 2MB)"
+// @Param        description  formData  string  false "Brand Description"
+// @Param        is_active    formData  bool    false "Is Active"
 // @Success      201      {object}  response.SuccessResponse{data=dto.BrandResponse}
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
@@ -105,7 +107,7 @@ func (h *Handler) FindByID(c *gin.Context) {
 // @Router       /core/brands [post]
 func (h *Handler) Create(c *gin.Context) {
 	var req dto.CreateBrandRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBind(&req); err != nil {
 		response.Error(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
@@ -121,32 +123,35 @@ func (h *Handler) Create(c *gin.Context) {
 
 // Update godoc
 // @Summary      Update Brand
-// @Description  Update an existing brand
+// @Description  Update an existing brand with optional photo upload
 // @Tags         Brand
-// @Accept       json
+// @Accept       multipart/form-data
 // @Produce      json
-// @Param        id       path      int                     true  "Brand ID"
-// @Param        request  body      dto.UpdateBrandRequest  true  "Update Brand Request"
+// @Param        slug         path      string  true  "Brand Slug"
+// @Param        name         formData  string  false "Brand Name"
+// @Param        photo        formData  file    false "Brand Photo (max 2MB)"
+// @Param        description  formData  string  false "Brand Description"
+// @Param        is_active    formData  bool    false "Is Active"
 // @Success      200      {object}  response.SuccessResponse{data=dto.BrandResponse}
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      404      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /core/brands/{id} [put]
+// @Router       /core/brands/{slug} [put]
 func (h *Handler) Update(c *gin.Context) {
-	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
-	if err != nil {
-		response.Error(c, http.StatusBadRequest, "Invalid ID", nil)
+	slug := c.Param("slug")
+	if slug == "" {
+		response.Error(c, http.StatusBadRequest, "Invalid slug", nil)
 		return
 	}
 
 	var req dto.UpdateBrandRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBind(&req); err != nil {
 		response.Error(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 
-	brand, err := h.service.Update(id, req)
+	brand, err := h.service.Update(slug, req)
 	if err != nil {
 		response.Error(c, http.StatusNotFound, err.Error(), nil)
 		return
@@ -160,21 +165,21 @@ func (h *Handler) Update(c *gin.Context) {
 // @Description  Soft delete a brand
 // @Tags         Brand
 // @Produce      json
-// @Param        id   path      int  true  "Brand ID"
+// @Param        slug   path      string  true  "Brand Slug"
 // @Success      200  {object}  response.SuccessResponse
 // @Failure      400  {object}  response.ErrorResponse
 // @Failure      404  {object}  response.ErrorResponse
 // @Failure      500  {object}  response.ErrorResponse
 // @Security     BearerAuth
-// @Router       /core/brands/{id} [delete]
+// @Router       /core/brands/{slug} [delete]
 func (h *Handler) Delete(c *gin.Context) {
-	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
-	if err != nil {
-		response.Error(c, http.StatusBadRequest, "Invalid ID", nil)
+	slug := c.Param("slug")
+	if slug == "" {
+		response.Error(c, http.StatusBadRequest, "Invalid slug", nil)
 		return
 	}
 
-	if err := h.service.Delete(id); err != nil {
+	if err := h.service.Delete(slug); err != nil {
 		response.Error(c, http.StatusNotFound, err.Error(), nil)
 		return
 	}

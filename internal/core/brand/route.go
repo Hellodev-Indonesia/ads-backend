@@ -6,13 +6,13 @@ import (
 )
 
 func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
-	brands := r.Group("/brands")
+	brands := r.Group("/core/brands")
 	brands.Use(middleware.AuthMiddleware())
 	{
 		brands.GET("", middleware.RequirePermission("core.brand.view"), h.FindAll)
-		brands.GET("/:id", middleware.RequirePermission("core.brand.view"), h.FindByID)
+		brands.GET("/:slug", middleware.RequirePermission("core.brand.view"), h.FindBySlug)
 		brands.POST("", middleware.RequirePermission("core.brand.create"), h.Create)
-		brands.PUT("/:id", middleware.RequirePermission("core.brand.update"), h.Update)
-		brands.DELETE("/:id", middleware.RequirePermission("core.brand.delete"), h.Delete)
+		brands.PUT("/:slug", middleware.RequirePermission("core.brand.update"), h.Update)
+		brands.DELETE("/:slug", middleware.RequirePermission("core.brand.delete"), h.Delete)
 	}
 }

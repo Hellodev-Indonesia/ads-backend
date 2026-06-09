@@ -51,15 +51,16 @@ func TestService_Update(t *testing.T) {
 
 	existing := &brand.Brand{
 		ID:        1,
+		Slug:      "old-brand",
 		Name:      "Old Brand",
 		IsActive:  true,
 		UpdatedAt: time.Now(),
 	}
 
-	mockRepo.On("FindByID", uint64(1)).Return(existing, nil)
+	mockRepo.On("FindBySlug", "old-brand").Return(existing, nil)
 	mockRepo.On("Update", mock.AnythingOfType("*brand.Brand")).Return(nil)
 
-	resp, err := svc.Update(1, req)
+	resp, err := svc.Update("old-brand", req)
 
 	assert.NoError(t, err)
 	assert.Equal(t, "Updated Brand", resp.Name)
@@ -68,9 +69,9 @@ func TestService_Update(t *testing.T) {
 func TestService_Update_NotFound(t *testing.T) {
 	mockRepo, svc := setupService(t)
 
-	mockRepo.On("FindByID", uint64(99)).Return(nil, errors.New("not found"))
+	mockRepo.On("FindBySlug", "not-found").Return((*brand.Brand)(nil), errors.New("not found"))
 
-	resp, err := svc.Update(99, dto.UpdateBrandRequest{})
+	resp, err := svc.Update("not-found", dto.UpdateBrandRequest{})
 
 	assert.Error(t, err)
 	assert.Equal(t, uint64(0), resp.ID)
@@ -79,26 +80,27 @@ func TestService_Update_NotFound(t *testing.T) {
 func TestService_Delete(t *testing.T) {
 	mockRepo, svc := setupService(t)
 
-	mockRepo.On("FindByID", uint64(1)).Return(&brand.Brand{ID: 1}, nil)
-	mockRepo.On("Delete", uint64(1)).Return(nil)
+	mockRepo.On("FindBySlug", "brand-1").Return(&brand.Brand{ID: 1, Slug: "brand-1"}, nil)
+	mockRepo.On("DeleteBySlug", "brand-1").Return(nil)
 
-	err := svc.Delete(1)
+	err := svc.Delete("brand-1")
 	assert.NoError(t, err)
 }
 
-func TestService_FindByID(t *testing.T) {
+func TestService_FindBySlug(t *testing.T) {
 	mockRepo, svc := setupService(t)
 
 	existing := &brand.Brand{
 		ID:        1,
+		Slug:      "brand-one",
 		Name:      "Brand One",
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
 
-	mockRepo.On("FindByID", uint64(1)).Return(existing, nil)
+	mockRepo.On("FindBySlug", "brand-one").Return(existing, nil)
 
-	resp, err := svc.FindByID(1)
+	resp, err := svc.FindBySlug("brand-one")
 
 	assert.NoError(t, err)
 	assert.Equal(t, uint64(1), resp.ID)

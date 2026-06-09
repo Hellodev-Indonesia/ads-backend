@@ -30,17 +30,17 @@ func (_m *MockRepository) Create(brand *Brand) error {
 	return r0
 }
 
-// Delete provides a mock function with given fields: id
-func (_m *MockRepository) Delete(id uint64) error {
-	ret := _m.Called(id)
+// DeleteBySlug provides a mock function with given fields: slug
+func (_m *MockRepository) DeleteBySlug(slug string) error {
+	ret := _m.Called(slug)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Delete")
+		panic("no return value specified for DeleteBySlug")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(uint64) error); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(slug)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -85,29 +85,29 @@ func (_m *MockRepository) FindAll(filter dto.BrandFilter) ([]Brand, int64, error
 	return r0, r1, r2
 }
 
-// FindByID provides a mock function with given fields: id
-func (_m *MockRepository) FindByID(id uint64) (*Brand, error) {
-	ret := _m.Called(id)
+// FindBySlug provides a mock function with given fields: slug
+func (_m *MockRepository) FindBySlug(slug string) (*Brand, error) {
+	ret := _m.Called(slug)
 
 	if len(ret) == 0 {
-		panic("no return value specified for FindByID")
+		panic("no return value specified for FindBySlug")
 	}
 
 	var r0 *Brand
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint64) (*Brand, error)); ok {
-		return rf(id)
+	if rf, ok := ret.Get(0).(func(string) (*Brand, error)); ok {
+		return rf(slug)
 	}
-	if rf, ok := ret.Get(0).(func(uint64) *Brand); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(string) *Brand); ok {
+		r0 = rf(slug)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*Brand)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(uint64) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(slug)
 	} else {
 		r1 = ret.Error(1)
 	}

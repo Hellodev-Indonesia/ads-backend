@@ -2,7 +2,7 @@ package integration_test
 
 import (
 	"bytes"
-	"encoding/json"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -22,10 +22,10 @@ func setupBrandRouter(mockService brand.Service) *gin.Engine {
 	brands := router.Group("/brands")
 	{
 		brands.GET("", handler.FindAll)
-		brands.GET("/:id", handler.FindByID)
+		brands.GET("/:slug", handler.FindBySlug)
 		brands.POST("", handler.Create)
-		brands.PUT("/:id", handler.Update)
-		brands.DELETE("/:id", handler.Delete)
+		brands.PUT("/:slug", handler.Update)
+		brands.DELETE("/:slug", handler.Delete)
 	}
 	return router
 }
@@ -34,20 +34,22 @@ func TestBrandAPI_Create(t *testing.T) {
 	mockService := brand.NewMockService(t)
 	router := setupBrandRouter(mockService)
 
-	isActive := true
-	reqPayload := dto.CreateBrandRequest{
-		Name:     "Brand 1",
-		IsActive: &isActive,
-	}
-	body, _ := json.Marshal(reqPayload)
+	// removed reqPayload
+
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	writer.WriteField("name", "Brand 1")
+	writer.WriteField("is_active", "true")
+	writer.Close()
 
 	mockService.On("Create", mock.AnythingOfType("dto.CreateBrandRequest")).Return(dto.BrandResponse{
 		ID:   1,
+		Slug: "brand-1",
 		Name: "Brand 1",
 	}, nil)
 
-	req, _ := http.NewRequest(http.MethodPost, "/brands", bytes.NewBuffer(body))
-	req.Header.Set("Content-Type", "application/json")
+	req, _ := http.NewRequest(http.MethodPost, "/brands", body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 
@@ -67,13 +69,13 @@ func TestBrandAPI_FindAll(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 
-func TestBrandAPI_FindByID(t *testing.T) {
+func TestBrandAPI_FindBySlug(t *testing.T) {
 	mockService := brand.NewMockService(t)
 	router := setupBrandRouter(mockService)
 
-	mockService.On("FindByID", uint64(1)).Return(dto.BrandResponse{ID: 1, Name: "Brand 1"}, nil)
+	mockService.On("FindBySlug", "brand-1").Return(dto.BrandResponse{ID: 1, Slug: "brand-1", Name: "Brand 1"}, nil)
 
-	req, _ := http.NewRequest(http.MethodGet, "/brands/1", nil)
+	req, _ := http.NewRequest(http.MethodGet, "/brands/brand-1", nil)
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 
@@ -84,19 +86,19 @@ func TestBrandAPI_Update(t *testing.T) {
 	mockService := brand.NewMockService(t)
 	router := setupBrandRouter(mockService)
 
-	newName := "Brand Updated"
-	reqPayload := dto.UpdateBrandRequest{
-		Name: &newName,
-	}
-	body, _ := json.Marshal(reqPayload)
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	writer.WriteField("name", "Brand Updated")
+	writer.Close()
 
-	mockService.On("Update", uint64(1), mock.AnythingOfType("dto.UpdateBrandRequest")).Return(dto.BrandResponse{
+	mockService.On("Update", "brand-1", mock.AnythingOfType("dto.UpdateBrandRequest")).Return(dto.BrandResponse{
 		ID:   1,
+		Slug: "brand-updated",
 		Name: "Brand Updated",
 	}, nil)
 
-	req, _ := http.NewRequest(http.MethodPut, "/brands/1", bytes.NewBuffer(body))
-	req.Header.Set("Content-Type", "application/json")
+	req, _ := http.NewRequest(http.MethodPut, "/brands/brand-1", body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 
@@ -107,9 +109,9 @@ func TestBrandAPI_Delete(t *testing.T) {
 	mockService := brand.NewMockService(t)
 	router := setupBrandRouter(mockService)
 
-	mockService.On("Delete", uint64(1)).Return(nil)
+	mockService.On("Delete", "brand-1").Return(nil)
 
-	req, _ := http.NewRequest(http.MethodDelete, "/brands/1", nil)
+	req, _ := http.NewRequest(http.MethodDelete, "/brands/brand-1", nil)
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 

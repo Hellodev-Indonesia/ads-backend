@@ -146,6 +146,8 @@ definitions:
     type: object
   dto.BrandResponse:
     properties:
+      ad_account_count:
+        type: integer
       created_at:
         type: string
       description:
@@ -157,6 +159,8 @@ definitions:
       name:
         type: string
       photo:
+        type: string
+      slug:
         type: string
       updated_at:
         type: string
@@ -233,21 +237,6 @@ definitions:
         type: boolean
       matched_rule:
         $ref: '#/definitions/dto.WhitelistRuleResponse'
-    type: object
-  dto.CreateBrandRequest:
-    properties:
-      description:
-        type: string
-      is_active:
-        type: boolean
-      name:
-        maxLength: 255
-        type: string
-      photo:
-        maxLength: 255
-        type: string
-    required:
-    - name
     type: object
   dto.CreateWhitelistRuleRequest:
     properties:
@@ -503,19 +492,6 @@ definitions:
         type: string
       date_stop:
         example: "2026-03-31"
-        type: string
-    type: object
-  dto.UpdateBrandRequest:
-    properties:
-      description:
-        type: string
-      is_active:
-        type: boolean
-      name:
-        maxLength: 255
-        type: string
-      photo:
-        maxLength: 255
         type: string
     type: object
   dto.UpdateWhitelistRuleRequest:
@@ -952,87 +928,6 @@ paths:
       summary: Logout
       tags:
       - Authentication
-  /brands:
-    get:
-      description: Get a paginated list of brands
-      parameters:
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 25
-        description: Items per page
-        in: query
-        name: limit
-        type: integer
-      - description: Search by name
-        in: query
-        name: name
-        type: string
-      - description: Filter by active status
-        in: query
-        name: is_active
-        type: boolean
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.PaginationResponse'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/dto.BrandResponse'
-                  type: array
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: List Brands
-      tags:
-      - Brand
-    post:
-      consumes:
-      - application/json
-      description: Create a new brand
-      parameters:
-      - description: Create Brand Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateBrandRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.SuccessResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/dto.BrandResponse'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Create Brand
-      tags:
-      - Brand
   /brands/{brand_id}/whitelist-rules:
     get:
       consumes:
@@ -1248,15 +1143,107 @@ paths:
       summary: Check URL against whitelist
       tags:
       - Brand Whitelist Rules
-  /brands/{id}:
+  /core/brands:
+    get:
+      description: Get a paginated list of brands
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search by name
+        in: query
+        name: name
+        type: string
+      - description: Filter by active status
+        in: query
+        name: is_active
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.BrandResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List Brands
+      tags:
+      - Brand
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new brand with optional photo upload
+      parameters:
+      - description: Brand Name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Brand Photo (max 2MB)
+        in: formData
+        name: photo
+        type: file
+      - description: Brand Description
+        in: formData
+        name: description
+        type: string
+      - description: Is Active
+        in: formData
+        name: is_active
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.BrandResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create Brand
+      tags:
+      - Brand
+  /core/brands/{slug}:
     delete:
       description: Soft delete a brand
       parameters:
-      - description: Brand ID
+      - description: Brand Slug
         in: path
-        name: id
+        name: slug
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -1282,13 +1269,13 @@ paths:
       tags:
       - Brand
     get:
-      description: Get details of a specific brand by ID
+      description: Get details of a specific brand by Slug
       parameters:
-      - description: Brand ID
+      - description: Brand Slug
         in: path
-        name: id
+        name: slug
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -1312,20 +1299,30 @@ paths:
       - Brand
     put:
       consumes:
-      - application/json
-      description: Update an existing brand
+      - multipart/form-data
+      description: Update an existing brand with optional photo upload
       parameters:
-      - description: Brand ID
+      - description: Brand Slug
         in: path
-        name: id
+        name: slug
         required: true
-        type: integer
-      - description: Update Brand Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.UpdateBrandRequest'
+        type: string
+      - description: Brand Name
+        in: formData
+        name: name
+        type: string
+      - description: Brand Photo (max 2MB)
+        in: formData
+        name: photo
+        type: file
+      - description: Brand Description
+        in: formData
+        name: description
+        type: string
+      - description: Is Active
+        in: formData
+        name: is_active
+        type: boolean
       produces:
       - application/json
       responses:

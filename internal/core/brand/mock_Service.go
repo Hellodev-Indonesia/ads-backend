@@ -40,17 +40,17 @@ func (_m *MockService) Create(req dto.CreateBrandRequest) (dto.BrandResponse, er
 	return r0, r1
 }
 
-// Delete provides a mock function with given fields: id
-func (_m *MockService) Delete(id uint64) error {
-	ret := _m.Called(id)
+// Delete provides a mock function with given fields: slug
+func (_m *MockService) Delete(slug string) error {
+	ret := _m.Called(slug)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Delete")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(uint64) error); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(slug)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -95,27 +95,27 @@ func (_m *MockService) FindAll(filter dto.BrandFilter) ([]dto.BrandResponse, int
 	return r0, r1, r2
 }
 
-// FindByID provides a mock function with given fields: id
-func (_m *MockService) FindByID(id uint64) (dto.BrandResponse, error) {
-	ret := _m.Called(id)
+// FindBySlug provides a mock function with given fields: slug
+func (_m *MockService) FindBySlug(slug string) (dto.BrandResponse, error) {
+	ret := _m.Called(slug)
 
 	if len(ret) == 0 {
-		panic("no return value specified for FindByID")
+		panic("no return value specified for FindBySlug")
 	}
 
 	var r0 dto.BrandResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint64) (dto.BrandResponse, error)); ok {
-		return rf(id)
+	if rf, ok := ret.Get(0).(func(string) (dto.BrandResponse, error)); ok {
+		return rf(slug)
 	}
-	if rf, ok := ret.Get(0).(func(uint64) dto.BrandResponse); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(string) dto.BrandResponse); ok {
+		r0 = rf(slug)
 	} else {
 		r0 = ret.Get(0).(dto.BrandResponse)
 	}
 
-	if rf, ok := ret.Get(1).(func(uint64) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(slug)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -123,9 +123,9 @@ func (_m *MockService) FindByID(id uint64) (dto.BrandResponse, error) {
 	return r0, r1
 }
 
-// Update provides a mock function with given fields: id, req
-func (_m *MockService) Update(id uint64, req dto.UpdateBrandRequest) (dto.BrandResponse, error) {
-	ret := _m.Called(id, req)
+// Update provides a mock function with given fields: slug, req
+func (_m *MockService) Update(slug string, req dto.UpdateBrandRequest) (dto.BrandResponse, error) {
+	ret := _m.Called(slug, req)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Update")
@@ -133,17 +133,17 @@ func (_m *MockService) Update(id uint64, req dto.UpdateBrandRequest) (dto.BrandR
 
 	var r0 dto.BrandResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint64, dto.UpdateBrandRequest) (dto.BrandResponse, error)); ok {
-		return rf(id, req)
+	if rf, ok := ret.Get(0).(func(string, dto.UpdateBrandRequest) (dto.BrandResponse, error)); ok {
+		return rf(slug, req)
 	}
-	if rf, ok := ret.Get(0).(func(uint64, dto.UpdateBrandRequest) dto.BrandResponse); ok {
-		r0 = rf(id, req)
+	if rf, ok := ret.Get(0).(func(string, dto.UpdateBrandRequest) dto.BrandResponse); ok {
+		r0 = rf(slug, req)
 	} else {
 		r0 = ret.Get(0).(dto.BrandResponse)
 	}
 
-	if rf, ok := ret.Get(1).(func(uint64, dto.UpdateBrandRequest) error); ok {
-		r1 = rf(id, req)
+	if rf, ok := ret.Get(1).(func(string, dto.UpdateBrandRequest) error); ok {
+		r1 = rf(slug, req)
 	} else {
 		r1 = ret.Error(1)
 	}

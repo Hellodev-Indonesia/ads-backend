@@ -8,8 +8,8 @@ import (
 type Repository interface {
 	Create(brand *Brand) error
 	Update(brand *Brand) error
-	Delete(id uint64) error
-	FindByID(id uint64) (*Brand, error)
+	DeleteBySlug(slug string) error
+	FindBySlug(slug string) (*Brand, error)
 	FindAll(filter dto.BrandFilter) ([]Brand, int64, error)
 }
 
@@ -41,13 +41,13 @@ func (r *repository) Update(brand *Brand) error {
 	return r.db.Save(brand).Error
 }
 
-func (r *repository) Delete(id uint64) error {
-	return r.db.Delete(&Brand{}, id).Error
+func (r *repository) DeleteBySlug(slug string) error {
+	return r.db.Where("slug = ?", slug).Delete(&Brand{}).Error
 }
 
-func (r *repository) FindByID(id uint64) (*Brand, error) {
+func (r *repository) FindBySlug(slug string) (*Brand, error) {
 	var brand Brand
-	err := r.db.Select("brands.*, (SELECT count(id) FROM meta_ad_accounts WHERE brand_id = brands.id) as ad_account_count").First(&brand, id).Error
+	err := r.db.Select("brands.*, (SELECT count(id) FROM meta_ad_accounts WHERE brand_id = brands.id) as ad_account_count").Where("slug = ?", slug).First(&brand).Error
 	return &brand, err
 }
 
