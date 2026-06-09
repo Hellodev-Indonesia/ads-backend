@@ -130,6 +130,10 @@ func (r *repository) FindUnassigned(filter AdAccountFilter) ([]MetaAdAccount, in
 		query = query.Where("name LIKE ?", "%"+filter.Search+"%")
 	}
 
+	if filter.BusinessID != nil {
+		query = query.Where("business_id = ?", *filter.BusinessID)
+	}
+
 	query.Count(&total)
 
 	if filter.Limit <= 0 {

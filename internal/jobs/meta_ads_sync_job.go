@@ -16,7 +16,6 @@ import (
 	"github.com/alex/ads_backend/internal/meta/campaign"
 	"github.com/alex/ads_backend/internal/meta/insight"
 	insightDto "github.com/alex/ads_backend/internal/meta/insight/dto"
-	"github.com/alex/ads_backend/internal/meta/business"
 	metasync "github.com/alex/ads_backend/internal/meta/sync"
 	syncDto "github.com/alex/ads_backend/internal/meta/sync/dto"
 )
@@ -55,7 +54,6 @@ type MetaAdsSyncJob struct {
 	adsService        ads.Service
 	insightService    insight.Service
 	adCreativeService adcreative.Service
-	businessService   business.Service
 	syncLogService    *metasync.Service
 	publisher         Publisher
 	running           atomic.Bool
@@ -70,7 +68,6 @@ func NewMetaAdsSyncJob(
 	syncLogService *metasync.Service,
 	publisher Publisher,
 	adCreativeService adcreative.Service,
-	businessService business.Service,
 ) *MetaAdsSyncJob {
 	return &MetaAdsSyncJob{
 		adAccountService:  adAccountService,
@@ -79,7 +76,6 @@ func NewMetaAdsSyncJob(
 		adsService:        adsService,
 		insightService:    insightService,
 		adCreativeService: adCreativeService,
-		businessService:   businessService,
 		syncLogService:    syncLogService,
 		publisher:         publisher,
 	}
@@ -190,21 +186,7 @@ func (j *MetaAdsSyncJob) IsRunning() bool {
 func (j *MetaAdsSyncJob) executeAll(batches []*metasync.MetaSyncBatch, insightsOnly bool, insightReq insightDto.SyncInsightRequest) {
 	defer j.running.Store(false)
 
-	if !insightsOnly && len(batches) > 0 {
-		// Sync businesses once per global sync
-		ctx := context.Background()
-		firstBatch := batches[0] // We log this under the first batch
-		
-		_, err := j.runSyncStep(
-			ctx, firstBatch.ID,
-			metasync.SyncTypeBusinesses,
-			"/me/businesses",
-			func() (int, error) { return j.businessService.SyncBusinesses() },
-		)
-		if err != nil {
-			log.Printf("Failed to sync businesses: %v", err)
-		}
-	}
+
 
 	for _, batch := range batches {
 		j.execute(batch, insightsOnly, insightReq)

@@ -1209,6 +1209,12 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "description": "Filter by Business ID",
+                        "name": "business_id",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "description": "Page number",
                         "name": "page",
@@ -1307,9 +1313,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/meta/ad-accounts/unassigned": {
+        "/meta/ad-accounts/businesses": {
             "get": {
-                "description": "Retrieve all ad accounts not assigned to any brand",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get unique business options available in ad accounts",
                 "consumes": [
                     "application/json"
                 ],
@@ -1319,7 +1330,45 @@ const docTemplate = `{
                 "tags": [
                     "Meta Ad Accounts"
                 ],
-                "summary": "Get Unassigned Meta Ad Accounts",
+                "summary": "Get Business Options",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.BusinessOptionResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/ad-accounts/unassigned": {
+            "get": {
+                "description": "Get paginated list of Meta ad accounts that are not assigned to any brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Ad Accounts"
+                ],
+                "summary": "Get Unassigned Ad Accounts",
                 "parameters": [
                     {
                         "type": "string",
@@ -1338,6 +1387,12 @@ const docTemplate = `{
                         "description": "Items per page",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by Business ID",
+                        "name": "business_id",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1346,7 +1401,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1356,9 +1411,6 @@ const docTemplate = `{
                                             "items": {
                                                 "$ref": "#/definitions/dto.AdAccountResponse"
                                             }
-                                        },
-                                        "meta": {
-                                            "$ref": "#/definitions/response.Meta"
                                         }
                                     }
                                 }
@@ -1367,6 +1419,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }
@@ -1539,79 +1597,6 @@ const docTemplate = `{
                                         },
                                         "meta": {
                                             "$ref": "#/definitions/response.PaginationMeta"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/meta/businesses": {
-            "get": {
-                "description": "Retrieve all business portfolios synced from Meta API",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Meta Businesses"
-                ],
-                "summary": "Get Meta Businesses (Portfolios)",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Search by name",
-                        "name": "search",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Items per page",
-                        "name": "limit",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/dto.BusinessResponse"
-                                            }
-                                        },
-                                        "meta": {
-                                            "$ref": "#/definitions/response.Meta"
                                         }
                                     }
                                 }
@@ -3368,9 +3353,6 @@ const docTemplate = `{
                 },
                 "brand_id": {
                     "type": "integer"
-                },
-                "business_id": {
-                    "type": "string"
                 }
             }
         },
@@ -3434,26 +3416,14 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.BusinessResponse": {
+        "dto.BusinessOptionResponse": {
             "type": "object",
             "properties": {
-                "created_time": {
+                "business_id": {
                     "type": "string"
                 },
-                "id": {
+                "business_name": {
                     "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "profile_picture_uri": {
-                    "type": "string"
-                },
-                "synced_at": {
-                    "type": "string"
-                },
-                "timezone_id": {
-                    "type": "integer"
                 }
             }
         },

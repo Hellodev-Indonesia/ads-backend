@@ -27,6 +27,7 @@ var _ = dto.AdAccountResponse{}
 // @Produce      json
 // @Param        search   query     string  false  "Search by name"
 // @Param        brand_id query     int     false  "Filter by Brand ID"
+// @Param        business_id query  string  false  "Filter by Business ID"
 // @Param        page     query     int     false  "Page number"
 // @Param        limit    query     int     false  "Items per page"
 // @Success      200      {object}  response.Response{data=[]dto.AdAccountResponse,meta=response.Meta}
@@ -46,11 +47,18 @@ func (h *Handler) GetAdAccounts(c *gin.Context) {
 		}
 	}
 
+	businessID := c.Query("business_id")
+	var businessIDPtr *string
+	if businessID != "" {
+		businessIDPtr = &businessID
+	}
+
 	filter := AdAccountFilter{
-		Search:  search,
-		Page:    page,
-		Limit:   limit,
-		BrandID: brandID,
+		Search:     search,
+		Page:       page,
+		Limit:      limit,
+		BrandID:    brandID,
+		BusinessID: businessIDPtr,
 	}
 
 	resp, meta, err := h.service.GetAdAccounts(filter)
@@ -62,17 +70,19 @@ func (h *Handler) GetAdAccounts(c *gin.Context) {
 }
 
 // GetUnassignedAdAccounts godoc
-// @Summary      Get Unassigned Meta Ad Accounts
-// @Description  Retrieve all ad accounts not assigned to any brand
+// @Summary      Get Unassigned Ad Accounts
+// @Description  Get paginated list of Meta ad accounts that are not assigned to any brand
 // @Tags         Meta Ad Accounts
 // @Accept       json
 // @Produce      json
-// @Param        search   query     string  false  "Search by name"
-// @Param        page     query     int     false  "Page number"
-// @Param        limit    query     int     false  "Items per page"
-// @Success      200      {object}  response.Response{data=[]dto.AdAccountResponse,meta=response.Meta}
-// @Failure      400      {object}  response.ErrorResponse
-// @Failure      500      {object}  response.ErrorResponse
+// @Param        search    query     string  false  "Search by name"
+// @Param        page      query     int     false  "Page number"
+// @Param        limit     query     int     false  "Items per page"
+// @Param        business_id query   string  false  "Filter by Business ID"
+// @Success      200       {object}  response.PaginationResponse{data=[]dto.AdAccountResponse}
+// @Failure      400       {object}  response.ErrorResponse
+// @Failure      401       {object}  response.ErrorResponse
+// @Failure      500       {object}  response.ErrorResponse
 // @Router       /meta/ad-accounts/unassigned [get]
 func (h *Handler) GetUnassignedAdAccounts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))

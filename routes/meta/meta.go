@@ -4,7 +4,6 @@ import (
 	"github.com/alex/ads_backend/internal/meta/ad_account"
 	"github.com/alex/ads_backend/internal/meta/ads"
 	"github.com/alex/ads_backend/internal/meta/adset"
-	"github.com/alex/ads_backend/internal/meta/business"
 	"github.com/alex/ads_backend/internal/meta/campaign"
 	"github.com/alex/ads_backend/internal/meta/dashboard"
 	"github.com/alex/ads_backend/internal/meta/insight"
@@ -19,7 +18,6 @@ func RegisterMetaRoutes(
 	adsHandler *ads.Handler,
 	insightHandler *insight.Handler,
 	dashboardHandler *dashboard.Handler,
-	businessHandler *business.Handler,
 ) {
 	ad_account.RegisterRoutes(r, adAccHandler)
 	campaign.RegisterRoutes(r, campaignHandler)
@@ -27,5 +25,4 @@ func RegisterMetaRoutes(
 	ads.RegisterRoutes(r, adsHandler)
 	insight.RegisterRoutes(r, insightHandler)
 	dashboard.RegisterRoutes(r, dashboardHandler)
-	business.RegisterRoutes(r, businessHandler)
 }

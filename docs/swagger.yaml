@@ -125,8 +125,6 @@ definitions:
         type: array
       brand_id:
         type: integer
-      business_id:
-        type: string
     type: object
   dto.AssignPermissionRequest:
     properties:
@@ -167,20 +165,12 @@ definitions:
       updated_at:
         type: string
     type: object
-  dto.BusinessResponse:
+  dto.BusinessOptionResponse:
     properties:
-      created_time:
+      business_id:
         type: string
-      id:
+      business_name:
         type: string
-      name:
-        type: string
-      profile_picture_uri:
-        type: string
-      synced_at:
-        type: string
-      timezone_id:
-        type: integer
     type: object
   dto.CampaignResponse:
     properties:
@@ -1504,6 +1494,10 @@ paths:
         in: query
         name: brand_id
         type: integer
+      - description: Filter by Business ID
+        in: query
+        name: business_id
+        type: string
       - description: Page number
         in: query
         name: page
@@ -1570,11 +1564,36 @@ paths:
       summary: Assign or Unassign Brand to Ad Accounts
       tags:
       - Meta Ad Accounts
+  /meta/ad-accounts/businesses:
+    get:
+      consumes:
+      - application/json
+      description: Get unique business options available in ad accounts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.BusinessOptionResponse'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get Business Options
+      tags:
+      - Meta Ad Accounts
   /meta/ad-accounts/unassigned:
     get:
       consumes:
       - application/json
-      description: Retrieve all ad accounts not assigned to any brand
+      description: Get paginated list of Meta ad accounts that are not assigned to
+        any brand
       parameters:
       - description: Search by name
         in: query
@@ -1588,6 +1607,10 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: Filter by Business ID
+        in: query
+        name: business_id
+        type: string
       produces:
       - application/json
       responses:
@@ -1595,24 +1618,26 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/response.Response'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
                     $ref: '#/definitions/dto.AdAccountResponse'
                   type: array
-                meta:
-                  $ref: '#/definitions/response.Meta'
               type: object
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Get Unassigned Meta Ad Accounts
+      summary: Get Unassigned Ad Accounts
       tags:
       - Meta Ad Accounts
   /meta/ads:
@@ -1729,51 +1754,6 @@ paths:
       summary: Get AdSets
       tags:
       - Meta AdSets
-  /meta/businesses:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve all business portfolios synced from Meta API
-      parameters:
-      - description: Search by name
-        in: query
-        name: search
-        type: string
-      - description: Page number
-        in: query
-        name: page
-        type: integer
-      - description: Items per page
-        in: query
-        name: limit
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/dto.BusinessResponse'
-                  type: array
-                meta:
-                  $ref: '#/definitions/response.Meta'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      summary: Get Meta Businesses (Portfolios)
-      tags:
-      - Meta Businesses
   /meta/campaigns:
     get:
       consumes:
