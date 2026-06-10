@@ -713,8 +713,8 @@ SELECT
     SUM(i.spend) AS total_spends
 FROM brands b
 LEFT JOIN meta_ad_accounts a ON b.id = a.brand_id
-LEFT JOIN meta_campaigns c ON a.id = c.account_id
-LEFT JOIN meta_insights i ON c.id = i.campaign_id AND i.level = 'campaign'` + insightWhere + `
+LEFT JOIN meta_campaigns c ON a.id COLLATE utf8mb4_unicode_ci = c.account_id COLLATE utf8mb4_unicode_ci
+LEFT JOIN meta_insights i ON c.id COLLATE utf8mb4_unicode_ci = i.campaign_id COLLATE utf8mb4_unicode_ci AND i.level = 'campaign'` + insightWhere + `
 ` + where + `
 GROUP BY b.id, b.name
 ORDER BY b.name ASC
