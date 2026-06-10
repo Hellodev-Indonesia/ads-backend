@@ -8,6 +8,7 @@ import (
 	"github.com/alex/ads_backend/internal/core/permission"
 	"github.com/alex/ads_backend/internal/core/role"
 	"github.com/alex/ads_backend/internal/core/user"
+	"github.com/alex/ads_backend/internal/core/contact_person"
 	"github.com/alex/ads_backend/internal/notification/alert"
 	"github.com/gin-gonic/gin"
 )
@@ -21,6 +22,7 @@ func RegisterCoreRoutes(
 	brandHandler *brand.Handler,
 	whitelistHandler *brand_whitelist_rule.Handler,
 	fraudLogHandler *fraudlog.Handler,
+	contactPersonHandler *contact_person.Handler,
 	alertHandler *alert.Handler,
 ) {
 	auth.RegisterRoutes(r, authHandler)
@@ -30,5 +32,6 @@ func RegisterCoreRoutes(
 	brand.RegisterRoutes(r, brandHandler)
 	brand_whitelist_rule.RegisterRoutes(r, whitelistHandler)
 	fraudlog.RegisterRoutes(r, fraudLogHandler)
+	contact_person.RegisterRoutes(r, contactPersonHandler)
 	alert.RegisterRoutes(r, alertHandler)
 }

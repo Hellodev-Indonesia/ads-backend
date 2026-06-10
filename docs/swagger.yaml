@@ -245,6 +245,52 @@ definitions:
       matched_rule:
         $ref: '#/definitions/dto.WhitelistRuleResponse'
     type: object
+  dto.ContactPersonListResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John Doe
+        type: string
+      phone:
+        example: "+6281234567890"
+        type: string
+    type: object
+  dto.ContactPersonRequest:
+    properties:
+      name:
+        example: John Doe
+        maxLength: 255
+        minLength: 2
+        type: string
+      phone:
+        example: "+6281234567890"
+        maxLength: 50
+        minLength: 6
+        type: string
+    required:
+    - name
+    - phone
+    type: object
+  dto.ContactPersonResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John Doe
+        type: string
+      phone:
+        example: "+6281234567890"
+        type: string
+      updated_at:
+        type: string
+    type: object
   dto.CreateWhitelistRuleRequest:
     properties:
       allow_subdomains:
@@ -1150,6 +1196,181 @@ paths:
       summary: Check URL against whitelist
       tags:
       - Brand Whitelist Rules
+  /contact-persons:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of contact persons
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.ContactPersonListResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List contact persons
+      tags:
+      - Core - Contact Person
+    post:
+      consumes:
+      - application/json
+      description: Create a new contact person
+      parameters:
+      - description: Contact Person request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ContactPersonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ContactPersonResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create contact person
+      tags:
+      - Core - Contact Person
+  /contact-persons/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a contact person by ID
+      parameters:
+      - description: Contact Person ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete contact person
+      tags:
+      - Core - Contact Person
+    get:
+      consumes:
+      - application/json
+      description: Get contact person details by ID
+      parameters:
+      - description: Contact Person ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ContactPersonResponse'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get contact person by ID
+      tags:
+      - Core - Contact Person
+    put:
+      consumes:
+      - application/json
+      description: Update an existing contact person
+      parameters:
+      - description: Contact Person ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Contact Person request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ContactPersonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ContactPersonResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update contact person
+      tags:
+      - Core - Contact Person
   /core/brands:
     get:
       description: Get a paginated list of brands

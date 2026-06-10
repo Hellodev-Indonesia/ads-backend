@@ -18,6 +18,10 @@ func SeedCore(db *gorm.DB) {
 		{Name: "rbac.role.manage", Description: "Manage roles"},
 		{Name: "meta.campaign.view", Description: "View campaigns"},
 		{Name: "meta.campaign.sync", Description: "Sync campaigns from Meta"},
+		{Name: "core.contact_person.view", Description: "View contact persons"},
+		{Name: "core.contact_person.create", Description: "Create contact person"},
+		{Name: "core.contact_person.update", Description: "Update contact person"},
+		{Name: "core.contact_person.delete", Description: "Delete contact person"},
 	}
 
 	for i := range permissions {

@@ -5,6 +5,7 @@ import (
 	"github.com/alex/ads_backend/internal/core/auth"
 	"github.com/alex/ads_backend/internal/core/brand"
 	"github.com/alex/ads_backend/internal/core/brand_whitelist_rule"
+	"github.com/alex/ads_backend/internal/core/contact_person"
 	fraudlog "github.com/alex/ads_backend/internal/core/fraud_log"
 	"github.com/alex/ads_backend/internal/core/permission"
 	"github.com/alex/ads_backend/internal/core/role"
@@ -47,6 +48,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		brandRepo := brand.NewRepository(config.DB)
 		whitelistRepo := brand_whitelist_rule.NewRepository(config.DB)
 		fraudLogRepo := fraudlog.NewRepository(config.DB)
+		contactPersonRepo := contact_person.NewRepository(config.DB)
 		alertRepo := alert.NewRepository(config.DB)
 
 		// Services
@@ -57,6 +59,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		brandService := brand.NewService(brandRepo)
 		whitelistSvc := brand_whitelist_rule.NewService(whitelistRepo)
 		fraudLogSvc := fraudlog.NewService(fraudLogRepo)
+		contactPersonService := contact_person.NewService(contactPersonRepo)
 		alertSvc := alert.NewService(alertRepo)
 
 		// Handlers
@@ -67,10 +70,11 @@ func RegisterApiRoutes(router *gin.Engine) {
 		brandHandler := brand.NewHandler(brandService)
 		whitelistHandler := brand_whitelist_rule.NewHandler(whitelistSvc)
 		fraudLogHandler := fraudlog.NewHandler(fraudLogSvc)
+		contactPersonHandler := contact_person.NewHandler(contactPersonService)
 		alertHandler := alert.NewHandler(alertSvc)
 
 		// Register Core Routes
-		core.RegisterCoreRoutes(v1, authHandler, userHandler, roleHandler, permHandler, brandHandler, whitelistHandler, fraudLogHandler, alertHandler)
+		core.RegisterCoreRoutes(v1, authHandler, userHandler, roleHandler, permHandler, brandHandler, whitelistHandler, fraudLogHandler, contactPersonHandler, alertHandler)
 
 		// --- META DOMAIN ---
 		// Shared low-level client (single instance, injected into all sub-module services)

@@ -92,6 +92,45 @@ func (_m *MockService) GetAdSetDashboard(filter DashboardFilter) ([]dto.AdSetDas
 	return r0, r1, r2
 }
 
+// GetBrandDashboard provides a mock function with given fields: filter
+func (_m *MockService) GetBrandDashboard(filter DashboardFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error) {
+	ret := _m.Called(filter)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetBrandDashboard")
+	}
+
+	var r0 []dto.BrandDashboardResponse
+	var r1 *response.PaginationMeta
+	var r2 error
+	if rf, ok := ret.Get(0).(func(DashboardFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error)); ok {
+		return rf(filter)
+	}
+	if rf, ok := ret.Get(0).(func(DashboardFilter) []dto.BrandDashboardResponse); ok {
+		r0 = rf(filter)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dto.BrandDashboardResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(DashboardFilter) *response.PaginationMeta); ok {
+		r1 = rf(filter)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*response.PaginationMeta)
+		}
+	}
+
+	if rf, ok := ret.Get(2).(func(DashboardFilter) error); ok {
+		r2 = rf(filter)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // GetCampaignDashboard provides a mock function with given fields: filter
 func (_m *MockService) GetCampaignDashboard(filter DashboardFilter) ([]dto.CampaignDashboardRow, *response.PaginationMeta, error) {
 	ret := _m.Called(filter)
