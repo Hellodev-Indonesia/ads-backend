@@ -159,8 +159,6 @@ func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json
 
 		if autoPage && base.Paging != nil && base.Paging.Next != "" {
 			nextURL = base.Paging.Next
-			// Add a small delay between pages to prevent hitting rate limits too quickly
-			time.Sleep(500 * time.Millisecond)
 		} else {
 			nextURL = ""
 		}
