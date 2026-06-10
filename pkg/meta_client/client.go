@@ -54,7 +54,7 @@ func NewClient(baseURL, version, accessToken string) *Client {
 		Version:     version,
 		AccessToken: accessToken,
 		HTTPClient: &http.Client{
-			Timeout: 15 * time.Second,
+			Timeout: 60 * time.Second,
 		},
 	}
 }

@@ -2,13 +2,11 @@ package jobs
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"sync/atomic"
 	"time"
 
-	"github.com/alex/ads_backend/config"
 	"github.com/alex/ads_backend/internal/meta/ad_account"
 	adcreative "github.com/alex/ads_backend/internal/meta/ad_creative"
 	"github.com/alex/ads_backend/internal/meta/ads"
@@ -107,15 +105,7 @@ func (j *MetaAdsSyncJob) Start(ctx context.Context, req syncDto.TriggerSyncReque
 		}
 	}
 
-	if len(accountIDs) == 0 {
-		// Fallback to config if DB is empty
-		if config.MetaAdAccountID != "" {
-			accountIDs = []string{config.MetaAdAccountID}
-		} else {
-			j.running.Store(false)
-			return nil, errors.New("no active ad accounts found and META_AD_ACCOUNT_ID is not configured")
-		}
-	}
+	// If len(accountIDs) is 0, we don't fail here. We will fetch them in execute after SyncAdAccounts.
 
 	datePreset := "last_30d"
 	var dp *string
@@ -228,6 +218,17 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			hasError = true
 			firstError = setFirstError(firstError, err)
 		}
+
+		// Re-fetch active ad accounts if we didn't specify one
+		if len(accountIDs) == 0 {
+			accounts, _, _ := j.adAccountService.GetAdAccounts(ad_account.AdAccountFilter{Limit: 1000})
+			for _, acc := range accounts {
+				if acc.IsActive {
+					accountIDs = append(accountIDs, acc.ID)
+				}
+			}
+			totalSteps += len(accountIDs) * stepsPerAccount
+		}
 	}
 
 	for idx, actID := range accountIDs {
@@ -240,9 +241,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			Percentage: pct,
 		})
 
-		if hasError {
-			break
-		}
+		accountHasError := false
 
 		if !insightsOnly {
 			c, err := j.runSyncStep(
@@ -254,12 +253,13 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			)
 			campaignCount += c
 			if err != nil {
+				accountHasError = true
 				hasError = true
 				firstError = setFirstError(firstError, err)
 			}
 		}
 
-		if !hasError && !insightsOnly {
+		if !accountHasError && !insightsOnly {
 			c, err := j.runSyncStep(
 				ctx, batch.ID,
 				metasync.SyncTypeAdsets,
@@ -269,13 +269,14 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			)
 			adSetCount += c
 			if err != nil {
+				accountHasError = true
 				hasError = true
 				firstError = setFirstError(firstError, err)
 			}
 		}
 
 		var syncedAds []ads.MetaAd
-		if !hasError && !insightsOnly {
+		if !accountHasError && !insightsOnly {
 			c, err := j.runSyncStep(
 				ctx, batch.ID,
 				metasync.SyncTypeAds,
@@ -291,12 +292,13 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			)
 			adsCount += c
 			if err != nil {
+				accountHasError = true
 				hasError = true
 				firstError = setFirstError(firstError, err)
 			}
 		}
 
-		if !hasError && !insightsOnly {
+		if !accountHasError && !insightsOnly {
 			adRecords := make([]adcreative.AdRecord, 0, len(syncedAds))
 			for _, a := range syncedAds {
 				if a.CreativeID != "" {
@@ -318,6 +320,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			)
 			adCreativeCount += c
 			if err != nil {
+				accountHasError = true
 				hasError = true
 				firstError = setFirstError(firstError, err)
 			}
@@ -332,7 +335,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			req.TimeIncrement = 1
 		}
 
-		if (req.Level == "" || req.Level == "campaign") && !hasError {
+		if (req.Level == "" || req.Level == "campaign") && !accountHasError {
 			c, err := j.runSyncStep(
 				ctx, batch.ID,
 				metasync.SyncTypeCampaignInsights,
@@ -342,12 +345,13 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			)
 			campaignInsightCount += c
 			if err != nil {
+				accountHasError = true
 				hasError = true
 				firstError = setFirstError(firstError, err)
 			}
 		}
 
-		if (req.Level == "" || req.Level == "ad" || req.Level == "adset") && !hasError {
+		if (req.Level == "" || req.Level == "ad" || req.Level == "adset") && !accountHasError {
 			c, err := j.runSyncStep(
 				ctx, batch.ID,
 				metasync.SyncTypeAdInsights,
@@ -357,6 +361,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			)
 			adInsightCount += c
 			if err != nil {
+				accountHasError = true
 				hasError = true
 				firstError = setFirstError(firstError, err)
 			}

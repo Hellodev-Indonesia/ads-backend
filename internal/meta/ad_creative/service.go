@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/alex/ads_backend/internal/core/brand_whitelist_rule"
@@ -113,14 +114,29 @@ func (s *serviceImpl) SyncCreatives(adAccountID string, adsList []AdRecord) (int
 		}
 	}
 
+	var wg sync.WaitGroup
+	sem := make(chan struct{}, 10)
+	var mu sync.Mutex
 	count := 0
+
 	for creativeID, ad := range seen {
-		if err := s.processCreative(creativeID, ad, adAccountID, account.BrandID); err != nil {
-			log.Printf("Warning: failed to process creative %s: %v", creativeID, err)
-			continue
-		}
-		count++
+		wg.Add(1)
+		sem <- struct{}{}
+		go func(cid string, a AdRecord) {
+			defer wg.Done()
+			defer func() { <-sem }()
+
+			if err := s.processCreative(cid, a, adAccountID, account.BrandID); err != nil {
+				log.Printf("Warning: failed to process creative %s: %v", cid, err)
+				return
+			}
+			mu.Lock()
+			count++
+			mu.Unlock()
+		}(creativeID, ad)
 	}
+	wg.Wait()
+
 	return count, nil
 }
 
