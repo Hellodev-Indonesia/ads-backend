@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/url"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/alex/ads_backend/internal/core/brand_whitelist_rule"
@@ -105,56 +104,63 @@ func (s *serviceImpl) SyncCreatives(adAccountID string, adsList []AdRecord) (int
 
 	// Deduplicate creative IDs; keep the first ad per creative for context.
 	seen := make(map[string]AdRecord)
+	var creativeIDs []string
 	for _, ad := range adsList {
 		if ad.CreativeID == "" {
 			continue
 		}
 		if _, exists := seen[ad.CreativeID]; !exists {
 			seen[ad.CreativeID] = ad
+			creativeIDs = append(creativeIDs, ad.CreativeID)
 		}
 	}
 
-	var wg sync.WaitGroup
-	sem := make(chan struct{}, 10)
-	var mu sync.Mutex
 	count := 0
+	batchSize := 20
 
-	for creativeID, ad := range seen {
-		wg.Add(1)
-		sem <- struct{}{}
-		go func(cid string, a AdRecord) {
-			defer wg.Done()
-			defer func() { <-sem }()
+	for i := 0; i < len(creativeIDs); i += batchSize {
+		end := i + batchSize
+		if end > len(creativeIDs) {
+			end = len(creativeIDs)
+		}
+		batchIDs := creativeIDs[i:end]
 
-			if err := s.processCreative(cid, a, adAccountID, account.BrandID); err != nil {
-				log.Printf("Warning: failed to process creative %s: %v", cid, err)
-				return
+		params := url.Values{}
+		params.Set("ids", strings.Join(batchIDs, ","))
+		params.Set("fields", creativeFields)
+
+		rawList, _, err := s.client.Get("", params, false)
+		if err != nil {
+			log.Printf("Warning: failed to bulk fetch creatives: %v", err)
+			continue
+		}
+
+		if len(rawList) == 0 {
+			continue
+		}
+
+		var rawMap map[string]json.RawMessage
+		if err := json.Unmarshal(rawList[0], &rawMap); err != nil {
+			log.Printf("Warning: failed to unmarshal bulk creative response: %v", err)
+			continue
+		}
+
+		for creativeID, rawPayloadBytes := range rawMap {
+			ad := seen[creativeID]
+			if err := s.processCreativeBulk(creativeID, rawPayloadBytes, ad, adAccountID, account.BrandID); err != nil {
+				log.Printf("Warning: failed to process creative %s: %v", creativeID, err)
+				continue
 			}
-			mu.Lock()
 			count++
-			mu.Unlock()
-		}(creativeID, ad)
+		}
 	}
-	wg.Wait()
 
 	return count, nil
 }
 
-func (s *serviceImpl) processCreative(creativeID string, ad AdRecord, adAccountID string, brandID *uint64) error {
-	params := url.Values{}
-	params.Set("fields", creativeFields)
-
-	rawList, _, err := s.client.Get(creativeID, params, false)
-	if err != nil {
-		return fmt.Errorf("Meta API error: %w", err)
-	}
-	if len(rawList) == 0 {
-		return nil
-	}
-
-	// Reuse existing ads/dto.CreativeResponse for top-level unmarshal.
+func (s *serviceImpl) processCreativeBulk(creativeID string, rawPayloadBytes []byte, ad AdRecord, adAccountID string, brandID *uint64) error {
 	var apiResp adsDto.CreativeResponse
-	if err := json.Unmarshal(rawList[0], &apiResp); err != nil {
+	if err := json.Unmarshal(rawPayloadBytes, &apiResp); err != nil {
 		return fmt.Errorf("unmarshal error: %w", err)
 	}
 
@@ -166,7 +172,7 @@ func (s *serviceImpl) processCreative(creativeID string, ad AdRecord, adAccountI
 		urlHash = hashURL(destinationURL)
 	}
 
-	rawPayload := string(rawList[0])
+	rawPayload := string(rawPayloadBytes)
 	now := time.Now()
 
 	// Load previous state before upsert.
