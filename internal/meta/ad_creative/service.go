@@ -164,26 +164,25 @@ func (s *serviceImpl) processCreative(creativeID string, ad AdRecord, adAccountI
 	}
 
 	changeType, changedFields := detectChange(prev, creative, isFirstSync)
-	if changeType == "unchanged" {
-		return nil
-	}
-
-	version := buildVersion(creative, ad, adAccountID, brandID, changeType, changedFields, now)
-	if err := s.repo.CreateVersion(version); err != nil {
-		log.Printf("Warning: failed to save creative version for %s: %v", creativeID, err)
+	if changeType != "unchanged" {
+		version := buildVersion(creative, ad, adAccountID, brandID, changeType, changedFields, now)
+		if err := s.repo.CreateVersion(version); err != nil {
+			log.Printf("Warning: failed to save creative version for %s: %v", creativeID, err)
+		}
 	}
 
 	if brandID == nil || destinationURL == "" {
 		return nil
 	}
 
-	s.runPolicyCheck(creative, version, *brandID, isFirstSync, changeType)
+	s.runPolicyCheck(creative, ad, adAccountID, *brandID, isFirstSync, changeType)
 	return nil
 }
 
 func (s *serviceImpl) runPolicyCheck(
 	creative *AdCreative,
-	version *AdCreativeVersion,
+	ad AdRecord,
+	adAccountID string,
 	brandID uint64,
 	isFirstSync bool,
 	changeType string,
@@ -229,10 +228,10 @@ func (s *serviceImpl) runPolicyCheck(
 	msg := buildMessage(eventType, creative.CreativeID, targetURL)
 	input := fraudlogDto.CreateFraudLogInput{
 		BrandID:       &brandID,
-		AdAccountID:   version.AdAccountID,
-		CampaignID:    version.CampaignID,
-		AdsetID:       version.AdsetID,
-		AdID:          version.AdID,
+		AdAccountID:   &adAccountID,
+		CampaignID:    &ad.CampaignID,
+		AdsetID:       &ad.AdSetID,
+		AdID:          &ad.ID,
 		CreativeID:    &creative.CreativeID,
 		EventType:     eventType,
 		Severity:      severity,
