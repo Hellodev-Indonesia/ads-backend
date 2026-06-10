@@ -194,3 +194,13 @@ func nullableString(value string) *string {
 	}
 	return &value
 }
+
+func (s *Service) CleanupOrphanedBatches(ctx context.Context) error {
+	if err := s.repo.FailOrphanedSteps(ctx); err != nil {
+		return err
+	}
+	if err := s.repo.FailOrphanedBatches(ctx); err != nil {
+		return err
+	}
+	return nil
+}

@@ -101,3 +101,23 @@ func (r *Repository) CountFailedStepsByBatchID(ctx context.Context, batchID uint
 		Count(&count).Error
 	return count, err
 }
+
+func (r *Repository) FailOrphanedBatches(ctx context.Context) error {
+	return r.db.WithContext(ctx).
+		Model(&MetaSyncBatch{}).
+		Where("status = ?", StatusRunning).
+		Updates(map[string]interface{}{
+			"status":        StatusFailed,
+			"error_message": "Interrupted by server restart",
+		}).Error
+}
+
+func (r *Repository) FailOrphanedSteps(ctx context.Context) error {
+	return r.db.WithContext(ctx).
+		Model(&MetaSyncStep{}).
+		Where("status = ?", StatusRunning).
+		Updates(map[string]interface{}{
+			"status":        StatusFailed,
+			"error_message": "Interrupted by server restart",
+		}).Error
+}
