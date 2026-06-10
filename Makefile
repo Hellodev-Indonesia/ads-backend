@@ -7,7 +7,7 @@ endif
 # Database DSN for golang-migrate
 DB_DSN := mysql://$(DB_USER):$(DB_PASSWORD)@tcp($(DB_HOST):$(DB_PORT))/$(DB_NAME)
 
-.PHONY: dev seed docs migrate-up migrate-down migrate-fresh help
+.PHONY: dev seed docs migrate-up migrate-down migrate-fresh help centrifugo
 
 help: ## Show this help message
 	@echo "Usage: make [target]"

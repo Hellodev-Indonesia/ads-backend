@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"net/http"
 	"time"
 )
@@ -47,13 +49,17 @@ func (c *Client) Publish(ctx context.Context, channel string, data any) error {
 
 	resp, err := c.http.Do(req)
 	if err != nil {
+		log.Printf("[Centrifugo] Publish HTTP Error: %v", err)
 		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		log.Printf("[Centrifugo] Publish Bad Status %d: %s", resp.StatusCode, string(bodyBytes))
 		return fmt.Errorf("centrifugo returned status %d", resp.StatusCode)
 	}
 
+	log.Printf("[Centrifugo] Successfully published to channel %s", channel)
 	return nil
 }

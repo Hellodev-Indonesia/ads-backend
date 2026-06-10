@@ -9,7 +9,7 @@ import (
 
 var ErrAlreadyRunning = errors.New("sync is already in progress")
 
-const Channel = "meta:sync"
+const Channel = "meta_ads_sync"
 
 const (
 	StatusPending       = "PENDING"
