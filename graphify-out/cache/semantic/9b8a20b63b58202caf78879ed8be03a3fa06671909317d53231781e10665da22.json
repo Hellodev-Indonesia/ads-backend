@@ -1,1 +1,0 @@
-{"nodes": [{"id": "migration_005_ad_accounts", "label": "Migration 000005: meta_ad_accounts Table", "file_type": "code", "source_file": "database/migrations/000005_create_meta_ad_accounts_table.up.sql", "source_location": null, "source_url": null, "captured_at": null, "author": null, "contributor": null}], "edges": [], "hyperedges": []}
