@@ -2110,6 +2110,75 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/dashboard/brands": {
+            "get": {
+                "description": "Returns aggregated metrics for each brand (ad account count, active campaign count, total spends)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Dashboard"
+                ],
+                "summary": "Brand Dashboard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search by brand name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/dashboard/campaigns": {
             "get": {
                 "description": "Returns campaigns with performance metrics (spend, impressions, reach, actions) joined from insights and adsets",

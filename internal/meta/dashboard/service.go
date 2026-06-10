@@ -26,6 +26,7 @@ type Service interface {
 	GetCampaignDashboard(filter DashboardFilter) ([]dto.CampaignDashboardRow, *response.PaginationMeta, error)
 	GetAdSetDashboard(filter DashboardFilter) ([]dto.AdSetDashboardRow, *response.PaginationMeta, error)
 	GetAdDashboard(filter DashboardFilter) ([]dto.AdDashboardRow, *response.PaginationMeta, error)
+	GetBrandDashboard(filter DashboardFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error)
 }
 
 type serviceImpl struct {
@@ -425,4 +426,46 @@ func mapAdScanToDTO(r adDashboardScan) dto.AdDashboardRow {
 	}
 
 	return row
+}
+
+func (s *serviceImpl) GetBrandDashboard(filter DashboardFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error) {
+	rows, total, err := s.repo.FindBrandDashboard(filter)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to fetch brand dashboard: %w", err)
+	}
+
+	result := make([]dto.BrandDashboardResponse, 0, len(rows))
+	for _, r := range rows {
+		var spend float64
+		if r.TotalSpends != nil {
+			spend = *r.TotalSpends
+		}
+		result = append(result, dto.BrandDashboardResponse{
+			BrandID:             r.BrandID,
+			BrandName:           r.BrandName,
+			AdAccountCount:      r.AdAccountCount,
+			ActiveCampaignCount: r.ActiveCampaignCount,
+			TotalSpends:         spend,
+		})
+	}
+
+	if filter.Limit <= 0 {
+		filter.Limit = 25
+	}
+	if filter.Page <= 0 {
+		filter.Page = 1
+	}
+	lastPage := int(total) / filter.Limit
+	if int(total)%filter.Limit > 0 {
+		lastPage++
+	}
+
+	meta := &response.PaginationMeta{
+		Page:     filter.Page,
+		Limit:    filter.Limit,
+		Total:    int(total),
+		LastPage: lastPage,
+	}
+
+	return result, meta, nil
 }

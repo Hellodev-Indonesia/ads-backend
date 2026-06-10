@@ -2073,6 +2073,53 @@ paths:
       summary: Ad Set Dashboard
       tags:
       - Meta Dashboard
+  /meta/dashboard/brands:
+    get:
+      consumes:
+      - application/json
+      description: Returns aggregated metrics for each brand (ad account count, active
+        campaign count, total spends)
+      parameters:
+      - description: Search by brand name
+        in: query
+        name: search
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Brand Dashboard
+      tags:
+      - Meta Dashboard
   /meta/dashboard/campaigns:
     get:
       consumes:

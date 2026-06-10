@@ -87,3 +87,11 @@ type AdDashboardRow struct {
 	DateStart string `json:"date_start"`
 	DateStop  string `json:"date_stop"`
 }
+
+type BrandDashboardResponse struct {
+	BrandID             uint64  `json:"brand_id"`
+	BrandName           string  `json:"brand_name"`
+	AdAccountCount      int     `json:"ad_account_count"`
+	ActiveCampaignCount int     `json:"active_campaign_count"`
+	TotalSpends         float64 `json:"total_spends"`
+}

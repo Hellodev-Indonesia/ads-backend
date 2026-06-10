@@ -11,5 +11,6 @@ func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
 		g.GET("/campaigns", middleware.RequirePermission("meta.campaign.view"), h.GetCampaignDashboard)
 		g.GET("/adsets", middleware.RequirePermission("meta.campaign.view"), h.GetAdSetDashboard)
 		g.GET("/ads", middleware.RequirePermission("meta.campaign.view"), h.GetAdDashboard)
+		g.GET("/brands", middleware.RequirePermission("meta.campaign.view"), h.GetBrandDashboard)
 	}
 }
