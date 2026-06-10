@@ -138,42 +138,39 @@ func (j *MetaAdsSyncJob) Start(ctx context.Context, req syncDto.TriggerSyncReque
 		}
 	}
 
-	var batches []*metasync.MetaSyncBatch
-
-	for _, adAccountID := range accountIDs {
-		batch, err := j.syncLogService.StartBatch(ctx, metasync.StartBatchInput{
-			AdAccountID: adAccountID,
-			SyncMode:    "manual",
-			SyncScope:   "incremental",
-			DatePreset:  dp,
-			DateStart:   parsedDateStart,
-			DateStop:    parsedDateStop,
-		})
-		if err != nil {
-			log.Printf("Failed to start batch for account %s: %v", adAccountID, err)
-			continue
-		}
-		batches = append(batches, batch)
-
-		j.publish(ctx, syncEvent{
-			Event:     "sync:started",
-			Message:   fmt.Sprintf("Meta Ads sync started for %s", adAccountID),
-			BatchID:   batch.ID,
-			BatchCode: batch.BatchCode,
-		})
+	syncScope := "incremental"
+	if req.AdAccountID == "" {
+		syncScope = "global"
 	}
 
-	if len(batches) == 0 {
+	batch, err := j.syncLogService.StartBatch(ctx, metasync.StartBatchInput{
+		AdAccountID: req.AdAccountID,
+		SyncMode:    "manual",
+		SyncScope:   syncScope,
+		DatePreset:  dp,
+		DateStart:   parsedDateStart,
+		DateStop:    parsedDateStop,
+	})
+	if err != nil {
 		j.running.Store(false)
-		return nil, errors.New("failed to start any sync batches")
+		return nil, fmt.Errorf("failed to start batch: %v", err)
 	}
+
+	j.publish(ctx, syncEvent{
+		Event:     "sync:started",
+		Message:   "Meta Ads sync started",
+		BatchID:   batch.ID,
+		BatchCode: batch.BatchCode,
+	})
+
+	batches := []*metasync.MetaSyncBatch{batch}
 
 	insightReq := insightDto.SyncInsightRequest{
 		DateStart: req.DateStart,
 		DateStop:  req.DateStop,
 	}
 
-	go j.executeAll(batches, false, insightReq)
+	go j.executeAll(batches, false, insightReq, accountIDs)
 
 	return batches, nil
 }
@@ -183,59 +180,64 @@ func (j *MetaAdsSyncJob) IsRunning() bool {
 	return j.running.Load()
 }
 
-func (j *MetaAdsSyncJob) executeAll(batches []*metasync.MetaSyncBatch, insightsOnly bool, insightReq insightDto.SyncInsightRequest) {
+func (j *MetaAdsSyncJob) executeAll(batches []*metasync.MetaSyncBatch, insightsOnly bool, insightReq insightDto.SyncInsightRequest, accountIDs []string) {
 	defer j.running.Store(false)
 
-
-
 	for _, batch := range batches {
-		j.execute(batch, insightsOnly, insightReq)
+		j.execute(batch, insightsOnly, insightReq, accountIDs)
 	}
 }
 
-func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly bool, insightReq insightDto.SyncInsightRequest) {
+func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly bool, insightReq insightDto.SyncInsightRequest, accountIDs []string) {
 
 	ctx := context.Background()
-	adAccountID := batch.AdAccountID
 	startTime := time.Now()
 
 	hasError := false
 	var firstError error
 	var adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount int
-	var err error
 
 	if !insightsOnly {
-		adAccountsCount, err = j.runSyncStep(
+		c, err := j.runSyncStep(
 			ctx, batch.ID,
 			metasync.SyncTypeAdAccounts,
 			"/me/adaccounts",
 			func() (int, error) { return j.adAccountService.SyncAdAccounts() },
 		)
+		adAccountsCount += c
 		if err != nil {
 			hasError = true
 			firstError = setFirstError(firstError, err)
 		}
+	}
 
-		if !hasError {
-			campaignCount, err = j.runSyncStep(
+	for _, actID := range accountIDs {
+		if hasError {
+			break
+		}
+
+		if !insightsOnly {
+			c, err := j.runSyncStep(
 				ctx, batch.ID,
 				metasync.SyncTypeCampaigns,
-				fmt.Sprintf("/%s/campaigns", adAccountID),
-				func() (int, error) { return j.campaignService.SyncCampaigns(adAccountID) },
+				fmt.Sprintf("/%s/campaigns", actID),
+				func() (int, error) { return j.campaignService.SyncCampaigns(actID) },
 			)
+			campaignCount += c
 			if err != nil {
 				hasError = true
 				firstError = setFirstError(firstError, err)
 			}
 		}
 
-		if !hasError {
-			adSetCount, err = j.runSyncStep(
+		if !hasError && !insightsOnly {
+			c, err := j.runSyncStep(
 				ctx, batch.ID,
 				metasync.SyncTypeAdsets,
-				fmt.Sprintf("/%s/adsets", adAccountID),
-				func() (int, error) { return j.adSetService.SyncAdSets(adAccountID) },
+				fmt.Sprintf("/%s/adsets", actID),
+				func() (int, error) { return j.adSetService.SyncAdSets(actID) },
 			)
+			adSetCount += c
 			if err != nil {
 				hasError = true
 				firstError = setFirstError(firstError, err)
@@ -243,26 +245,27 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 		}
 
 		var syncedAds []ads.MetaAd
-		if !hasError {
-			adsCount, err = j.runSyncStep(
+		if !hasError && !insightsOnly {
+			c, err := j.runSyncStep(
 				ctx, batch.ID,
 				metasync.SyncTypeAds,
-				fmt.Sprintf("/%s/ads", adAccountID),
+				fmt.Sprintf("/%s/ads", actID),
 				func() (int, error) {
-					count, models, e := j.adsService.SyncAdsWithList(adAccountID)
+					count, models, e := j.adsService.SyncAdsWithList(actID)
 					if e == nil {
 						syncedAds = models
 					}
 					return count, e
 				},
 			)
+			adsCount += c
 			if err != nil {
 				hasError = true
 				firstError = setFirstError(firstError, err)
 			}
 		}
 
-		if !hasError {
+		if !hasError && !insightsOnly {
 			adRecords := make([]adcreative.AdRecord, 0, len(syncedAds))
 			for _, a := range syncedAds {
 				if a.CreativeID != "" {
@@ -275,51 +278,54 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				}
 			}
 
-			adCreativeCount, err = j.runSyncStep(
+			c, err := j.runSyncStep(
 				ctx, batch.ID,
 				metasync.SyncTypeAdCreatives,
-				fmt.Sprintf("/%s/creatives", adAccountID),
-				func() (int, error) { return j.adCreativeService.SyncCreatives(adAccountID, adRecords) },
+				fmt.Sprintf("/%s/creatives", actID),
+				func() (int, error) { return j.adCreativeService.SyncCreatives(actID, adRecords) },
 			)
+			adCreativeCount += c
 			if err != nil {
 				hasError = true
 				firstError = setFirstError(firstError, err)
 			}
 		}
-	}
 
-	req := insightReq
-	req.AdAccountID = adAccountID
-	if !insightsOnly {
-		if req.DateStart == "" && req.DateStop == "" && req.DatePreset == "" {
-			req.DatePreset = "last_30d"
+		req := insightReq
+		req.AdAccountID = actID
+		if !insightsOnly {
+			if req.DateStart == "" && req.DateStop == "" && req.DatePreset == "" {
+				req.DatePreset = "last_30d"
+			}
+			req.TimeIncrement = 1
 		}
-		req.TimeIncrement = 1
-	}
 
-	if (req.Level == "" || req.Level == "campaign") && !hasError {
-		campaignInsightCount, err = j.runSyncStep(
-			ctx, batch.ID,
-			metasync.SyncTypeCampaignInsights,
-			fmt.Sprintf("/%s/insights?level=campaign", adAccountID),
-			func() (int, error) { return j.insightService.SyncCampaignInsights(req) },
-		)
-		if err != nil {
-			hasError = true
-			firstError = setFirstError(firstError, err)
+		if (req.Level == "" || req.Level == "campaign") && !hasError {
+			c, err := j.runSyncStep(
+				ctx, batch.ID,
+				metasync.SyncTypeCampaignInsights,
+				fmt.Sprintf("/%s/insights?level=campaign", actID),
+				func() (int, error) { return j.insightService.SyncCampaignInsights(req) },
+			)
+			campaignInsightCount += c
+			if err != nil {
+				hasError = true
+				firstError = setFirstError(firstError, err)
+			}
 		}
-	}
 
-	if (req.Level == "" || req.Level == "ad" || req.Level == "adset") && !hasError {
-		adInsightCount, err = j.runSyncStep(
-			ctx, batch.ID,
-			metasync.SyncTypeAdInsights,
-			fmt.Sprintf("/%s/insights?level=%s", adAccountID, req.Level),
-			func() (int, error) { return j.insightService.SyncAdInsights(req) },
-		)
-		if err != nil {
-			hasError = true
-			firstError = setFirstError(firstError, err)
+		if (req.Level == "" || req.Level == "ad" || req.Level == "adset") && !hasError {
+			c, err := j.runSyncStep(
+				ctx, batch.ID,
+				metasync.SyncTypeAdInsights,
+				fmt.Sprintf("/%s/insights?level=%s", actID, req.Level),
+				func() (int, error) { return j.insightService.SyncAdInsights(req) },
+			)
+			adInsightCount += c
+			if err != nil {
+				hasError = true
+				firstError = setFirstError(firstError, err)
+			}
 		}
 	}
 
