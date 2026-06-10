@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/alex/ads_backend/internal/meta/sync/dto"
 	"github.com/alex/ads_backend/pkg/response"
@@ -82,10 +83,19 @@ func (h *Handler) TriggerSync(c *gin.Context) {
 // @Security     BearerAuth
 // @Router       /meta/sync/status [get]
 func (h *Handler) SyncStatus(c *gin.Context) {
-	response.Success(c, "OK", gin.H{
+	respData := gin.H{
 		"running": h.job.IsRunning(),
 		"channel": Channel,
-	})
+	}
+
+	lastBatch, err := h.service.GetLastSyncBatch(c.Request.Context())
+	if err == nil && lastBatch != nil && lastBatch.FinishedAt != nil {
+		minutesAgo := int(time.Since(*lastBatch.FinishedAt).Minutes())
+		respData["last_sync_minutes_ago"] = minutesAgo
+		respData["last_sync_at"] = lastBatch.FinishedAt
+	}
+
+	response.Success(c, "OK", respData)
 }
 
 // ListBatches godoc

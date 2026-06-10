@@ -45,6 +45,18 @@ func (r *Repository) ListBatches(ctx context.Context, limit int, offset int) ([]
 	return batches, err
 }
 
+func (r *Repository) GetLastSyncBatch(ctx context.Context) (*MetaSyncBatch, error) {
+	var batch MetaSyncBatch
+	err := r.db.WithContext(ctx).
+		Where("status = ?", StatusCompleted).
+		Order("finished_at DESC").
+		First(&batch).Error
+	if err != nil {
+		return nil, err
+	}
+	return &batch, nil
+}
+
 func (r *Repository) CreateStep(ctx context.Context, step *MetaSyncStep) error {
 	return r.db.WithContext(ctx).Create(step).Error
 }

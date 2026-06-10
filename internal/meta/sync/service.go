@@ -74,6 +74,10 @@ func (s *Service) UpdateBatchProgress(ctx context.Context, batchID uint64, progr
 	return s.repo.UpdateBatchProgress(ctx, batchID, progress)
 }
 
+func (s *Service) GetLastSyncBatch(ctx context.Context) (*MetaSyncBatch, error) {
+	return s.repo.GetLastSyncBatch(ctx)
+}
+
 func (s *Service) MarkBatchPartialFailed(ctx context.Context, batchID uint64, errInput error) error {
 	batch, err := s.repo.FindBatchByID(ctx, batchID)
 	if err != nil {
