@@ -1,0 +1,18 @@
+ALTER TABLE meta_campaigns
+MODIFY start_time TIMESTAMP NULL,
+MODIFY stop_time TIMESTAMP NULL,
+MODIFY created_time TIMESTAMP NULL,
+MODIFY updated_time TIMESTAMP NULL;
+
+ALTER TABLE meta_ad_sets
+MODIFY start_time TIMESTAMP NULL,
+MODIFY end_time TIMESTAMP NULL,
+MODIFY created_time TIMESTAMP NULL,
+MODIFY updated_time TIMESTAMP NULL;
+
+ALTER TABLE meta_ads
+MODIFY created_time TIMESTAMP NULL,
+MODIFY updated_time TIMESTAMP NULL;
+
+ALTER TABLE meta_businesses
+MODIFY created_time TIMESTAMP NULL;
