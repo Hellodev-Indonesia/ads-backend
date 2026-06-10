@@ -38,7 +38,13 @@ func NewHandler(job JobTrigger, service *Service) *Handler {
 // @Router       /meta/sync [post]
 func (h *Handler) TriggerSync(c *gin.Context) {
 	var req dto.TriggerSyncRequest
-	_ = c.ShouldBindJSON(&req)
+	if err := c.ShouldBind(&req); err != nil {
+		// Log but continue, allowing fallback to query parameters or empty
+		_ = c.ShouldBindQuery(&req)
+	}
+	if req.AdAccountID == "" {
+		req.AdAccountID = c.Query("ad_account_id")
+	}
 
 	batches, err := h.job.Start(c.Request.Context(), req)
 	if err != nil {
