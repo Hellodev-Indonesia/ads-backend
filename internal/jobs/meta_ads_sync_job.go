@@ -34,6 +34,7 @@ type syncEvent struct {
 	Count      int    `json:"count,omitempty"`
 	DurationMs int64  `json:"duration_ms,omitempty"`
 	Error      string `json:"error,omitempty"`
+	Percentage uint8  `json:"percentage,omitempty"`
 }
 
 var stepLabels = map[string]string{
@@ -197,11 +198,29 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 	var firstError error
 	var adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount int
 
+	totalSteps := 0
+	if !insightsOnly {
+		totalSteps += 1
+	}
+	stepsPerAccount := 0
+	if !insightsOnly {
+		stepsPerAccount += 4
+	}
+	if insightReq.Level == "" || insightReq.Level == "campaign" {
+		stepsPerAccount += 1
+	}
+	if insightReq.Level == "" || insightReq.Level == "ad" || insightReq.Level == "adset" {
+		stepsPerAccount += 1
+	}
+	totalSteps += len(accountIDs) * stepsPerAccount
+	currentStep := 0
+
 	if !insightsOnly {
 		c, err := j.runSyncStep(
 			ctx, batch.ID,
 			metasync.SyncTypeAdAccounts,
 			"/me/adaccounts",
+			&currentStep, totalSteps,
 			func() (int, error) { return j.adAccountService.SyncAdAccounts() },
 		)
 		adAccountsCount += c
@@ -214,6 +233,12 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 	for idx, actID := range accountIDs {
 		pct := uint8((float64(idx) / float64(len(accountIDs))) * 100)
 		_ = j.syncLogService.UpdateBatchProgress(ctx, batch.ID, pct)
+		j.publish(ctx, syncEvent{
+			Event:      "sync:progress",
+			Message:    fmt.Sprintf("Syncing ad account %d of %d", idx+1, len(accountIDs)),
+			BatchID:    batch.ID,
+			Percentage: pct,
+		})
 
 		if hasError {
 			break
@@ -224,6 +249,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				ctx, batch.ID,
 				metasync.SyncTypeCampaigns,
 				fmt.Sprintf("/%s/campaigns", actID),
+				&currentStep, totalSteps,
 				func() (int, error) { return j.campaignService.SyncCampaigns(actID) },
 			)
 			campaignCount += c
@@ -238,6 +264,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				ctx, batch.ID,
 				metasync.SyncTypeAdsets,
 				fmt.Sprintf("/%s/adsets", actID),
+				&currentStep, totalSteps,
 				func() (int, error) { return j.adSetService.SyncAdSets(actID) },
 			)
 			adSetCount += c
@@ -253,6 +280,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				ctx, batch.ID,
 				metasync.SyncTypeAds,
 				fmt.Sprintf("/%s/ads", actID),
+				&currentStep, totalSteps,
 				func() (int, error) {
 					count, models, e := j.adsService.SyncAdsWithList(actID)
 					if e == nil {
@@ -285,6 +313,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				ctx, batch.ID,
 				metasync.SyncTypeAdCreatives,
 				fmt.Sprintf("/%s/creatives", actID),
+				&currentStep, totalSteps,
 				func() (int, error) { return j.adCreativeService.SyncCreatives(actID, adRecords) },
 			)
 			adCreativeCount += c
@@ -308,6 +337,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				ctx, batch.ID,
 				metasync.SyncTypeCampaignInsights,
 				fmt.Sprintf("/%s/insights?level=campaign", actID),
+				&currentStep, totalSteps,
 				func() (int, error) { return j.insightService.SyncCampaignInsights(req) },
 			)
 			campaignInsightCount += c
@@ -322,6 +352,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				ctx, batch.ID,
 				metasync.SyncTypeAdInsights,
 				fmt.Sprintf("/%s/insights?level=%s", actID, req.Level),
+				&currentStep, totalSteps,
 				func() (int, error) { return j.insightService.SyncAdInsights(req) },
 			)
 			adInsightCount += c
@@ -374,6 +405,8 @@ func (j *MetaAdsSyncJob) runSyncStep(
 	batchID uint64,
 	syncType string,
 	endpoint string,
+	currentStep *int,
+	totalSteps int,
 	syncFunc func() (int, error),
 ) (int, error) {
 	step, err := j.syncLogService.StartStep(ctx, batchID, syncType, endpoint)
@@ -382,16 +415,22 @@ func (j *MetaAdsSyncJob) runSyncStep(
 		return 0, err
 	}
 
+	pct := uint8((float64(*currentStep) / float64(totalSteps)) * 100)
+
 	j.publish(ctx, syncEvent{
-		Event:   "sync:step:started",
-		Message: fmt.Sprintf("Syncing %s...", stepLabels[syncType]),
-		BatchID: batchID,
-		Step:    syncType,
+		Event:      "sync:step:started",
+		Message:    fmt.Sprintf("Syncing %s...", stepLabels[syncType]),
+		BatchID:    batchID,
+		Step:       syncType,
+		Percentage: pct,
 	})
 
 	stepStart := time.Now()
 	count, err := syncFunc()
 	durationMs := time.Since(stepStart).Milliseconds()
+
+	*currentStep++
+	completedPct := uint8((float64(*currentStep) / float64(totalSteps)) * 100)
 
 	if err != nil {
 		log.Printf("Error syncing %s: %v", syncType, err)
@@ -405,6 +444,7 @@ func (j *MetaAdsSyncJob) runSyncStep(
 			Step:       syncType,
 			DurationMs: durationMs,
 			Error:      err.Error(),
+			Percentage: completedPct,
 		})
 		return count, err
 	}
@@ -424,6 +464,7 @@ func (j *MetaAdsSyncJob) runSyncStep(
 		Step:       syncType,
 		Count:      count,
 		DurationMs: durationMs,
+		Percentage: completedPct,
 	})
 
 	log.Printf("Synced %d records for %s", count, syncType)
