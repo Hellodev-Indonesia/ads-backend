@@ -66,7 +66,12 @@ func (s *Service) CompleteBatch(ctx context.Context, batchID uint64) error {
 	batch.FinishedAt = &now
 	batch.DurationMs = calculateDurationMs(batch.StartedAt, batch.FinishedAt)
 	batch.ErrorMessage = nil
+	batch.ProgressPercent = 100
 	return s.repo.UpdateBatch(ctx, batch)
+}
+
+func (s *Service) UpdateBatchProgress(ctx context.Context, batchID uint64, progress uint8) error {
+	return s.repo.UpdateBatchProgress(ctx, batchID, progress)
 }
 
 func (s *Service) MarkBatchPartialFailed(ctx context.Context, batchID uint64, errInput error) error {

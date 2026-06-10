@@ -741,6 +741,8 @@ definitions:
         type: integer
       metadata:
         type: object
+      progress_percent:
+        type: integer
       provider:
         type: string
       rate_limit_hit:

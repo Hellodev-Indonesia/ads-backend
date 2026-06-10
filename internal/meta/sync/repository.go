@@ -22,6 +22,10 @@ func (r *Repository) UpdateBatch(ctx context.Context, batch *MetaSyncBatch) erro
 	return r.db.WithContext(ctx).Save(batch).Error
 }
 
+func (r *Repository) UpdateBatchProgress(ctx context.Context, id uint64, progress uint8) error {
+	return r.db.WithContext(ctx).Model(&MetaSyncBatch{}).Where("id = ?", id).Update("progress_percent", progress).Error
+}
+
 func (r *Repository) FindBatchByID(ctx context.Context, id uint64) (*MetaSyncBatch, error) {
 	var batch MetaSyncBatch
 	err := r.db.WithContext(ctx).Preload("Steps").First(&batch, id).Error

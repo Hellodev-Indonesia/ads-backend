@@ -90,7 +90,7 @@ func (c *Client) Get(path string, queryParams url.Values, autoPage bool) ([]json
 		var bodyBytes []byte
 		var reqErr error
 
-		maxRetries := 5
+		maxRetries := 0
 		for attempt := 0; attempt <= maxRetries; attempt++ {
 			req, err := http.NewRequest("GET", nextURL, nil)
 			if err != nil {

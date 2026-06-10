@@ -1,0 +1,1 @@
+ALTER TABLE meta_sync_batches ADD COLUMN progress_percent TINYINT UNSIGNED NOT NULL DEFAULT 0;

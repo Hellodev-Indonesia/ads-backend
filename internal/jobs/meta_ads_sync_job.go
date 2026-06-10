@@ -211,7 +211,10 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 		}
 	}
 
-	for _, actID := range accountIDs {
+	for idx, actID := range accountIDs {
+		pct := uint8((float64(idx) / float64(len(accountIDs))) * 100)
+		_ = j.syncLogService.UpdateBatchProgress(ctx, batch.ID, pct)
+
 		if hasError {
 			break
 		}

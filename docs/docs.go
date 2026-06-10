@@ -4762,6 +4762,9 @@ const docTemplate = `{
                 "metadata": {
                     "type": "object"
                 },
+                "progress_percent": {
+                    "type": "integer"
+                },
                 "provider": {
                     "type": "string"
                 },

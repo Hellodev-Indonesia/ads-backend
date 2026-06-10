@@ -59,6 +59,8 @@ type MetaSyncBatch struct {
 	SkippedCount  uint `gorm:"not null;default:0" json:"skipped_count"`
 	FailedCount   uint `gorm:"not null;default:0" json:"failed_count"`
 
+	ProgressPercent uint8 `gorm:"not null;default:0" json:"progress_percent"`
+
 	RequestCount uint `gorm:"not null;default:0" json:"request_count"`
 	RateLimitHit bool `gorm:"not null;default:false" json:"rate_limit_hit"`
 
