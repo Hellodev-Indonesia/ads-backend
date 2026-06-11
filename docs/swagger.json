@@ -646,7 +646,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "List contact persons",
                 "parameters": [
@@ -709,7 +709,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "Create contact person",
                 "parameters": [
@@ -766,7 +766,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "Get contact person by ID",
                 "parameters": [
@@ -819,7 +819,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "Update contact person",
                 "parameters": [
@@ -887,7 +887,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "Delete contact person",
                 "parameters": [

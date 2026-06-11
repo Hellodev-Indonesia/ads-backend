@@ -652,7 +652,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "List contact persons",
                 "parameters": [
@@ -715,7 +715,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "Create contact person",
                 "parameters": [
@@ -772,7 +772,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "Get contact person by ID",
                 "parameters": [
@@ -825,7 +825,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "Update contact person",
                 "parameters": [
@@ -893,7 +893,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Core - Contact Person"
+                    "Contact Person"
                 ],
                 "summary": "Delete contact person",
                 "parameters": [

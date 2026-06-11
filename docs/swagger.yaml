@@ -1236,7 +1236,7 @@ paths:
       - BearerAuth: []
       summary: List contact persons
       tags:
-      - Core - Contact Person
+      - Contact Person
     post:
       consumes:
       - application/json
@@ -1268,7 +1268,7 @@ paths:
       - BearerAuth: []
       summary: Create contact person
       tags:
-      - Core - Contact Person
+      - Contact Person
   /contact-persons/{id}:
     delete:
       consumes:
@@ -1300,7 +1300,7 @@ paths:
       - BearerAuth: []
       summary: Delete contact person
       tags:
-      - Core - Contact Person
+      - Contact Person
     get:
       consumes:
       - application/json
@@ -1331,7 +1331,7 @@ paths:
       - BearerAuth: []
       summary: Get contact person by ID
       tags:
-      - Core - Contact Person
+      - Contact Person
     put:
       consumes:
       - application/json
@@ -1372,7 +1372,7 @@ paths:
       - BearerAuth: []
       summary: Update contact person
       tags:
-      - Core - Contact Person
+      - Contact Person
   /core/brands:
     get:
       description: Get a paginated list of brands

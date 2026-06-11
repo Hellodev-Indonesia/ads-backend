@@ -21,7 +21,7 @@ func NewHandler(service Service) *Handler {
 // FindAll godoc
 // @Summary      List contact persons
 // @Description  Get a paginated list of contact persons
-// @Tags         Core - Contact Person
+// @Tags         Contact Person
 // @Accept       json
 // @Produce      json
 // @Param        page    query     int  false  "Page number" default(1)
@@ -52,7 +52,7 @@ func (h *Handler) FindAll(c *gin.Context) {
 // FindByID godoc
 // @Summary      Get contact person by ID
 // @Description  Get contact person details by ID
-// @Tags         Core - Contact Person
+// @Tags         Contact Person
 // @Accept       json
 // @Produce      json
 // @Param        id      path      int  true  "Contact Person ID"
@@ -83,7 +83,7 @@ func (h *Handler) FindByID(c *gin.Context) {
 // Create godoc
 // @Summary      Create contact person
 // @Description  Create a new contact person
-// @Tags         Core - Contact Person
+// @Tags         Contact Person
 // @Accept       json
 // @Produce      json
 // @Param        request body      dto.ContactPersonRequest  true  "Contact Person request"
@@ -110,7 +110,7 @@ func (h *Handler) Create(c *gin.Context) {
 // Update godoc
 // @Summary      Update contact person
 // @Description  Update an existing contact person
-// @Tags         Core - Contact Person
+// @Tags         Contact Person
 // @Accept       json
 // @Produce      json
 // @Param        id      path      int                     true  "Contact Person ID"
@@ -149,7 +149,7 @@ func (h *Handler) Update(c *gin.Context) {
 // Delete godoc
 // @Summary      Delete contact person
 // @Description  Delete a contact person by ID
-// @Tags         Core - Contact Person
+// @Tags         Contact Person
 // @Accept       json
 // @Produce      json
 // @Param        id      path      int  true  "Contact Person ID"

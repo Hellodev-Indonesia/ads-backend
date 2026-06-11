@@ -53,21 +53,19 @@ func (r *repository) FindAll(filter AdFilter) ([]MetaAd, int64, error) {
 	query := r.db.Model(&MetaAd{})
 
 	if filter.CampaignID != "" {
-		query = query.Where("meta_ads.campaign_id = ?", filter.CampaignID)
+		query = query.Where("campaign_id = ?", filter.CampaignID)
 	}
 	if filter.AdSetID != "" {
-		query = query.Where("meta_ads.adset_id = ?", filter.AdSetID)
+		query = query.Where("adset_id = ?", filter.AdSetID)
 	}
 	if filter.Status != "" {
-		query = query.Where("meta_ads.status = ?", filter.Status)
+		query = query.Where("status = ?", filter.Status)
 	}
 	if filter.Search != "" {
-		query = query.Where("meta_ads.name LIKE ?", "%"+filter.Search+"%")
+		query = query.Where("name LIKE ?", "%"+filter.Search+"%")
 	}
 	if filter.BrandID != nil {
-		query = query.Joins("JOIN meta_campaigns ON meta_ads.campaign_id = meta_campaigns.id").
-			Joins("JOIN meta_ad_accounts ON meta_campaigns.account_id = meta_ad_accounts.id").
-			Where("meta_ad_accounts.brand_id = ?", *filter.BrandID)
+		query = query.Where("campaign_id IN (SELECT id FROM meta_campaigns WHERE account_id IN (SELECT id FROM meta_ad_accounts WHERE brand_id = ?))", *filter.BrandID)
 	}
 
 	query.Count(&total)
