@@ -1,0 +1,2 @@
+-- Reverting collation is destructive and might not be safe.
+-- We leave it as utf8mb4_unicode_ci.
