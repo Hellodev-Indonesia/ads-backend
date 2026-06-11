@@ -23,6 +23,11 @@ type Service interface {
 	// Meta API sync (used by sync job)
 	SyncCampaignInsights(req dto.SyncInsightRequest) (int, error)
 	SyncAdInsights(req dto.SyncInsightRequest) (int, error)
+
+	// Reverse lookup (used by sync job)
+	FindMissingCampaignIDs(accountID, dateStart, dateStop string) ([]string, error)
+	FindMissingAdSetIDs(accountID, dateStart, dateStop string) ([]string, error)
+	FindMissingAdIDs(accountID, dateStart, dateStop string) ([]string, error)
 }
 
 type serviceImpl struct {
@@ -133,6 +138,20 @@ func (s *serviceImpl) syncInsightsInternal(req dto.SyncInsightRequest, level str
 	}
 
 	return len(models), nil
+}
+
+// --- REVERSE LOOKUP ---
+
+func (s *serviceImpl) FindMissingCampaignIDs(accountID, dateStart, dateStop string) ([]string, error) {
+	return s.repo.FindMissingCampaignIDs(accountID, dateStart, dateStop)
+}
+
+func (s *serviceImpl) FindMissingAdSetIDs(accountID, dateStart, dateStop string) ([]string, error) {
+	return s.repo.FindMissingAdSetIDs(accountID, dateStart, dateStop)
+}
+
+func (s *serviceImpl) FindMissingAdIDs(accountID, dateStart, dateStop string) ([]string, error) {
+	return s.repo.FindMissingAdIDs(accountID, dateStart, dateStop)
 }
 
 // --- MAPPERS ---

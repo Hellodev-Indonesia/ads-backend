@@ -14,6 +14,96 @@ type MockService struct {
 	mock.Mock
 }
 
+// FindMissingAdIDs provides a mock function with given fields: accountID, dateStart, dateStop
+func (_m *MockService) FindMissingAdIDs(accountID string, dateStart string, dateStop string) ([]string, error) {
+	ret := _m.Called(accountID, dateStart, dateStop)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindMissingAdIDs")
+	}
+
+	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string, string) ([]string, error)); ok {
+		return rf(accountID, dateStart, dateStop)
+	}
+	if rf, ok := ret.Get(0).(func(string, string, string) []string); ok {
+		r0 = rf(accountID, dateStart, dateStop)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string, string) error); ok {
+		r1 = rf(accountID, dateStart, dateStop)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FindMissingAdSetIDs provides a mock function with given fields: accountID, dateStart, dateStop
+func (_m *MockService) FindMissingAdSetIDs(accountID string, dateStart string, dateStop string) ([]string, error) {
+	ret := _m.Called(accountID, dateStart, dateStop)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindMissingAdSetIDs")
+	}
+
+	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string, string) ([]string, error)); ok {
+		return rf(accountID, dateStart, dateStop)
+	}
+	if rf, ok := ret.Get(0).(func(string, string, string) []string); ok {
+		r0 = rf(accountID, dateStart, dateStop)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string, string) error); ok {
+		r1 = rf(accountID, dateStart, dateStop)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FindMissingCampaignIDs provides a mock function with given fields: accountID, dateStart, dateStop
+func (_m *MockService) FindMissingCampaignIDs(accountID string, dateStart string, dateStop string) ([]string, error) {
+	ret := _m.Called(accountID, dateStart, dateStop)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindMissingCampaignIDs")
+	}
+
+	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string, string) ([]string, error)); ok {
+		return rf(accountID, dateStart, dateStop)
+	}
+	if rf, ok := ret.Get(0).(func(string, string, string) []string); ok {
+		r0 = rf(accountID, dateStart, dateStop)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string, string) error); ok {
+		r1 = rf(accountID, dateStart, dateStop)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetAdInsights provides a mock function with given fields: filter
 func (_m *MockService) GetAdInsights(filter InsightFilter) ([]dto.InsightResponse, *response.PaginationMeta, error) {
 	ret := _m.Called(filter)

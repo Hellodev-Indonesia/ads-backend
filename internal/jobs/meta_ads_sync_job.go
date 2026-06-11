@@ -191,12 +191,10 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 
 	var totalSteps int32 = 0
 	if !insightsOnly {
-		totalSteps += 1
+		totalSteps += 1 // Ad Accounts step
 	}
 	var stepsPerAccount int32 = 0
-	if !insightsOnly {
-		stepsPerAccount += 4
-	}
+	stepsPerAccount += 4 // 4 master data steps (either full or missing)
 	if insightReq.Level == "" || insightReq.Level == "campaign" {
 		stepsPerAccount += 1
 	}
@@ -386,6 +384,97 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					accountHasError = true
 					hasError = true
 					firstError = setFirstError(firstError, err)
+				}
+				mu.Unlock()
+			}
+
+			// --- REVERSE LOOKUP (SMART FETCH) ---
+			// If it's a specific date sync (insightsOnly = true), we fetch the missing master data
+			// AFTER the insights have been saved.
+			if insightsOnly && !accountHasError {
+				missingCampaigns, _ := j.insightService.FindMissingCampaignIDs(accountID, req.DateStart, req.DateStop)
+				c, err := j.runSyncStep(
+					ctx, batch.ID,
+					metasync.SyncTypeCampaigns,
+					fmt.Sprintf("/%s/campaigns (missing: %d)", accountID, len(missingCampaigns)),
+					&currentStep, totalSteps,
+					func() (int, error) { return j.campaignService.SyncCampaignsByIDs(accountID, missingCampaigns) },
+				)
+				mu.Lock()
+				campaignCount += c
+				if err != nil {
+					accountHasError = true
+					hasError = true
+					firstError = setFirstError(firstError, err)
+				}
+				mu.Unlock()
+
+				missingAdSets, _ := j.insightService.FindMissingAdSetIDs(accountID, req.DateStart, req.DateStop)
+				c2, err2 := j.runSyncStep(
+					ctx, batch.ID,
+					metasync.SyncTypeAdsets,
+					fmt.Sprintf("/%s/adsets (missing: %d)", accountID, len(missingAdSets)),
+					&currentStep, totalSteps,
+					func() (int, error) { return j.adSetService.SyncAdSetsByIDs(accountID, missingAdSets) },
+				)
+				mu.Lock()
+				adSetCount += c2
+				if err2 != nil {
+					accountHasError = true
+					hasError = true
+					firstError = setFirstError(firstError, err2)
+				}
+				mu.Unlock()
+
+				var syncedMissingAds []ads.MetaAd
+				missingAds, _ := j.insightService.FindMissingAdIDs(accountID, req.DateStart, req.DateStop)
+				c3, err3 := j.runSyncStep(
+					ctx, batch.ID,
+					metasync.SyncTypeAds,
+					fmt.Sprintf("/%s/ads (missing: %d)", accountID, len(missingAds)),
+					&currentStep, totalSteps,
+					func() (int, error) {
+						count, models, e := j.adsService.SyncAdsByIDs(accountID, missingAds)
+						if e == nil {
+							syncedMissingAds = models
+						}
+						return count, e
+					},
+				)
+				mu.Lock()
+				adsCount += c3
+				if err3 != nil {
+					accountHasError = true
+					hasError = true
+					firstError = setFirstError(firstError, err3)
+				}
+				mu.Unlock()
+
+				adRecords := make([]adcreative.AdRecord, 0, len(syncedMissingAds))
+				for _, a := range syncedMissingAds {
+					if a.CreativeID != "" {
+						adRecords = append(adRecords, adcreative.AdRecord{
+							ID:         a.ID,
+							CreativeID: a.CreativeID,
+							AdSetID:    a.AdSetID,
+							CampaignID: a.CampaignID,
+						})
+					}
+				}
+
+				c4, err4 := j.runSyncStep(
+					ctx, batch.ID,
+					metasync.SyncTypeAdCreatives,
+					fmt.Sprintf("/%s/creatives (missing: %d)", accountID, len(adRecords)),
+					&currentStep, totalSteps,
+					func() (int, error) { return j.adCreativeService.SyncCreatives(accountID, adRecords) },
+				)
+				mu.Lock()
+				adCreativeCount += c4
+				if err4 != nil {
+					accountHasError = true
+					hasError = true
+					firstError = setFirstError(firstError, err4)
 				}
 				mu.Unlock()
 			}

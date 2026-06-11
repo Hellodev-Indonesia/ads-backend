@@ -37,6 +37,7 @@ func TestAdsAPI_GetAds(t *testing.T) {
 	}
 	meta := &response.PaginationMeta{Page: 1, Limit: 25, Total: 1, LastPage: 1}
 
+
 	mockService.On("GetAds", mock.MatchedBy(func(f ads.AdFilter) bool {
 		return f.Page == 1 && f.Limit == 25
 	})).Return(adsList, meta, nil)

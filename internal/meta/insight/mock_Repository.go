@@ -83,6 +83,96 @@ func (_m *MockRepository) FindCampaignInsights(filter InsightFilter) ([]MetaInsi
 	return r0, r1, r2
 }
 
+// FindMissingAdIDs provides a mock function with given fields: accountID, dateStart, dateStop
+func (_m *MockRepository) FindMissingAdIDs(accountID string, dateStart string, dateStop string) ([]string, error) {
+	ret := _m.Called(accountID, dateStart, dateStop)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindMissingAdIDs")
+	}
+
+	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string, string) ([]string, error)); ok {
+		return rf(accountID, dateStart, dateStop)
+	}
+	if rf, ok := ret.Get(0).(func(string, string, string) []string); ok {
+		r0 = rf(accountID, dateStart, dateStop)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string, string) error); ok {
+		r1 = rf(accountID, dateStart, dateStop)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FindMissingAdSetIDs provides a mock function with given fields: accountID, dateStart, dateStop
+func (_m *MockRepository) FindMissingAdSetIDs(accountID string, dateStart string, dateStop string) ([]string, error) {
+	ret := _m.Called(accountID, dateStart, dateStop)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindMissingAdSetIDs")
+	}
+
+	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string, string) ([]string, error)); ok {
+		return rf(accountID, dateStart, dateStop)
+	}
+	if rf, ok := ret.Get(0).(func(string, string, string) []string); ok {
+		r0 = rf(accountID, dateStart, dateStop)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string, string) error); ok {
+		r1 = rf(accountID, dateStart, dateStop)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FindMissingCampaignIDs provides a mock function with given fields: accountID, dateStart, dateStop
+func (_m *MockRepository) FindMissingCampaignIDs(accountID string, dateStart string, dateStop string) ([]string, error) {
+	ret := _m.Called(accountID, dateStart, dateStop)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindMissingCampaignIDs")
+	}
+
+	var r0 []string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, string, string) ([]string, error)); ok {
+		return rf(accountID, dateStart, dateStop)
+	}
+	if rf, ok := ret.Get(0).(func(string, string, string) []string); ok {
+		r0 = rf(accountID, dateStart, dateStop)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string, string) error); ok {
+		r1 = rf(accountID, dateStart, dateStop)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // UpsertBatch provides a mock function with given fields: insights
 func (_m *MockRepository) UpsertBatch(insights []MetaInsight) error {
 	ret := _m.Called(insights)

@@ -20,6 +20,9 @@ type Repository interface {
 	UpsertBatch(insights []MetaInsight) error
 	FindCampaignInsights(filter InsightFilter) ([]MetaInsight, int64, error)
 	FindAdInsights(filter InsightFilter) ([]MetaInsight, int64, error)
+	FindMissingCampaignIDs(accountID, dateStart, dateStop string) ([]string, error)
+	FindMissingAdSetIDs(accountID, dateStart, dateStop string) ([]string, error)
+	FindMissingAdIDs(accountID, dateStart, dateStop string) ([]string, error)
 }
 
 type repository struct {
@@ -99,4 +102,63 @@ func (r *repository) FindCampaignInsights(filter InsightFilter) ([]MetaInsight, 
 
 func (r *repository) FindAdInsights(filter InsightFilter) ([]MetaInsight, int64, error) {
 	return r.findInsights("ad", filter)
+}
+
+func (r *repository) FindMissingCampaignIDs(accountID, dateStart, dateStop string) ([]string, error) {
+	var missingIDs []string
+	query := r.db.Table("meta_insights").
+		Select("DISTINCT meta_insights.campaign_id").
+		Joins("LEFT JOIN meta_campaigns ON meta_insights.campaign_id = meta_campaigns.id").
+		Where("meta_insights.account_id = ? AND meta_insights.level = 'campaign'", accountID).
+		Where("meta_campaigns.id IS NULL")
+
+	if dateStart != "" {
+		query = query.Where("meta_insights.date_start >= ?", dateStart)
+	}
+	if dateStop != "" {
+		query = query.Where("meta_insights.date_stop <= ?", dateStop)
+	}
+
+	err := query.Pluck("meta_insights.campaign_id", &missingIDs).Error
+	return missingIDs, err
+}
+
+func (r *repository) FindMissingAdSetIDs(accountID, dateStart, dateStop string) ([]string, error) {
+	var missingIDs []string
+	query := r.db.Table("meta_insights").
+		Select("DISTINCT meta_insights.adset_id").
+		Joins("LEFT JOIN meta_ad_sets ON meta_insights.adset_id = meta_ad_sets.id").
+		Where("meta_insights.account_id = ? AND meta_insights.level = 'adset'", accountID).
+		Where("meta_insights.adset_id != ''").
+		Where("meta_ad_sets.id IS NULL")
+
+	if dateStart != "" {
+		query = query.Where("meta_insights.date_start >= ?", dateStart)
+	}
+	if dateStop != "" {
+		query = query.Where("meta_insights.date_stop <= ?", dateStop)
+	}
+
+	err := query.Pluck("meta_insights.adset_id", &missingIDs).Error
+	return missingIDs, err
+}
+
+func (r *repository) FindMissingAdIDs(accountID, dateStart, dateStop string) ([]string, error) {
+	var missingIDs []string
+	query := r.db.Table("meta_insights").
+		Select("DISTINCT meta_insights.ad_id").
+		Joins("LEFT JOIN meta_ads ON meta_insights.ad_id = meta_ads.id").
+		Where("meta_insights.account_id = ? AND meta_insights.level = 'ad'", accountID).
+		Where("meta_insights.ad_id != ''").
+		Where("meta_ads.id IS NULL")
+
+	if dateStart != "" {
+		query = query.Where("meta_insights.date_start >= ?", dateStart)
+	}
+	if dateStop != "" {
+		query = query.Where("meta_insights.date_stop <= ?", dateStop)
+	}
+
+	err := query.Pluck("meta_insights.ad_id", &missingIDs).Error
+	return missingIDs, err
 }

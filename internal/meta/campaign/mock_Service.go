@@ -111,6 +111,34 @@ func (_m *MockService) SyncCampaigns(adAccountID string) (int, error) {
 	return r0, r1
 }
 
+// SyncCampaignsByIDs provides a mock function with given fields: adAccountID, ids
+func (_m *MockService) SyncCampaignsByIDs(adAccountID string, ids []string) (int, error) {
+	ret := _m.Called(adAccountID, ids)
+
+	if len(ret) == 0 {
+		panic("no return value specified for SyncCampaignsByIDs")
+	}
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, []string) (int, error)); ok {
+		return rf(adAccountID, ids)
+	}
+	if rf, ok := ret.Get(0).(func(string, []string) int); ok {
+		r0 = rf(adAccountID, ids)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(string, []string) error); ok {
+		r1 = rf(adAccountID, ids)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // NewMockService creates a new instance of MockService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMockService(t interface {

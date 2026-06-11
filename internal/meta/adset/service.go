@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/alex/ads_backend/internal/meta/adset/dto"
@@ -21,6 +22,7 @@ type Service interface {
 
 	// Meta API sync (used by sync job)
 	SyncAdSets(adAccountID string) (int, error)
+	SyncAdSetsByIDs(adAccountID string, ids []string) (int, error)
 }
 
 type serviceImpl struct {
@@ -92,6 +94,59 @@ func (s *serviceImpl) SyncAdSets(adAccountID string) (int, error) {
 	}
 
 	return len(models), nil
+}
+
+func (s *serviceImpl) SyncAdSetsByIDs(adAccountID string, ids []string) (int, error) {
+	if len(ids) == 0 {
+		return 0, nil
+	}
+
+	batchSize := 50
+	var allModels []MetaAdSet
+
+	for i := 0; i < len(ids); i += batchSize {
+		end := i + batchSize
+		if end > len(ids) {
+			end = len(ids)
+		}
+		batchIDs := ids[i:end]
+
+		params := url.Values{}
+		params.Set("ids", strings.Join(batchIDs, ","))
+		params.Set("fields", DefaultFields)
+
+		rawList, _, err := s.client.Get("", params, false)
+		if err != nil {
+			log.Printf("Warning: failed to bulk fetch adsets: %v", err)
+			continue
+		}
+
+		if len(rawList) == 0 {
+			continue
+		}
+
+		var rawMap map[string]json.RawMessage
+		if err := json.Unmarshal(rawList[0], &rawMap); err != nil {
+			log.Printf("Warning: failed to unmarshal bulk adsets response: %v", err)
+			continue
+		}
+
+		for _, rawPayloadBytes := range rawMap {
+			var item dto.AdSetResponse
+			if err := json.Unmarshal(rawPayloadBytes, &item); err != nil {
+				continue
+			}
+			allModels = append(allModels, mapDTOToModel(item))
+		}
+	}
+
+	if len(allModels) > 0 {
+		if err := s.repo.UpsertBatch(allModels); err != nil {
+			return 0, fmt.Errorf("failed to upsert adsets: %w", err)
+		}
+	}
+
+	return len(allModels), nil
 }
 
 // --- MAPPERS ---

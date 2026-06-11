@@ -51,6 +51,7 @@ func TestService_GetAdInsights(t *testing.T) {
 
 	mockRepo.On("FindAdInsights", filter).Return(insights, int64(1), nil)
 
+
 	resp, meta, err := svc.GetAdInsights(filter)
 
 	assert.NoError(t, err)

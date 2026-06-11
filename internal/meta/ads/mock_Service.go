@@ -111,6 +111,43 @@ func (_m *MockService) SyncAds(adAccountID string) (int, error) {
 	return r0, r1
 }
 
+// SyncAdsByIDs provides a mock function with given fields: adAccountID, ids
+func (_m *MockService) SyncAdsByIDs(adAccountID string, ids []string) (int, []MetaAd, error) {
+	ret := _m.Called(adAccountID, ids)
+
+	if len(ret) == 0 {
+		panic("no return value specified for SyncAdsByIDs")
+	}
+
+	var r0 int
+	var r1 []MetaAd
+	var r2 error
+	if rf, ok := ret.Get(0).(func(string, []string) (int, []MetaAd, error)); ok {
+		return rf(adAccountID, ids)
+	}
+	if rf, ok := ret.Get(0).(func(string, []string) int); ok {
+		r0 = rf(adAccountID, ids)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(string, []string) []MetaAd); ok {
+		r1 = rf(adAccountID, ids)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).([]MetaAd)
+		}
+	}
+
+	if rf, ok := ret.Get(2).(func(string, []string) error); ok {
+		r2 = rf(adAccountID, ids)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // SyncAdsWithList provides a mock function with given fields: adAccountID
 func (_m *MockService) SyncAdsWithList(adAccountID string) (int, []MetaAd, error) {
 	ret := _m.Called(adAccountID)
