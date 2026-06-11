@@ -90,11 +90,13 @@ func (h *Handler) SyncStatus(c *gin.Context) {
 		"channel": Channel,
 	}
 
-	lastBatch, err := h.service.GetLastSyncBatch(c.Request.Context())
-	if err == nil && lastBatch != nil && lastBatch.FinishedAt != nil {
-		minutesAgo := int(time.Since(*lastBatch.FinishedAt).Minutes())
-		respData["last_sync_minutes_ago"] = minutesAgo
-		respData["last_sync_at"] = lastBatch.FinishedAt
+	if h.service != nil {
+		lastBatch, err := h.service.GetLastSyncBatch(c.Request.Context())
+		if err == nil && lastBatch != nil && lastBatch.FinishedAt != nil {
+			minutesAgo := int(time.Since(*lastBatch.FinishedAt).Minutes())
+			respData["last_sync_minutes_ago"] = minutesAgo
+			respData["last_sync_at"] = lastBatch.FinishedAt
+		}
 	}
 
 	response.Success(c, "OK", respData)

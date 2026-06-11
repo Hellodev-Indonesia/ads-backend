@@ -172,6 +172,49 @@ definitions:
       business_name:
         type: string
     type: object
+  dto.CampaignDashboardRow:
+    properties:
+      amount_spent:
+        description: Insight metrics
+        type: string
+      attribution_setting:
+        description: From adset.attribution_spec
+      budget:
+        description: 'Budget: whichever is set (daily takes precedence)'
+        type: string
+      campaign_id:
+        type: string
+      campaign_name:
+        type: string
+      cost_per_result:
+        type: string
+      date_start:
+        type: string
+      date_stop:
+        type: string
+      effective_status:
+        type: string
+      ends:
+        description: Campaign schedule
+        type: string
+      impressions:
+        type: string
+      new_messaging_connections:
+        type: string
+      objective:
+        type: string
+      purchases:
+        type: string
+      reach:
+        type: string
+      results:
+        description: Derived from insights.actions JSON
+        type: string
+      status:
+        type: string
+      total_messaging_conversations:
+        type: string
+    type: object
   dto.CampaignResponse:
     properties:
       account_id:
@@ -222,6 +265,23 @@ definitions:
       updated_time:
         example: "2026-05-11T12:00:00Z"
         type: string
+    type: object
+  dto.CampaignSummaryResponse:
+    properties:
+      amount_spent:
+        type: number
+      cost_per_purchase:
+        type: number
+      impressions:
+        type: integer
+      new_messaging:
+        type: integer
+      purchase_total:
+        type: integer
+      reach:
+        type: integer
+      total_messaging:
+        type: integer
     type: object
   dto.CheckURLRequest:
     properties:
@@ -1970,6 +2030,74 @@ paths:
       summary: Get Ads
       tags:
       - Meta Ads
+  /meta/ads/dashboard:
+    get:
+      consumes:
+      - application/json
+      description: Returns ads with performance metrics joined from insights
+      parameters:
+      - description: Ad Account ID
+        in: query
+        name: ad_account_id
+        type: string
+      - description: Brand ID
+        in: query
+        name: brand_id
+        type: integer
+      - description: Filter by campaign ID
+        in: query
+        name: campaign_id
+        type: string
+      - description: Filter by ad set ID
+        in: query
+        name: adset_id
+        type: string
+      - description: Filter by ad status
+        in: query
+        name: status
+        type: string
+      - description: Search by ad name
+        in: query
+        name: search
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ad Dashboard
+      tags:
+      - Meta Dashboard
   /meta/adsets:
     get:
       consumes:
@@ -2027,6 +2155,123 @@ paths:
       summary: Get AdSets
       tags:
       - Meta AdSets
+  /meta/adsets/dashboard:
+    get:
+      consumes:
+      - application/json
+      description: Returns ad sets with performance metrics joined from insights
+      parameters:
+      - description: Ad Account ID
+        in: query
+        name: ad_account_id
+        type: string
+      - description: Brand ID
+        in: query
+        name: brand_id
+        type: integer
+      - description: Filter by campaign ID
+        in: query
+        name: campaign_id
+        type: string
+      - description: Filter by ad set status
+        in: query
+        name: status
+        type: string
+      - description: Search by ad set name
+        in: query
+        name: search
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Ad Set Dashboard
+      tags:
+      - Meta Dashboard
+  /meta/brands:
+    get:
+      consumes:
+      - application/json
+      description: Returns aggregated metrics for each brand (ad account count, active
+        campaign count, total spends)
+      parameters:
+      - description: Filter by multiple brand IDs (comma separated)
+        in: query
+        name: brand_ids
+        type: string
+      - description: Search by brand name
+        in: query
+        name: search
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Brand Dashboard
+      tags:
+      - Meta Dashboard
   /meta/brands/{brand_id}/ad-accounts:
     get:
       consumes:
@@ -2275,6 +2520,50 @@ paths:
       summary: Get Campaigns by Brand ID
       tags:
       - Meta Campaigns
+  /meta/brands/{brand_id}/campaigns/summary:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve summary metrics for all campaigns under a specific brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Start Date (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Stop Date (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CampaignSummaryResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Campaign Summary by Brand ID
+      tags:
+      - Meta Campaigns
   /meta/campaigns:
     get:
       consumes:
@@ -2332,233 +2621,7 @@ paths:
       summary: Get Campaigns
       tags:
       - Meta Campaigns
-  /meta/creatives/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve details of a specific ad creative from the local database
-        (synced from Meta)
-      parameters:
-      - description: Creative ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Custom fields comma-separated preset
-        in: query
-        name: fields
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/dto.CreativeResponse'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Get Ad Creative
-      tags:
-      - Meta Ads
-  /meta/dashboard/ads:
-    get:
-      consumes:
-      - application/json
-      description: Returns ads with performance metrics joined from insights
-      parameters:
-      - description: Ad Account ID
-        in: query
-        name: ad_account_id
-        type: string
-      - description: Brand ID
-        in: query
-        name: brand_id
-        type: integer
-      - description: Filter by campaign ID
-        in: query
-        name: campaign_id
-        type: string
-      - description: Filter by ad set ID
-        in: query
-        name: adset_id
-        type: string
-      - description: Filter by ad status
-        in: query
-        name: status
-        type: string
-      - description: Search by ad name
-        in: query
-        name: search
-        type: string
-      - description: Filter by date start (YYYY-MM-DD)
-        in: query
-        name: date_start
-        type: string
-      - description: Filter by date stop (YYYY-MM-DD)
-        in: query
-        name: date_stop
-        type: string
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 25
-        description: Items per page
-        in: query
-        name: limit
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Ad Dashboard
-      tags:
-      - Meta Dashboard
-  /meta/dashboard/adsets:
-    get:
-      consumes:
-      - application/json
-      description: Returns ad sets with performance metrics joined from insights
-      parameters:
-      - description: Ad Account ID
-        in: query
-        name: ad_account_id
-        type: string
-      - description: Brand ID
-        in: query
-        name: brand_id
-        type: integer
-      - description: Filter by campaign ID
-        in: query
-        name: campaign_id
-        type: string
-      - description: Filter by ad set status
-        in: query
-        name: status
-        type: string
-      - description: Search by ad set name
-        in: query
-        name: search
-        type: string
-      - description: Filter by date start (YYYY-MM-DD)
-        in: query
-        name: date_start
-        type: string
-      - description: Filter by date stop (YYYY-MM-DD)
-        in: query
-        name: date_stop
-        type: string
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 25
-        description: Items per page
-        in: query
-        name: limit
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Ad Set Dashboard
-      tags:
-      - Meta Dashboard
-  /meta/dashboard/brands:
-    get:
-      consumes:
-      - application/json
-      description: Returns aggregated metrics for each brand (ad account count, active
-        campaign count, total spends)
-      parameters:
-      - description: Filter by multiple brand IDs (comma separated)
-        in: query
-        name: brand_ids
-        type: string
-      - description: Search by brand name
-        in: query
-        name: search
-        type: string
-      - description: Filter by date start (YYYY-MM-DD)
-        in: query
-        name: date_start
-        type: string
-      - description: Filter by date stop (YYYY-MM-DD)
-        in: query
-        name: date_stop
-        type: string
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 25
-        description: Items per page
-        in: query
-        name: limit
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Brand Dashboard
-      tags:
-      - Meta Dashboard
-  /meta/dashboard/campaigns:
+  /meta/campaigns/dashboard:
     get:
       consumes:
       - application/json
@@ -2605,7 +2668,16 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.Response'
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.CampaignDashboardRow'
+                  type: array
+                meta:
+                  $ref: '#/definitions/response.PaginationMeta'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -2618,7 +2690,48 @@ paths:
       - BearerAuth: []
       summary: Campaign Dashboard
       tags:
-      - Meta Dashboard
+      - Meta Campaigns
+  /meta/creatives/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve details of a specific ad creative from the local database
+        (synced from Meta)
+      parameters:
+      - description: Creative ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Custom fields comma-separated preset
+        in: query
+        name: fields
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CreativeResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Ad Creative
+      tags:
+      - Meta Ads
   /meta/insights/ad:
     get:
       consumes:

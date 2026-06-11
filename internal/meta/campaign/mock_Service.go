@@ -44,6 +44,45 @@ func (_m *MockService) GetCampaignByID(id string) (*dto.CampaignResponse, error)
 	return r0, r1
 }
 
+// GetCampaignDashboard provides a mock function with given fields: filter
+func (_m *MockService) GetCampaignDashboard(filter CampaignFilter) ([]dto.CampaignDashboardRow, *response.PaginationMeta, error) {
+	ret := _m.Called(filter)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetCampaignDashboard")
+	}
+
+	var r0 []dto.CampaignDashboardRow
+	var r1 *response.PaginationMeta
+	var r2 error
+	if rf, ok := ret.Get(0).(func(CampaignFilter) ([]dto.CampaignDashboardRow, *response.PaginationMeta, error)); ok {
+		return rf(filter)
+	}
+	if rf, ok := ret.Get(0).(func(CampaignFilter) []dto.CampaignDashboardRow); ok {
+		r0 = rf(filter)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dto.CampaignDashboardRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(CampaignFilter) *response.PaginationMeta); ok {
+		r1 = rf(filter)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*response.PaginationMeta)
+		}
+	}
+
+	if rf, ok := ret.Get(2).(func(CampaignFilter) error); ok {
+		r2 = rf(filter)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // GetCampaigns provides a mock function with given fields: filter
 func (_m *MockService) GetCampaigns(filter CampaignFilter) ([]dto.CampaignResponse, *response.PaginationMeta, error) {
 	ret := _m.Called(filter)
@@ -81,6 +120,36 @@ func (_m *MockService) GetCampaigns(filter CampaignFilter) ([]dto.CampaignRespon
 	}
 
 	return r0, r1, r2
+}
+
+// GetSummaryByBrand provides a mock function with given fields: brandID, dateStart, dateStop
+func (_m *MockService) GetSummaryByBrand(brandID uint64, dateStart string, dateStop string) (*dto.CampaignSummaryResponse, error) {
+	ret := _m.Called(brandID, dateStart, dateStop)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetSummaryByBrand")
+	}
+
+	var r0 *dto.CampaignSummaryResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint64, string, string) (*dto.CampaignSummaryResponse, error)); ok {
+		return rf(brandID, dateStart, dateStop)
+	}
+	if rf, ok := ret.Get(0).(func(uint64, string, string) *dto.CampaignSummaryResponse); ok {
+		r0 = rf(brandID, dateStart, dateStop)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.CampaignSummaryResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint64, string, string) error); ok {
+		r1 = rf(brandID, dateStart, dateStop)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // SyncCampaigns provides a mock function with given fields: adAccountID

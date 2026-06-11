@@ -94,6 +94,90 @@ func (h *Handler) GetCampaignsByBrand(c *gin.Context) {
 	response.SuccessWithPagination(c, "Successfully retrieved campaigns for brand", resp, meta)
 }
 
+// GetCampaignSummaryByBrand godoc
+// @Summary      Get Campaign Summary by Brand ID
+// @Description  Retrieve summary metrics for all campaigns under a specific brand
+// @Tags         Meta Campaigns
+// @Accept       json
+// @Produce      json
+// @Param        brand_id       path      int     true   "Brand ID"
+// @Param        date_start     query     string  false  "Start Date (YYYY-MM-DD)"
+// @Param        date_stop      query     string  false  "Stop Date (YYYY-MM-DD)"
+// @Success      200            {object}  response.Response{data=dto.CampaignSummaryResponse}
+// @Failure      400            {object}  response.ErrorResponse
+// @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
+// @Router       /meta/brands/{brand_id}/campaigns/summary [get]
+func (h *Handler) GetCampaignSummaryByBrand(c *gin.Context) {
+	brandIDParam := c.Param("brand_id")
+	brandID, err := strconv.ParseUint(brandIDParam, 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid brand ID", nil)
+		return
+	}
+
+	dateStart := c.Query("date_start")
+	dateStop := c.Query("date_stop")
+
+	resp, err := h.service.GetSummaryByBrand(brandID, dateStart, dateStop)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	response.Success(c, "Successfully retrieved campaign summary for brand", resp)
+}
+
+// GetCampaignDashboard godoc
+// @Summary      Campaign Dashboard
+// @Description  Returns campaigns with performance metrics (spend, impressions, reach, actions) joined from insights and adsets
+// @Tags         Meta Campaigns
+// @Accept       json
+// @Produce      json
+// @Param        ad_account_id  query     string  false  "Ad Account ID"
+// @Param        brand_id       query     int     false  "Brand ID"
+// @Param        status         query     string  false  "Filter by campaign status (ACTIVE, PAUSED, etc)"
+// @Param        search         query     string  false  "Search by campaign name"
+// @Param        date_start     query     string  false  "Filter by date start (YYYY-MM-DD)"
+// @Param        date_stop      query     string  false  "Filter by date stop (YYYY-MM-DD)"
+// @Param        page           query     int     false  "Page number" default(1)
+// @Param        limit          query     int     false  "Items per page" default(25)
+// @Success      200            {object}  response.Response{data=[]dto.CampaignDashboardRow,meta=response.PaginationMeta}
+// @Failure      400            {object}  response.ErrorResponse
+// @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
+// @Router       /meta/campaigns/dashboard [get]
+func (h *Handler) GetCampaignDashboard(c *gin.Context) {
+	adAccountID := c.Query("ad_account_id")
+
+	var brandID *uint64
+	brandIDStr := c.Query("brand_id")
+	if brandIDStr != "" {
+		bid, err := strconv.ParseUint(brandIDStr, 10, 64)
+		if err == nil {
+			brandID = &bid
+		}
+	}
+
+	filter := CampaignFilter{
+		AccountID: adAccountID,
+		BrandID:   brandID,
+		Status:    c.Query("status"),
+		Search:    c.Query("search"),
+		DateStart: c.Query("date_start"),
+		DateStop:  c.Query("date_stop"),
+		Page:      parseQueryInt(c, "page", 1),
+		Limit:     parseQueryInt(c, "limit", 25),
+	}
+
+	resp, meta, err := h.service.GetCampaignDashboard(filter)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	response.SuccessWithPagination(c, "Successfully retrieved campaign dashboard", resp, meta)
+}
+
 func parseQueryInt(c *gin.Context, key string, defaultVal int) int {
 	val := c.Query(key)
 	if val == "" {

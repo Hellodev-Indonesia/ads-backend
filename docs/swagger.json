@@ -1905,6 +1905,110 @@
                 }
             }
         },
+        "/meta/ads/dashboard": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns ads with performance metrics joined from insights",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Dashboard"
+                ],
+                "summary": "Ad Dashboard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID",
+                        "name": "ad_account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by campaign ID",
+                        "name": "campaign_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by ad set ID",
+                        "name": "adset_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by ad status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by ad name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/adsets": {
             "get": {
                 "security": [
@@ -1980,6 +2084,184 @@
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/adsets/dashboard": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns ad sets with performance metrics joined from insights",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Dashboard"
+                ],
+                "summary": "Ad Set Dashboard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Ad Account ID",
+                        "name": "ad_account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by campaign ID",
+                        "name": "campaign_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by ad set status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by ad set name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/brands": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns aggregated metrics for each brand (ad account count, active campaign count, total spends)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Dashboard"
+                ],
+                "summary": "Brand Dashboard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by multiple brand IDs (comma separated)",
+                        "name": "brand_ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by brand name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
@@ -2394,6 +2676,79 @@
                 }
             }
         },
+        "/meta/brands/{brand_id}/campaigns/summary": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve summary metrics for all campaigns under a specific brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Campaigns"
+                ],
+                "summary": "Get Campaign Summary by Brand ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start Date (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Stop Date (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.CampaignSummaryResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/campaigns": {
             "get": {
                 "security": [
@@ -2486,356 +2841,7 @@
                 }
             }
         },
-        "/meta/creatives/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieve details of a specific ad creative from the local database (synced from Meta)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Meta Ads"
-                ],
-                "summary": "Get Ad Creative",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Creative ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Custom fields comma-separated preset",
-                        "name": "fields",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/dto.CreativeResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/meta/dashboard/ads": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Returns ads with performance metrics joined from insights",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Meta Dashboard"
-                ],
-                "summary": "Ad Dashboard",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Ad Account ID",
-                        "name": "ad_account_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Brand ID",
-                        "name": "brand_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by campaign ID",
-                        "name": "campaign_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by ad set ID",
-                        "name": "adset_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by ad status",
-                        "name": "status",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search by ad name",
-                        "name": "search",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by date start (YYYY-MM-DD)",
-                        "name": "date_start",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by date stop (YYYY-MM-DD)",
-                        "name": "date_stop",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 25,
-                        "description": "Items per page",
-                        "name": "limit",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/meta/dashboard/adsets": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Returns ad sets with performance metrics joined from insights",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Meta Dashboard"
-                ],
-                "summary": "Ad Set Dashboard",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Ad Account ID",
-                        "name": "ad_account_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Brand ID",
-                        "name": "brand_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by campaign ID",
-                        "name": "campaign_id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by ad set status",
-                        "name": "status",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search by ad set name",
-                        "name": "search",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by date start (YYYY-MM-DD)",
-                        "name": "date_start",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by date stop (YYYY-MM-DD)",
-                        "name": "date_stop",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 25,
-                        "description": "Items per page",
-                        "name": "limit",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/meta/dashboard/brands": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Returns aggregated metrics for each brand (ad account count, active campaign count, total spends)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Meta Dashboard"
-                ],
-                "summary": "Brand Dashboard",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Filter by multiple brand IDs (comma separated)",
-                        "name": "brand_ids",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search by brand name",
-                        "name": "search",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by date start (YYYY-MM-DD)",
-                        "name": "date_start",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by date stop (YYYY-MM-DD)",
-                        "name": "date_stop",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 25,
-                        "description": "Items per page",
-                        "name": "limit",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/meta/dashboard/campaigns": {
+        "/meta/campaigns/dashboard": {
             "get": {
                 "security": [
                     {
@@ -2850,7 +2856,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Dashboard"
+                    "Meta Campaigns"
                 ],
                 "summary": "Campaign Dashboard",
                 "parameters": [
@@ -2909,7 +2915,92 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.CampaignDashboardRow"
+                                            }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/definitions/response.PaginationMeta"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/creatives/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve details of a specific ad creative from the local database (synced from Meta)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Ads"
+                ],
+                "summary": "Get Ad Creative",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Creative ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Custom fields comma-separated preset",
+                        "name": "fields",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.CreativeResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -4330,6 +4421,69 @@
                 }
             }
         },
+        "dto.CampaignDashboardRow": {
+            "type": "object",
+            "properties": {
+                "amount_spent": {
+                    "description": "Insight metrics",
+                    "type": "string"
+                },
+                "attribution_setting": {
+                    "description": "From adset.attribution_spec"
+                },
+                "budget": {
+                    "description": "Budget: whichever is set (daily takes precedence)",
+                    "type": "string"
+                },
+                "campaign_id": {
+                    "type": "string"
+                },
+                "campaign_name": {
+                    "type": "string"
+                },
+                "cost_per_result": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "date_stop": {
+                    "type": "string"
+                },
+                "effective_status": {
+                    "type": "string"
+                },
+                "ends": {
+                    "description": "Campaign schedule",
+                    "type": "string"
+                },
+                "impressions": {
+                    "type": "string"
+                },
+                "new_messaging_connections": {
+                    "type": "string"
+                },
+                "objective": {
+                    "type": "string"
+                },
+                "purchases": {
+                    "type": "string"
+                },
+                "reach": {
+                    "type": "string"
+                },
+                "results": {
+                    "description": "Derived from insights.actions JSON",
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_messaging_conversations": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.CampaignResponse": {
             "type": "object",
             "properties": {
@@ -4396,6 +4550,32 @@
                 "updated_time": {
                     "type": "string",
                     "example": "2026-05-11T12:00:00Z"
+                }
+            }
+        },
+        "dto.CampaignSummaryResponse": {
+            "type": "object",
+            "properties": {
+                "amount_spent": {
+                    "type": "number"
+                },
+                "cost_per_purchase": {
+                    "type": "number"
+                },
+                "impressions": {
+                    "type": "integer"
+                },
+                "new_messaging": {
+                    "type": "integer"
+                },
+                "purchase_total": {
+                    "type": "integer"
+                },
+                "reach": {
+                    "type": "integer"
+                },
+                "total_messaging": {
+                    "type": "integer"
                 }
             }
         },

@@ -14,6 +14,45 @@ type MockService struct {
 	mock.Mock
 }
 
+// GetAdDashboard provides a mock function with given fields: filter
+func (_m *MockService) GetAdDashboard(filter AdFilter) ([]dto.AdDashboardRow, *response.PaginationMeta, error) {
+	ret := _m.Called(filter)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAdDashboard")
+	}
+
+	var r0 []dto.AdDashboardRow
+	var r1 *response.PaginationMeta
+	var r2 error
+	if rf, ok := ret.Get(0).(func(AdFilter) ([]dto.AdDashboardRow, *response.PaginationMeta, error)); ok {
+		return rf(filter)
+	}
+	if rf, ok := ret.Get(0).(func(AdFilter) []dto.AdDashboardRow); ok {
+		r0 = rf(filter)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dto.AdDashboardRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(AdFilter) *response.PaginationMeta); ok {
+		r1 = rf(filter)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*response.PaginationMeta)
+		}
+	}
+
+	if rf, ok := ret.Get(2).(func(AdFilter) error); ok {
+		r2 = rf(filter)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // GetAds provides a mock function with given fields: filter
 func (_m *MockService) GetAds(filter AdFilter) ([]dto.AdResponse, *response.PaginationMeta, error) {
 	ret := _m.Called(filter)

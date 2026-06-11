@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"net/url"
 	"strconv"
 	"strings"
@@ -20,6 +21,8 @@ type Service interface {
 	// DB reads (used by handlers)
 	GetCampaigns(filter CampaignFilter) ([]dto.CampaignResponse, *response.PaginationMeta, error)
 	GetCampaignByID(id string) (*dto.CampaignResponse, error)
+	GetSummaryByBrand(brandID uint64, dateStart, dateStop string) (*dto.CampaignSummaryResponse, error)
+	GetCampaignDashboard(filter CampaignFilter) ([]dto.CampaignDashboardRow, *response.PaginationMeta, error)
 
 	// Meta API sync (used by sync job)
 	SyncCampaigns(adAccountID string) (int, error)
@@ -72,10 +75,222 @@ func (s *serviceImpl) GetCampaigns(filter CampaignFilter) ([]dto.CampaignRespons
 func (s *serviceImpl) GetCampaignByID(id string) (*dto.CampaignResponse, error) {
 	campaign, err := s.repo.FindByID(id)
 	if err != nil {
-		return nil, fmt.Errorf("campaign not found: %w", err)
+		return nil, fmt.Errorf("failed to fetch campaign: %w", err)
 	}
-	result := mapModelToDTO(*campaign)
-	return &result, nil
+
+	resp := mapModelToDTO(*campaign)
+	return &resp, nil
+}
+
+type metaAction struct {
+	ActionType string `json:"action_type"`
+	Value      string `json:"value"`
+}
+
+func (s *serviceImpl) GetSummaryByBrand(brandID uint64, dateStart, dateStop string) (*dto.CampaignSummaryResponse, error) {
+	rows, err := s.repo.GetSummaryByBrand(brandID, dateStart, dateStop)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get summary: %w", err)
+	}
+
+	var summary dto.CampaignSummaryResponse
+	for _, row := range rows {
+		summary.AmountSpent += row.Spend
+		summary.Impressions += row.Impressions
+		summary.Reach += row.Reach
+
+		if len(row.Actions) > 0 {
+			var actions []metaAction
+			if err := json.Unmarshal(row.Actions, &actions); err == nil {
+				for _, act := range actions {
+					val, _ := strconv.ParseInt(act.Value, 10, 64)
+					switch act.ActionType {
+					case "onsite_conversion.total_messaging_connection":
+						summary.TotalMessaging += val
+					case "onsite_conversion.messaging_first_reply":
+						summary.NewMessaging += val
+					case "purchase":
+						summary.PurchaseTotal += val
+					}
+				}
+			}
+		}
+	}
+
+	if summary.PurchaseTotal > 0 {
+		summary.CostPerPurchase = summary.AmountSpent / float64(summary.PurchaseTotal)
+	}
+
+	return &summary, nil
+}
+
+func (s *serviceImpl) GetCampaignDashboard(filter CampaignFilter) ([]dto.CampaignDashboardRow, *response.PaginationMeta, error) {
+	rows, total, err := s.repo.FindCampaignDashboard(filter)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to fetch campaign dashboard: %w", err)
+	}
+
+	result := make([]dto.CampaignDashboardRow, 0, len(rows))
+	for _, r := range rows {
+		dtoRow := mapScanToDTO(r)
+		if dtoRow.DateStart == "" && filter.DateStart != "" {
+			dtoRow.DateStart = filter.DateStart
+		}
+		if dtoRow.DateStop == "" && filter.DateStop != "" {
+			dtoRow.DateStop = filter.DateStop
+		}
+		result = append(result, dtoRow)
+	}
+
+	if filter.Limit <= 0 {
+		filter.Limit = 25
+	}
+	if filter.Page <= 0 {
+		filter.Page = 1
+	}
+	lastPage := int(total) / filter.Limit
+	if int(total)%filter.Limit > 0 {
+		lastPage++
+	}
+
+	meta := &response.PaginationMeta{
+		Page:     filter.Page,
+		Limit:    filter.Limit,
+		Total:    int(total),
+		LastPage: lastPage,
+	}
+
+	return result, meta, nil
+}
+
+func mapScanToDTO(r campaignDashboardScan) dto.CampaignDashboardRow {
+	var budgetStr string
+	if r.DailyBudget == 0 && r.LifetimeBudget == 0 {
+		budgetStr = resolveBudget(r.AdsetDailyBudget, r.AdsetLifetimeBudget)
+	} else {
+		budgetStr = resolveBudget(r.DailyBudget, r.LifetimeBudget)
+	}
+
+	row := dto.CampaignDashboardRow{
+		CampaignID:      r.CampaignID,
+		CampaignName:    r.CampaignName,
+		Status:          r.Status,
+		EffectiveStatus: r.EffectiveStatus,
+		Objective:       r.Objective,
+		Budget:          budgetStr,
+		AmountSpent:     formatNullFloat(r.Spend),
+		Impressions:     formatNullInt(r.Impressions),
+		Reach:           formatNullInt(r.Reach),
+	}
+
+	if r.StopTime != nil {
+		row.Ends = r.StopTime.Format("2006-01-02")
+	}
+	if r.DateStart != nil && len(*r.DateStart) >= 10 {
+		row.DateStart = (*r.DateStart)[:10]
+	}
+	if r.DateStop != nil && len(*r.DateStop) >= 10 {
+		row.DateStop = (*r.DateStop)[:10]
+	}
+
+	// Extract action metrics from JSON
+	actions := parseActions(r.Actions)
+	row.TotalMessagingConversations = findAction(actions, "onsite_conversion.total_messaging_connection")
+	row.NewMessagingConnections = findAction(actions, "onsite_conversion.messaging_first_reply")
+	row.Purchases = findAction(actions, "purchase")
+
+	var primaryActionType string
+	if len(actions) > 0 {
+		row.Results = actions[0].Value
+		primaryActionType = actions[0].ActionType
+	}
+
+	if val := findAction(actions, "onsite_conversion.messaging_first_reply"); val != "0" {
+		row.Results = val
+		primaryActionType = "onsite_conversion.messaging_first_reply"
+	} else if val := findAction(actions, "onsite_conversion.total_messaging_connection"); val != "0" {
+		row.Results = val
+		primaryActionType = "onsite_conversion.total_messaging_connection"
+	} else if val := findAction(actions, "purchase"); val != "0" {
+		row.Results = val
+		primaryActionType = "purchase"
+	}
+
+	costs := parseActions(r.CostPerActionType)
+	if primaryActionType != "" {
+		row.CostPerResult = findAction(costs, primaryActionType)
+	} else if len(costs) > 0 {
+		row.CostPerResult = costs[0].Value
+	}
+
+	if row.CostPerResult == "" || row.CostPerResult == "0" {
+		spent, _ := strconv.ParseFloat(row.AmountSpent, 64)
+		results, _ := strconv.ParseFloat(row.Results, 64)
+		if results > 0 {
+			row.CostPerResult = formatFloat(math.Ceil(spent / results))
+		} else {
+			row.CostPerResult = "0"
+		}
+	} else {
+		val, _ := strconv.ParseFloat(row.CostPerResult, 64)
+		row.CostPerResult = formatFloat(math.Ceil(val))
+	}
+
+	// Attribution spec from adset
+	if r.AttributionSpec != nil {
+		var v interface{}
+		if err := json.Unmarshal(r.AttributionSpec, &v); err == nil {
+			row.AttributionSetting = v
+		}
+	}
+
+	return row
+}
+
+func resolveBudget(daily, lifetime float64) string {
+	if daily > 0 {
+		return formatFloat(daily)
+	}
+	return formatFloat(lifetime)
+}
+
+func parseActions(raw json.RawMessage) []metaAction {
+	if raw == nil {
+		return nil
+	}
+	var actions []metaAction
+	_ = json.Unmarshal(raw, &actions)
+	return actions
+}
+
+func findAction(actions []metaAction, actionType string) string {
+	for _, a := range actions {
+		if a.ActionType == actionType {
+			return a.Value
+		}
+	}
+	return "0"
+}
+
+func formatNullFloat(v *float64) string {
+	if v == nil {
+		return "0"
+	}
+	return formatFloat(*v)
+}
+
+func formatFloat(v float64) string {
+	if v == math.Trunc(v) {
+		return fmt.Sprintf("%.0f", v)
+	}
+	return fmt.Sprintf("%.2f", v)
+}
+
+func formatNullInt(v *int64) string {
+	if v == nil {
+		return "0"
+	}
+	return strconv.FormatInt(*v, 10)
 }
 
 // --- META API SYNC METHOD (for background job) ---

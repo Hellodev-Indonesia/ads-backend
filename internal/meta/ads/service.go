@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -13,12 +15,20 @@ import (
 	"github.com/alex/ads_backend/pkg/response"
 )
 
+// Action type keys used by Meta Graph API
+const (
+	actionTotalMessaging = "onsite_conversion.total_messaging_connection"
+	actionNewMessaging   = "onsite_conversion.messaging_first_reply"
+	actionPurchase       = "purchase"
+)
+
 const DefaultAdFields = "id,campaign_id,adset_id,name,status,effective_status,creative,created_time,updated_time"
 const DefaultCreativeFields = "id,name,title,body,image_url,thumbnail_url,object_story_spec,asset_feed_spec,url_tags"
 
 type Service interface {
 	// DB reads (used by handlers)
 	GetAds(filter AdFilter) ([]dto.AdResponse, *response.PaginationMeta, error)
+	GetAdDashboard(filter AdFilter) ([]dto.AdDashboardRow, *response.PaginationMeta, error)
 
 	// Direct Meta API call (creatives stay as direct calls)
 	GetCreative(creativeID string, fields string) (*dto.CreativeResponse, error)
@@ -229,4 +239,154 @@ func formatTime(t *time.Time) string {
 		return ""
 	}
 	return t.Format(time.RFC3339)
+}
+
+func (s *serviceImpl) GetAdDashboard(filter AdFilter) ([]dto.AdDashboardRow, *response.PaginationMeta, error) {
+	rows, total, err := s.repo.FindAdDashboard(filter)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to fetch ad dashboard: %w", err)
+	}
+
+	result := make([]dto.AdDashboardRow, 0, len(rows))
+	for _, r := range rows {
+		dtoRow := mapAdScanToDTO(r)
+		if dtoRow.DateStart == "" && filter.DateStart != "" {
+			dtoRow.DateStart = filter.DateStart
+		}
+		if dtoRow.DateStop == "" && filter.DateStop != "" {
+			dtoRow.DateStop = filter.DateStop
+		}
+		result = append(result, dtoRow)
+	}
+
+	if filter.Limit <= 0 {
+		filter.Limit = 25
+	}
+	if filter.Page <= 0 {
+		filter.Page = 1
+	}
+	lastPage := int(total) / filter.Limit
+	if int(total)%filter.Limit > 0 {
+		lastPage++
+	}
+
+	meta := &response.PaginationMeta{
+		Page:     filter.Page,
+		Limit:    filter.Limit,
+		Total:    int(total),
+		LastPage: lastPage,
+	}
+
+	return result, meta, nil
+}
+func mapAdScanToDTO(r adDashboardScan) dto.AdDashboardRow {
+	row := dto.AdDashboardRow{
+		AdID:            r.AdID,
+		AdSetID:         r.AdSetID,
+		CampaignID:      r.CampaignID,
+		CampaignName:    r.CampaignName,
+		AdSetName:       r.AdSetName,
+		AdName:          r.AdName,
+		Status:          r.Status,
+		EffectiveStatus: r.EffectiveStatus,
+		CreativeID:      r.CreativeID,
+		AmountSpent:     formatNullFloat(r.Spend),
+		Impressions:     formatNullInt(r.Impressions),
+		Reach:           formatNullInt(r.Reach),
+	}
+
+	if r.DateStart != nil && len(*r.DateStart) >= 10 {
+		row.DateStart = (*r.DateStart)[:10]
+	}
+	if r.DateStop != nil && len(*r.DateStop) >= 10 {
+		row.DateStop = (*r.DateStop)[:10]
+	}
+
+	actions := parseActions(r.Actions)
+	row.TotalMessagingConversations = findAction(actions, actionTotalMessaging)
+	row.NewMessagingConnections = findAction(actions, actionNewMessaging)
+	row.Purchases = findAction(actions, actionPurchase)
+
+	var primaryActionType string
+	if len(actions) > 0 {
+		row.Results = actions[0].Value
+		primaryActionType = actions[0].ActionType
+	}
+
+	if val := findAction(actions, actionNewMessaging); val != "0" {
+		row.Results = val
+		primaryActionType = actionNewMessaging
+	} else if val := findAction(actions, actionTotalMessaging); val != "0" {
+		row.Results = val
+		primaryActionType = actionTotalMessaging
+	} else if val := findAction(actions, actionPurchase); val != "0" {
+		row.Results = val
+		primaryActionType = actionPurchase
+	}
+
+	costs := parseActions(r.CostPerActionType)
+	if primaryActionType != "" {
+		row.CostPerResult = findAction(costs, primaryActionType)
+	} else if len(costs) > 0 {
+		row.CostPerResult = costs[0].Value
+	}
+
+	if row.CostPerResult == "" || row.CostPerResult == "0" {
+		spent, _ := strconv.ParseFloat(row.AmountSpent, 64)
+		results, _ := strconv.ParseFloat(row.Results, 64)
+		if results > 0 {
+			row.CostPerResult = formatFloat(math.Ceil(spent / results))
+		} else {
+			row.CostPerResult = "0"
+		}
+	} else {
+		val, _ := strconv.ParseFloat(row.CostPerResult, 64)
+		row.CostPerResult = formatFloat(math.Ceil(val))
+	}
+
+	return row
+}
+
+type metaAction struct {
+	ActionType string `json:"action_type"`
+	Value      string `json:"value"`
+}
+
+func parseActions(raw json.RawMessage) []metaAction {
+	if raw == nil {
+		return nil
+	}
+	var actions []metaAction
+	_ = json.Unmarshal(raw, &actions)
+	return actions
+}
+
+func findAction(actions []metaAction, actionType string) string {
+	for _, a := range actions {
+		if a.ActionType == actionType {
+			return a.Value
+		}
+	}
+	return "0"
+}
+
+func formatNullFloat(v *float64) string {
+	if v == nil {
+		return "0"
+	}
+	return formatFloat(*v)
+}
+
+func formatFloat(v float64) string {
+	if v == math.Trunc(v) {
+		return fmt.Sprintf("%.0f", v)
+	}
+	return fmt.Sprintf("%.2f", v)
+}
+
+func formatNullInt(v *int64) string {
+	if v == nil {
+		return "0"
+	}
+	return strconv.FormatInt(*v, 10)
 }

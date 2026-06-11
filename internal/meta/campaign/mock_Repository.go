@@ -76,6 +76,73 @@ func (_m *MockRepository) FindByID(id string) (*MetaCampaign, error) {
 	return r0, r1
 }
 
+// FindCampaignDashboard provides a mock function with given fields: filter
+func (_m *MockRepository) FindCampaignDashboard(filter CampaignFilter) ([]campaignDashboardScan, int64, error) {
+	ret := _m.Called(filter)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindCampaignDashboard")
+	}
+
+	var r0 []campaignDashboardScan
+	var r1 int64
+	var r2 error
+	if rf, ok := ret.Get(0).(func(CampaignFilter) ([]campaignDashboardScan, int64, error)); ok {
+		return rf(filter)
+	}
+	if rf, ok := ret.Get(0).(func(CampaignFilter) []campaignDashboardScan); ok {
+		r0 = rf(filter)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]campaignDashboardScan)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(CampaignFilter) int64); ok {
+		r1 = rf(filter)
+	} else {
+		r1 = ret.Get(1).(int64)
+	}
+
+	if rf, ok := ret.Get(2).(func(CampaignFilter) error); ok {
+		r2 = rf(filter)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
+// GetSummaryByBrand provides a mock function with given fields: brandID, dateStart, dateStop
+func (_m *MockRepository) GetSummaryByBrand(brandID uint64, dateStart string, dateStop string) ([]InsightSummaryRow, error) {
+	ret := _m.Called(brandID, dateStart, dateStop)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetSummaryByBrand")
+	}
+
+	var r0 []InsightSummaryRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint64, string, string) ([]InsightSummaryRow, error)); ok {
+		return rf(brandID, dateStart, dateStop)
+	}
+	if rf, ok := ret.Get(0).(func(uint64, string, string) []InsightSummaryRow); ok {
+		r0 = rf(brandID, dateStart, dateStop)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]InsightSummaryRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint64, string, string) error); ok {
+		r1 = rf(brandID, dateStart, dateStop)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Upsert provides a mock function with given fields: campaign
 func (_m *MockRepository) Upsert(campaign *MetaCampaign) error {
 	ret := _m.Called(campaign)

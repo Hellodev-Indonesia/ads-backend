@@ -49,6 +49,43 @@ func (_m *MockRepository) FindAll(filter AdAccountFilter) ([]MetaAdAccount, int6
 	return r0, r1, r2
 }
 
+// FindBrandDashboard provides a mock function with given fields: filter
+func (_m *MockRepository) FindBrandDashboard(filter AdAccountFilter) ([]brandDashboardScan, int64, error) {
+	ret := _m.Called(filter)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindBrandDashboard")
+	}
+
+	var r0 []brandDashboardScan
+	var r1 int64
+	var r2 error
+	if rf, ok := ret.Get(0).(func(AdAccountFilter) ([]brandDashboardScan, int64, error)); ok {
+		return rf(filter)
+	}
+	if rf, ok := ret.Get(0).(func(AdAccountFilter) []brandDashboardScan); ok {
+		r0 = rf(filter)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]brandDashboardScan)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(AdAccountFilter) int64); ok {
+		r1 = rf(filter)
+	} else {
+		r1 = ret.Get(1).(int64)
+	}
+
+	if rf, ok := ret.Get(2).(func(AdAccountFilter) error); ok {
+		r2 = rf(filter)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // FindByID provides a mock function with given fields: id
 func (_m *MockRepository) FindByID(id string) (*MetaAdAccount, error) {
 	ret := _m.Called(id)

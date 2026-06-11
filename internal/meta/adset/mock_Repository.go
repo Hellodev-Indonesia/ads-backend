@@ -9,6 +9,43 @@ type MockRepository struct {
 	mock.Mock
 }
 
+// FindAdSetDashboard provides a mock function with given fields: filter
+func (_m *MockRepository) FindAdSetDashboard(filter AdSetFilter) ([]adSetDashboardScan, int64, error) {
+	ret := _m.Called(filter)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindAdSetDashboard")
+	}
+
+	var r0 []adSetDashboardScan
+	var r1 int64
+	var r2 error
+	if rf, ok := ret.Get(0).(func(AdSetFilter) ([]adSetDashboardScan, int64, error)); ok {
+		return rf(filter)
+	}
+	if rf, ok := ret.Get(0).(func(AdSetFilter) []adSetDashboardScan); ok {
+		r0 = rf(filter)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]adSetDashboardScan)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(AdSetFilter) int64); ok {
+		r1 = rf(filter)
+	} else {
+		r1 = ret.Get(1).(int64)
+	}
+
+	if rf, ok := ret.Get(2).(func(AdSetFilter) error); ok {
+		r2 = rf(filter)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // FindAll provides a mock function with given fields: filter
 func (_m *MockRepository) FindAll(filter AdSetFilter) ([]MetaAdSet, int64, error) {
 	ret := _m.Called(filter)
