@@ -89,10 +89,15 @@ type AdDashboardRow struct {
 }
 
 type BrandDashboardResponse struct {
-	BrandID             uint64  `json:"brand_id"`
-	BrandName           string  `json:"brand_name"`
-	BrandPhoto          *string `json:"brand_photo"`
-	AdAccountCount      int     `json:"ad_account_count"`
-	ActiveCampaignCount int     `json:"active_campaign_count"`
-	TotalSpends         float64 `json:"total_spends"`
+	Brand               BrandDashboardInfo `json:"brand"`
+	AdAccountCount      int                `json:"ad_account_count"`
+	ActiveCampaignCount int                `json:"active_campaign_count"`
+	TotalSpends         float64            `json:"total_spends"`
+}
+
+type BrandDashboardInfo struct {
+	ID    uint64  `json:"id"`
+	Name  string  `json:"name"`
+	Slug  string  `json:"slug"`
+	Photo *string `json:"photo"`
 }

@@ -441,9 +441,12 @@ func (s *serviceImpl) GetBrandDashboard(filter DashboardFilter) ([]dto.BrandDash
 			spend = *r.TotalSpends
 		}
 		result = append(result, dto.BrandDashboardResponse{
-			BrandID:             r.BrandID,
-			BrandName:           r.BrandName,
-			BrandPhoto:          r.BrandPhoto,
+			Brand: dto.BrandDashboardInfo{
+				ID:    r.BrandID,
+				Name:  r.BrandName,
+				Slug:  r.BrandSlug,
+				Photo: r.BrandPhoto,
+			},
 			AdAccountCount:      r.AdAccountCount,
 			ActiveCampaignCount: r.ActiveCampaignCount,
 			TotalSpends:         spend,
