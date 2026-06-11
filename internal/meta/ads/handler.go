@@ -84,15 +84,17 @@ func (h *Handler) GetAdsByBrand(c *gin.Context) {
 	}
 
 	filter := AdFilter{
-		BrandID:    &brandID,
-		CampaignID: c.Query("campaign_id"),
-		AdSetID:    c.Query("adset_id"),
-		Status:     c.Query("status"),
-		Search:     c.Query("search"),
-		DateStart:  c.Query("date_start"),
-		DateStop:   c.Query("date_stop"),
-		Page:       parseQueryInt(c, "page", 1),
-		Limit:      parseQueryInt(c, "limit", 25),
+		BrandID:     &brandID,
+		CampaignID:  c.Query("campaign_id"),
+		AdSetID:     c.Query("adset_id"),
+		CampaignIDs: c.QueryArray("campaign_ids"),
+		AdSetIDs:    c.QueryArray("adset_ids"),
+		Status:      c.Query("status"),
+		Search:      c.Query("search"),
+		DateStart:   c.Query("date_start"),
+		DateStop:    c.Query("date_stop"),
+		Page:        parseQueryInt(c, "page", 1),
+		Limit:       parseQueryInt(c, "limit", 25),
 	}
 
 	resp, meta, err := h.service.GetAdDashboard(filter)
@@ -179,16 +181,18 @@ func (h *Handler) GetAdDashboard(c *gin.Context) {
 	}
 
 	filter := AdFilter{
-		AccountID:  c.Query("ad_account_id"),
-		BrandID:    brandID,
-		CampaignID: c.Query("campaign_id"),
-		AdSetID:    c.Query("adset_id"),
-		Status:     c.Query("status"),
-		Search:     c.Query("search"),
-		DateStart:  c.Query("date_start"),
-		DateStop:   c.Query("date_stop"),
-		Page:       parseQueryInt(c, "page", 1),
-		Limit:      parseQueryInt(c, "limit", 25),
+		AccountID:   c.Query("ad_account_id"),
+		BrandID:     brandID,
+		CampaignID:  c.Query("campaign_id"),
+		AdSetID:     c.Query("adset_id"),
+		CampaignIDs: c.QueryArray("campaign_ids"),
+		AdSetIDs:    c.QueryArray("adset_ids"),
+		Status:      c.Query("status"),
+		Search:      c.Query("search"),
+		DateStart:   c.Query("date_start"),
+		DateStop:    c.Query("date_stop"),
+		Page:        parseQueryInt(c, "page", 1),
+		Limit:       parseQueryInt(c, "limit", 25),
 	}
 
 	rows, meta, err := h.service.GetAdDashboard(filter)

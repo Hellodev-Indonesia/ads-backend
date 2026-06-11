@@ -10,12 +10,14 @@ import (
 )
 
 type AdFilter struct {
-	AccountID  string
-	BrandID    *uint64
-	CampaignID string
-	AdSetID    string
-	Status     string
-	Search     string
+	AccountID   string
+	BrandID     *uint64
+	CampaignID  string
+	AdSetID     string
+	CampaignIDs []string
+	AdSetIDs    []string
+	Status      string
+	Search      string
 	DateStart  string
 	DateStop   string
 	Page       int
@@ -146,6 +148,14 @@ func (r *repository) FindAdDashboard(filter AdFilter) ([]adDashboardScan, int64,
 	if filter.Status != "" {
 		where += " AND a.status = ?"
 		args = append(args, filter.Status)
+	}
+	if len(filter.CampaignIDs) > 0 {
+		where += " AND a.campaign_id IN ?"
+		args = append(args, filter.CampaignIDs)
+	}
+	if len(filter.AdSetIDs) > 0 {
+		where += " AND a.adset_id IN ?"
+		args = append(args, filter.AdSetIDs)
 	}
 	if filter.Search != "" {
 		where += " AND a.name LIKE ?"

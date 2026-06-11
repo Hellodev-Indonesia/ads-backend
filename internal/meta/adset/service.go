@@ -28,6 +28,7 @@ type Service interface {
 	// DB reads (used by handlers)
 	GetAdSets(filter AdSetFilter) ([]dto.AdSetResponse, *response.PaginationMeta, error)
 	GetAdSetDashboard(filter AdSetFilter) ([]dto.AdSetDashboardRow, *response.PaginationMeta, error)
+	GetAdSetListByBrand(brandID uint64, campaignIDs []string) ([]dto.SimpleListResponse, error)
 
 	// Meta API sync (used by sync job)
 	SyncAdSets(adAccountID string) (int, error)
@@ -44,6 +45,10 @@ func NewService(client *meta_client.Client, repo Repository) Service {
 }
 
 // --- DB READ METHODS ---
+
+func (s *serviceImpl) GetAdSetListByBrand(brandID uint64, campaignIDs []string) ([]dto.SimpleListResponse, error) {
+	return s.repo.FindSimpleListByBrand(brandID, campaignIDs)
+}
 
 func (s *serviceImpl) GetAdSets(filter AdSetFilter) ([]dto.AdSetResponse, *response.PaginationMeta, error) {
 	adsets, total, err := s.repo.FindAll(filter)

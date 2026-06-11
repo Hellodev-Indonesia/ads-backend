@@ -10,10 +10,12 @@ import (
 )
 
 type CampaignFilter struct {
-	Status    string
-	AccountID string
-	BrandID   *uint64
-	Search    string
+	Status      string
+	AccountID   string
+	BrandID     *uint64
+	CampaignIDs []string
+	AdSetIDs    []string
+	Search      string
 	DateStart string
 	DateStop  string
 	Page      int
@@ -34,6 +36,7 @@ type Repository interface {
 	FindByID(id string) (*MetaCampaign, error)
 	GetSummaryByBrand(brandID uint64, dateStart, dateStop string) ([]InsightSummaryRow, error)
 	FindCampaignDashboard(filter CampaignFilter) ([]campaignDashboardScan, int64, error)
+	FindSimpleListByBrand(brandID uint64) ([]dto.SimpleListResponse, error)
 }
 
 type repository struct {
@@ -163,6 +166,14 @@ func (r *repository) FindCampaignDashboard(filter CampaignFilter) ([]campaignDas
 	if filter.Status != "" {
 		where += " AND c.status = ?"
 		args = append(args, filter.Status)
+	}
+	if len(filter.CampaignIDs) > 0 {
+		where += " AND c.id IN ?"
+		args = append(args, filter.CampaignIDs)
+	}
+	if len(filter.AdSetIDs) > 0 {
+		where += " AND c.id IN (SELECT campaign_id FROM meta_ad_sets WHERE id IN ?)"
+		args = append(args, filter.AdSetIDs)
 	}
 	if filter.Search != "" {
 		where += " AND c.name LIKE ?"
@@ -346,4 +357,15 @@ func javaStrToInt(s string) (int, error) {
 
 func intToStr(v int) string {
 	return fmt.Sprintf("%d", v)
+}
+
+func (r *repository) FindSimpleListByBrand(brandID uint64) ([]dto.SimpleListResponse, error) {
+	var list []dto.SimpleListResponse
+	err := r.db.Table("meta_campaigns c").
+		Select("c.id, c.name").
+		Joins("JOIN meta_ad_accounts a ON c.account_id = a.id").
+		Where("a.brand_id = ?", brandID).
+		Order("c.created_time DESC").
+		Scan(&list).Error
+	return list, err
 }

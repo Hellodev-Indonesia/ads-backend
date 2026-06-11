@@ -80,14 +80,16 @@ func (h *Handler) GetAdSetsByBrand(c *gin.Context) {
 	}
 
 	filter := AdSetFilter{
-		BrandID:    &brandID,
-		CampaignID: c.Query("campaign_id"),
-		Status:     c.Query("status"),
-		Search:     c.Query("search"),
-		DateStart:  c.Query("date_start"),
-		DateStop:   c.Query("date_stop"),
-		Page:       parseQueryInt(c, "page", 1),
-		Limit:      parseQueryInt(c, "limit", 25),
+		BrandID:     &brandID,
+		CampaignID:  c.Query("campaign_id"),
+		CampaignIDs: c.QueryArray("campaign_ids"),
+		AdSetIDs:    c.QueryArray("adset_ids"),
+		Status:      c.Query("status"),
+		Search:      c.Query("search"),
+		DateStart:   c.Query("date_start"),
+		DateStop:    c.Query("date_stop"),
+		Page:        parseQueryInt(c, "page", 1),
+		Limit:       parseQueryInt(c, "limit", 25),
 	}
 
 	resp, meta, err := h.service.GetAdSetDashboard(filter)
@@ -108,6 +110,37 @@ func parseQueryInt(c *gin.Context, key string, defaultVal int) int {
 		return defaultVal
 	}
 	return v
+}
+
+// GetAdSetListByBrand godoc
+// @Summary      Get Ad Set Simple List by Brand ID
+// @Description  Retrieve id and name of all ad sets under a specific brand
+// @Tags         Meta AdSets
+// @Accept       json
+// @Produce      json
+// @Param        brand_id       path      int     true   "Brand ID"
+// @Param        campaign_ids   query     []string false "Filter by campaign IDs" collectionFormat(multi)
+// @Success      200            {object}  response.Response{data=[]dto.SimpleListResponse}
+// @Failure      400            {object}  response.ErrorResponse
+// @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
+// @Router       /meta/brands/{brand_id}/adsets/list [get]
+func (h *Handler) GetAdSetListByBrand(c *gin.Context) {
+	brandIDParam := c.Param("brand_id")
+	brandID, err := strconv.ParseUint(brandIDParam, 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid brand ID", nil)
+		return
+	}
+
+	campaignIDs := c.QueryArray("campaign_ids")
+
+	resp, err := h.service.GetAdSetListByBrand(brandID, campaignIDs)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	response.Success(c, "Successfully retrieved ad set list for brand", resp)
 }
 
 // GetAdSetDashboard godoc
@@ -140,15 +173,17 @@ func (h *Handler) GetAdSetDashboard(c *gin.Context) {
 	}
 
 	filter := AdSetFilter{
-		AccountID:  c.Query("ad_account_id"),
-		BrandID:    brandID,
-		CampaignID: c.Query("campaign_id"),
-		Status:     c.Query("status"),
-		Search:     c.Query("search"),
-		DateStart:  c.Query("date_start"),
-		DateStop:   c.Query("date_stop"),
-		Page:       parseQueryInt(c, "page", 1),
-		Limit:      parseQueryInt(c, "limit", 25),
+		AccountID:   c.Query("ad_account_id"),
+		BrandID:     brandID,
+		CampaignID:  c.Query("campaign_id"),
+		CampaignIDs: c.QueryArray("campaign_ids"),
+		AdSetIDs:    c.QueryArray("adset_ids"),
+		Status:      c.Query("status"),
+		Search:      c.Query("search"),
+		DateStart:   c.Query("date_start"),
+		DateStop:    c.Query("date_stop"),
+		Page:        parseQueryInt(c, "page", 1),
+		Limit:       parseQueryInt(c, "limit", 25),
 	}
 
 	rows, meta, err := h.service.GetAdSetDashboard(filter)

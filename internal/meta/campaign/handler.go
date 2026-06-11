@@ -81,13 +81,15 @@ func (h *Handler) GetCampaignsByBrand(c *gin.Context) {
 	}
 
 	filter := CampaignFilter{
-		BrandID:   &brandID,
-		Status:    c.Query("status"),
-		Search:    c.Query("search"),
-		DateStart: c.Query("date_start"),
-		DateStop:  c.Query("date_stop"),
-		Page:      parseQueryInt(c, "page", 1),
-		Limit:     parseQueryInt(c, "limit", 25),
+		BrandID:     &brandID,
+		Status:      c.Query("status"),
+		Search:      c.Query("search"),
+		DateStart:   c.Query("date_start"),
+		DateStop:    c.Query("date_stop"),
+		CampaignIDs: c.QueryArray("campaign_ids"),
+		AdSetIDs:    c.QueryArray("adset_ids"),
+		Page:        parseQueryInt(c, "page", 1),
+		Limit:       parseQueryInt(c, "limit", 25),
 	}
 
 	resp, meta, err := h.service.GetCampaignDashboard(filter)
@@ -131,6 +133,34 @@ func (h *Handler) GetCampaignSummaryByBrand(c *gin.Context) {
 	response.Success(c, "Successfully retrieved campaign summary for brand", resp)
 }
 
+// GetCampaignListByBrand godoc
+// @Summary      Get Campaign Simple List by Brand ID
+// @Description  Retrieve id and name of all campaigns under a specific brand
+// @Tags         Meta Campaigns
+// @Accept       json
+// @Produce      json
+// @Param        brand_id       path      int     true   "Brand ID"
+// @Success      200            {object}  response.Response{data=[]dto.SimpleListResponse}
+// @Failure      400            {object}  response.ErrorResponse
+// @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
+// @Router       /meta/brands/{brand_id}/campaigns/list [get]
+func (h *Handler) GetCampaignListByBrand(c *gin.Context) {
+	brandIDParam := c.Param("brand_id")
+	brandID, err := strconv.ParseUint(brandIDParam, 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid brand ID", nil)
+		return
+	}
+
+	resp, err := h.service.GetCampaignListByBrand(brandID)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	response.Success(c, "Successfully retrieved campaign list for brand", resp)
+}
+
 // GetCampaignDashboard godoc
 // @Summary      Campaign Dashboard
 // @Description  Returns campaigns with performance metrics (spend, impressions, reach, actions) joined from insights and adsets
@@ -163,14 +193,16 @@ func (h *Handler) GetCampaignDashboard(c *gin.Context) {
 	}
 
 	filter := CampaignFilter{
-		AccountID: adAccountID,
-		BrandID:   brandID,
-		Status:    c.Query("status"),
-		Search:    c.Query("search"),
-		DateStart: c.Query("date_start"),
-		DateStop:  c.Query("date_stop"),
-		Page:      parseQueryInt(c, "page", 1),
-		Limit:     parseQueryInt(c, "limit", 25),
+		AccountID:   adAccountID,
+		BrandID:     brandID,
+		Status:      c.Query("status"),
+		Search:      c.Query("search"),
+		DateStart:   c.Query("date_start"),
+		DateStop:    c.Query("date_stop"),
+		CampaignIDs: c.QueryArray("campaign_ids"),
+		AdSetIDs:    c.QueryArray("adset_ids"),
+		Page:        parseQueryInt(c, "page", 1),
+		Limit:       parseQueryInt(c, "limit", 25),
 	}
 
 	resp, meta, err := h.service.GetCampaignDashboard(filter)

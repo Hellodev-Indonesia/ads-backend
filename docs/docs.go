@@ -83,7 +83,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -91,7 +91,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AlertResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse"
                                             }
                                         }
                                     }
@@ -135,13 +135,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.AlertResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse"
                                         }
                                     }
                                 }
@@ -184,13 +184,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.AlertResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse"
                                         }
                                     }
                                 }
@@ -220,7 +220,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_auth_dto.LoginRequest"
                         }
                     }
                 ],
@@ -230,13 +230,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.LoginResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_auth_dto.LoginResponse"
                                         }
                                     }
                                 }
@@ -246,7 +246,7 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -274,7 +274,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -343,7 +343,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -351,7 +351,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.WhitelistRuleResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
                                             }
                                         }
                                     }
@@ -392,7 +392,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateWhitelistRuleRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CreateWhitelistRuleRequest"
                         }
                     }
                 ],
@@ -402,13 +402,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.WhitelistRuleResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
                                         }
                                     }
                                 }
@@ -450,7 +450,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CheckURLRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLRequest"
                         }
                     }
                 ],
@@ -460,13 +460,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.CheckURLResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLResponse"
                                         }
                                     }
                                 }
@@ -516,13 +516,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.WhitelistRuleResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
                                         }
                                     }
                                 }
@@ -569,7 +569,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UpdateWhitelistRuleRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.UpdateWhitelistRuleRequest"
                         }
                     }
                 ],
@@ -579,13 +579,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.WhitelistRuleResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
                                         }
                                     }
                                 }
@@ -631,7 +631,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -677,7 +677,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -685,7 +685,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.ContactPersonListResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonListResponse"
                                             }
                                         }
                                     }
@@ -696,7 +696,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -725,7 +725,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ContactPersonRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonRequest"
                         }
                     }
                 ],
@@ -735,13 +735,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.ContactPersonResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse"
                                         }
                                     }
                                 }
@@ -751,7 +751,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -790,13 +790,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.ContactPersonResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse"
                                         }
                                     }
                                 }
@@ -806,7 +806,7 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -842,7 +842,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ContactPersonRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonRequest"
                         }
                     }
                 ],
@@ -852,13 +852,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.ContactPersonResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse"
                                         }
                                     }
                                 }
@@ -868,13 +868,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -911,7 +911,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
@@ -927,7 +927,7 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -982,7 +982,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -990,7 +990,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.BrandResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse"
                                             }
                                         }
                                     }
@@ -1001,7 +1001,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -1056,13 +1056,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.BrandResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse"
                                         }
                                     }
                                 }
@@ -1072,13 +1072,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -1146,19 +1146,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -1194,13 +1194,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.BrandResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse"
                                         }
                                     }
                                 }
@@ -1210,7 +1210,7 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -1271,13 +1271,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.BrandResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse"
                                         }
                                     }
                                 }
@@ -1287,19 +1287,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -1331,25 +1331,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -1401,7 +1401,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1409,7 +1409,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.PermissionResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse"
                                             }
                                         }
                                     }
@@ -1443,7 +1443,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.PermissionRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest"
                         }
                     }
                 ],
@@ -1451,7 +1451,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -1490,13 +1490,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.PermissionResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse"
                                         }
                                     }
                                 }
@@ -1536,7 +1536,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.PermissionRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest"
                         }
                     }
                 ],
@@ -1544,7 +1544,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -1579,7 +1579,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -1631,7 +1631,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1639,7 +1639,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.RoleResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleResponse"
                                             }
                                         }
                                     }
@@ -1673,7 +1673,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.RoleRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleRequest"
                         }
                     }
                 ],
@@ -1681,7 +1681,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -1720,13 +1720,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.RoleResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleResponse"
                                         }
                                     }
                                 }
@@ -1766,7 +1766,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.RoleRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleRequest"
                         }
                     }
                 ],
@@ -1774,7 +1774,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -1809,7 +1809,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -1847,7 +1847,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.AssignPermissionRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.AssignPermissionRequest"
                         }
                     }
                 ],
@@ -1855,7 +1855,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -1913,7 +1913,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1921,7 +1921,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.UserResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserResponse"
                                             }
                                         }
                                     }
@@ -1955,7 +1955,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserRequest"
                         }
                     }
                 ],
@@ -1963,7 +1963,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -2002,13 +2002,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.UserResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserResponse"
                                         }
                                     }
                                 }
@@ -2048,7 +2048,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserRequest"
                         }
                     }
                 ],
@@ -2056,7 +2056,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -2091,7 +2091,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     }
                 }
@@ -2183,7 +2183,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -2191,7 +2191,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.FraudLogResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse"
                                             }
                                         }
                                     }
@@ -2235,13 +2235,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.FraudLogResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse"
                                         }
                                     }
                                 }
@@ -2284,13 +2284,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.FraudLogResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse"
                                         }
                                     }
                                 }
@@ -2362,7 +2362,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -2370,11 +2370,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AdAccountResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.Meta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Meta"
                                         }
                                     }
                                 }
@@ -2384,13 +2384,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -2421,7 +2421,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.AssignBrandRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AssignBrandRequest"
                         }
                     }
                 ],
@@ -2429,19 +2429,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -2474,7 +2474,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
@@ -2482,7 +2482,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.BusinessOptionResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.BusinessOptionResponse"
                                             }
                                         }
                                     }
@@ -2549,7 +2549,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -2557,7 +2557,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AdAccountResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse"
                                             }
                                         }
                                     }
@@ -2568,19 +2568,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -2617,19 +2617,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.SuccessResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -2699,7 +2699,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -2707,11 +2707,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AdResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.AdResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.PaginationMeta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -2721,13 +2721,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -2819,19 +2819,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -2895,7 +2895,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -2903,11 +2903,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AdSetResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_adset_dto.AdSetResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.PaginationMeta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -2917,13 +2917,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3009,19 +3009,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3090,7 +3090,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -3098,7 +3098,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AdAccountResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse"
                                             }
                                         }
                                     }
@@ -3109,19 +3109,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3210,7 +3210,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3218,11 +3218,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AdDashboardRow"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.AdDashboardRow"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.PaginationMeta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3232,13 +3232,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3321,7 +3321,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3329,11 +3329,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AdSetDashboardRow"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_adset_dto.AdSetDashboardRow"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.PaginationMeta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3343,13 +3343,87 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/brands/{brand_id}/adsets/list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve id and name of all ad sets under a specific brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta AdSets"
+                ],
+                "summary": "Get Ad Set Simple List by Brand ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "Filter by campaign IDs",
+                        "name": "campaign_ids",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_adset_dto.SimpleListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3426,7 +3500,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3434,11 +3508,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.CampaignDashboardRow"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.PaginationMeta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3448,13 +3522,77 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/brands/{brand_id}/campaigns/list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve id and name of all campaigns under a specific brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Campaigns"
+                ],
+                "summary": "Get Campaign Simple List by Brand ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.SimpleListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3505,13 +3643,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.CampaignSummaryResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignSummaryResponse"
                                         }
                                     }
                                 }
@@ -3521,13 +3659,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3591,7 +3729,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3599,11 +3737,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.CampaignResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.PaginationMeta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3613,13 +3751,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3701,7 +3839,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3709,11 +3847,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.CampaignDashboardRow"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.PaginationMeta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3723,13 +3861,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3774,13 +3912,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/dto.CreativeResponse"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.CreativeResponse"
                                         }
                                     }
                                 }
@@ -3790,13 +3928,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3878,7 +4016,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3886,11 +4024,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.InsightResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_insight_dto.InsightResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.PaginationMeta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3900,13 +4038,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -3976,7 +4114,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.Response"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3984,11 +4122,11 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.InsightResponse"
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_insight_dto.InsightResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/response.PaginationMeta"
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3998,13 +4136,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -4031,7 +4169,7 @@ const docTemplate = `{
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/dto.TriggerSyncRequest"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_sync_dto.TriggerSyncRequest"
                         }
                     }
                 ],
@@ -4039,19 +4177,19 @@ const docTemplate = `{
                     "202": {
                         "description": "Accepted",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                         }
                     },
                     "409": {
                         "description": "Sync already in progress",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -4097,7 +4235,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.PaginationResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -4105,7 +4243,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/sync.MetaSyncBatch"
+                                                "$ref": "#/definitions/internal_meta_sync.MetaSyncBatch"
                                             }
                                         }
                                     }
@@ -4116,7 +4254,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -4155,13 +4293,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/response.SuccessResponse"
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sync.MetaSyncBatch"
+                                            "$ref": "#/definitions/internal_meta_sync.MetaSyncBatch"
                                         }
                                     }
                                 }
@@ -4171,13 +4309,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
                         }
                     }
                 }
@@ -4205,7 +4343,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                         }
                     }
                 }
@@ -4213,7 +4351,499 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.AdAccountResponse": {
+        "github_com_alex_ads_backend_internal_core_auth_dto.AuthUserResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_auth_dto.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_auth_dto.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "centrifugo_token": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_auth_dto.AuthUserResponse"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse": {
+            "type": "object",
+            "properties": {
+                "ad_account_count": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photo": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLRequest": {
+            "type": "object",
+            "required": [
+                "scope",
+                "url"
+            ],
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "enum": [
+                        "destination_url",
+                        "display_url",
+                        "url_tags",
+                        "domain"
+                    ]
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLResponse": {
+            "type": "object",
+            "properties": {
+                "allowed": {
+                    "type": "boolean"
+                },
+                "matched_rule": {
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CreateWhitelistRuleRequest": {
+            "type": "object",
+            "required": [
+                "match_type",
+                "scope",
+                "value"
+            ],
+            "properties": {
+                "allow_subdomains": {
+                    "type": "boolean"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "match_type": {
+                    "type": "string",
+                    "enum": [
+                        "exact_url",
+                        "domain",
+                        "path_prefix",
+                        "contains",
+                        "regex"
+                    ]
+                },
+                "scope": {
+                    "type": "string",
+                    "enum": [
+                        "destination_url",
+                        "display_url",
+                        "url_tags",
+                        "domain"
+                    ]
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.UpdateWhitelistRuleRequest": {
+            "type": "object",
+            "properties": {
+                "allow_subdomains": {
+                    "type": "boolean"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "match_type": {
+                    "type": "string",
+                    "enum": [
+                        "exact_url",
+                        "domain",
+                        "path_prefix",
+                        "contains",
+                        "regex"
+                    ]
+                },
+                "scope": {
+                    "type": "string",
+                    "enum": [
+                        "destination_url",
+                        "display_url",
+                        "url_tags",
+                        "domain"
+                    ]
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse": {
+            "type": "object",
+            "properties": {
+                "allow_subdomains": {
+                    "type": "boolean"
+                },
+                "brand_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "match_type": {
+                    "type": "string"
+                },
+                "normalized_value": {
+                    "type": "string"
+                },
+                "scope": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonListResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+6281234567890"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "phone"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 2,
+                    "example": "John Doe"
+                },
+                "phone": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 6,
+                    "example": "+6281234567890"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+6281234567890"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse": {
+            "type": "object",
+            "properties": {
+                "ad_account_id": {
+                    "type": "string"
+                },
+                "ad_id": {
+                    "type": "string"
+                },
+                "adset_id": {
+                    "type": "string"
+                },
+                "brand_id": {
+                    "type": "integer"
+                },
+                "campaign_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "creative_id": {
+                    "type": "string"
+                },
+                "detected_at": {
+                    "type": "string"
+                },
+                "event_type": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "matched_rule_id": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "new_value": {
+                    "type": "string"
+                },
+                "old_value": {
+                    "type": "string"
+                },
+                "resolved_at": {
+                    "type": "string"
+                },
+                "severity": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_role_dto.AssignPermissionRequest": {
+            "type": "object",
+            "required": [
+                "permission_ids"
+            ],
+            "properties": {
+                "permission_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_role_dto.RoleRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_role_dto.RoleResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse"
+                    }
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_user_dto.RoleBrief": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_user_dto.UserRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "role_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_user_dto.UserResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.RoleBrief"
+                    }
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse": {
             "type": "object",
             "properties": {
                 "account_status": {
@@ -4248,7 +4878,32 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.AdDashboardRow": {
+        "github_com_alex_ads_backend_internal_meta_ad_account_dto.AssignBrandRequest": {
+            "type": "object",
+            "properties": {
+                "ad_account_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "brand_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_ad_account_dto.BusinessOptionResponse": {
+            "type": "object",
+            "properties": {
+                "business_id": {
+                    "type": "string"
+                },
+                "business_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_ads_dto.AdDashboardRow": {
             "type": "object",
             "properties": {
                 "ad_id": {
@@ -4316,7 +4971,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.AdResponse": {
+        "github_com_alex_ads_backend_internal_meta_ads_dto.AdResponse": {
             "type": "object",
             "properties": {
                 "adset_id": {
@@ -4332,7 +4987,7 @@ const docTemplate = `{
                     "example": "2026-05-11T10:00:00Z"
                 },
                 "creative": {
-                    "$ref": "#/definitions/dto.CreativeRef"
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.CreativeRef"
                 },
                 "effective_status": {
                     "type": "string",
@@ -4356,7 +5011,51 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.AdSetDashboardRow": {
+        "github_com_alex_ads_backend_internal_meta_ads_dto.CreativeRef": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "2387654321098"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_ads_dto.CreativeResponse": {
+            "type": "object",
+            "properties": {
+                "asset_feed_spec": {},
+                "body": {
+                    "type": "string",
+                    "example": "Get 20% off today!"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "2387654321098"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://scontent.xx.fbcdn.net/..."
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Creative Promo 1"
+                },
+                "object_story_spec": {},
+                "thumbnail_url": {
+                    "type": "string",
+                    "example": "https://scontent.xx.fbcdn.net/..."
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Special Offer"
+                },
+                "url_tags": {
+                    "type": "string",
+                    "example": "utm_source=facebook\u0026utm_medium=cpc"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_adset_dto.AdSetDashboardRow": {
             "type": "object",
             "properties": {
                 "adset_id": {
@@ -4428,7 +5127,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.AdSetResponse": {
+        "github_com_alex_ads_backend_internal_meta_adset_dto.AdSetResponse": {
             "type": "object",
             "properties": {
                 "attribution_spec": {},
@@ -4486,124 +5185,18 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.AlertResponse": {
+        "github_com_alex_ads_backend_internal_meta_adset_dto.SimpleListResponse": {
             "type": "object",
             "properties": {
-                "brand_id": {
-                    "type": "integer"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "fraud_log_id": {
-                    "type": "integer"
-                },
                 "id": {
-                    "type": "integer"
-                },
-                "is_read": {
-                    "type": "boolean"
-                },
-                "message": {
                     "type": "string"
-                },
-                "severity": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.AssignBrandRequest": {
-            "type": "object",
-            "properties": {
-                "ad_account_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "brand_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.AssignPermissionRequest": {
-            "type": "object",
-            "required": [
-                "permission_ids"
-            ],
-            "properties": {
-                "permission_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
-        "dto.AuthUserResponse": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
                 }
             }
         },
-        "dto.BrandResponse": {
-            "type": "object",
-            "properties": {
-                "ad_account_count": {
-                    "type": "integer"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "photo": {
-                    "type": "string"
-                },
-                "slug": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.BusinessOptionResponse": {
-            "type": "object",
-            "properties": {
-                "business_id": {
-                    "type": "string"
-                },
-                "business_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.CampaignDashboardRow": {
+        "github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow": {
             "type": "object",
             "properties": {
                 "amount_spent": {
@@ -4678,7 +5271,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CampaignResponse": {
+        "github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignResponse": {
             "type": "object",
             "properties": {
                 "account_id": {
@@ -4747,7 +5340,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CampaignSummaryResponse": {
+        "github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignSummaryResponse": {
             "type": "object",
             "properties": {
                 "amount_spent": {
@@ -4773,247 +5366,18 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CheckURLRequest": {
-            "type": "object",
-            "required": [
-                "scope",
-                "url"
-            ],
-            "properties": {
-                "scope": {
-                    "type": "string",
-                    "enum": [
-                        "destination_url",
-                        "display_url",
-                        "url_tags",
-                        "domain"
-                    ]
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.CheckURLResponse": {
+        "github_com_alex_ads_backend_internal_meta_campaign_dto.SimpleListResponse": {
             "type": "object",
             "properties": {
-                "allowed": {
-                    "type": "boolean"
-                },
-                "matched_rule": {
-                    "$ref": "#/definitions/dto.WhitelistRuleResponse"
-                }
-            }
-        },
-        "dto.ContactPersonListResponse": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "id": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "string"
                 },
                 "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "phone": {
-                    "type": "string",
-                    "example": "+6281234567890"
-                }
-            }
-        },
-        "dto.ContactPersonRequest": {
-            "type": "object",
-            "required": [
-                "name",
-                "phone"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 2,
-                    "example": "John Doe"
-                },
-                "phone": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 6,
-                    "example": "+6281234567890"
-                }
-            }
-        },
-        "dto.ContactPersonResponse": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "phone": {
-                    "type": "string",
-                    "example": "+6281234567890"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }
         },
-        "dto.CreateWhitelistRuleRequest": {
-            "type": "object",
-            "required": [
-                "match_type",
-                "scope",
-                "value"
-            ],
-            "properties": {
-                "allow_subdomains": {
-                    "type": "boolean"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "match_type": {
-                    "type": "string",
-                    "enum": [
-                        "exact_url",
-                        "domain",
-                        "path_prefix",
-                        "contains",
-                        "regex"
-                    ]
-                },
-                "scope": {
-                    "type": "string",
-                    "enum": [
-                        "destination_url",
-                        "display_url",
-                        "url_tags",
-                        "domain"
-                    ]
-                },
-                "value": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.CreativeRef": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "example": "2387654321098"
-                }
-            }
-        },
-        "dto.CreativeResponse": {
-            "type": "object",
-            "properties": {
-                "asset_feed_spec": {},
-                "body": {
-                    "type": "string",
-                    "example": "Get 20% off today!"
-                },
-                "id": {
-                    "type": "string",
-                    "example": "2387654321098"
-                },
-                "image_url": {
-                    "type": "string",
-                    "example": "https://scontent.xx.fbcdn.net/..."
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Creative Promo 1"
-                },
-                "object_story_spec": {},
-                "thumbnail_url": {
-                    "type": "string",
-                    "example": "https://scontent.xx.fbcdn.net/..."
-                },
-                "title": {
-                    "type": "string",
-                    "example": "Special Offer"
-                },
-                "url_tags": {
-                    "type": "string",
-                    "example": "utm_source=facebook\u0026utm_medium=cpc"
-                }
-            }
-        },
-        "dto.FraudLogResponse": {
-            "type": "object",
-            "properties": {
-                "ad_account_id": {
-                    "type": "string"
-                },
-                "ad_id": {
-                    "type": "string"
-                },
-                "adset_id": {
-                    "type": "string"
-                },
-                "brand_id": {
-                    "type": "integer"
-                },
-                "campaign_id": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "creative_id": {
-                    "type": "string"
-                },
-                "detected_at": {
-                    "type": "string"
-                },
-                "event_type": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "matched_rule_id": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "new_value": {
-                    "type": "string"
-                },
-                "old_value": {
-                    "type": "string"
-                },
-                "resolved_at": {
-                    "type": "string"
-                },
-                "severity": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.InsightResponse": {
+        "github_com_alex_ads_backend_internal_meta_insight_dto.InsightResponse": {
             "type": "object",
             "properties": {
                 "account_currency": {
@@ -5105,121 +5469,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.LoginRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.LoginResponse": {
-            "type": "object",
-            "properties": {
-                "centrifugo_token": {
-                    "type": "string"
-                },
-                "permissions": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "token": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/dto.AuthUserResponse"
-                }
-            }
-        },
-        "dto.PermissionRequest": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.PermissionResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.RoleBrief": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.RoleRequest": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.RoleResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "permissions": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.PermissionResponse"
-                    }
-                }
-            }
-        },
-        "dto.TriggerSyncRequest": {
+        "github_com_alex_ads_backend_internal_meta_sync_dto.TriggerSyncRequest": {
             "type": "object",
             "properties": {
                 "ad_account_id": {
@@ -5236,129 +5486,39 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.UpdateWhitelistRuleRequest": {
+        "github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse": {
             "type": "object",
             "properties": {
-                "allow_subdomains": {
-                    "type": "boolean"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "match_type": {
-                    "type": "string",
-                    "enum": [
-                        "exact_url",
-                        "domain",
-                        "path_prefix",
-                        "contains",
-                        "regex"
-                    ]
-                },
-                "scope": {
-                    "type": "string",
-                    "enum": [
-                        "destination_url",
-                        "display_url",
-                        "url_tags",
-                        "domain"
-                    ]
-                },
-                "value": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.UserRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "name"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string",
-                    "minLength": 6
-                },
-                "role_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
-        "dto.UserResponse": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.RoleBrief"
-                    }
-                }
-            }
-        },
-        "dto.WhitelistRuleResponse": {
-            "type": "object",
-            "properties": {
-                "allow_subdomains": {
-                    "type": "boolean"
-                },
                 "brand_id": {
                     "type": "integer"
                 },
                 "created_at": {
                     "type": "string"
                 },
-                "description": {
-                    "type": "string"
+                "fraud_log_id": {
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "is_active": {
+                "is_read": {
                     "type": "boolean"
                 },
-                "match_type": {
+                "message": {
                     "type": "string"
                 },
-                "normalized_value": {
+                "severity": {
                     "type": "string"
                 },
-                "scope": {
+                "title": {
                     "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
-                },
-                "value": {
-                    "type": "string"
                 }
             }
         },
-        "response.ErrorResponse": {
+        "github_com_alex_ads_backend_pkg_response.ErrorResponse": {
             "type": "object",
             "properties": {
                 "errors": {},
@@ -5372,7 +5532,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.Meta": {
+        "github_com_alex_ads_backend_pkg_response.Meta": {
             "type": "object",
             "properties": {
                 "last_page": {
@@ -5389,7 +5549,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.MetaPaging": {
+        "github_com_alex_ads_backend_pkg_response.MetaPaging": {
             "type": "object",
             "properties": {
                 "cursors": {
@@ -5411,7 +5571,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.PaginationMeta": {
+        "github_com_alex_ads_backend_pkg_response.PaginationMeta": {
             "type": "object",
             "properties": {
                 "last_page": {
@@ -5428,7 +5588,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.PaginationResponse": {
+        "github_com_alex_ads_backend_pkg_response.PaginationResponse": {
             "type": "object",
             "properties": {
                 "data": {},
@@ -5437,7 +5597,7 @@ const docTemplate = `{
                     "example": "Success"
                 },
                 "meta": {
-                    "$ref": "#/definitions/response.Meta"
+                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Meta"
                 },
                 "success": {
                     "type": "boolean",
@@ -5445,7 +5605,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.Response": {
+        "github_com_alex_ads_backend_pkg_response.Response": {
             "type": "object",
             "properties": {
                 "data": {},
@@ -5454,17 +5614,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "meta": {
-                    "$ref": "#/definitions/response.Meta"
+                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Meta"
                 },
                 "paging": {
-                    "$ref": "#/definitions/response.MetaPaging"
+                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.MetaPaging"
                 },
                 "success": {
                     "type": "boolean"
                 }
             }
         },
-        "response.SuccessResponse": {
+        "github_com_alex_ads_backend_pkg_response.SuccessResponse": {
             "type": "object",
             "properties": {
                 "data": {},
@@ -5478,7 +5638,7 @@ const docTemplate = `{
                 }
             }
         },
-        "sync.MetaSyncBatch": {
+        "internal_meta_sync.MetaSyncBatch": {
             "type": "object",
             "properties": {
                 "ad_account_id": {
@@ -5547,7 +5707,7 @@ const docTemplate = `{
                 "steps": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/sync.MetaSyncStep"
+                        "$ref": "#/definitions/internal_meta_sync.MetaSyncStep"
                     }
                 },
                 "sync_mode": {
@@ -5567,11 +5727,11 @@ const docTemplate = `{
                 }
             }
         },
-        "sync.MetaSyncStep": {
+        "internal_meta_sync.MetaSyncStep": {
             "type": "object",
             "properties": {
                 "batch": {
-                    "$ref": "#/definitions/sync.MetaSyncBatch"
+                    "$ref": "#/definitions/internal_meta_sync.MetaSyncBatch"
                 },
                 "batch_id": {
                     "type": "integer"

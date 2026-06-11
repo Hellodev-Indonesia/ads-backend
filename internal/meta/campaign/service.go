@@ -23,6 +23,7 @@ type Service interface {
 	GetCampaignByID(id string) (*dto.CampaignResponse, error)
 	GetSummaryByBrand(brandID uint64, dateStart, dateStop string) (*dto.CampaignSummaryResponse, error)
 	GetCampaignDashboard(filter CampaignFilter) ([]dto.CampaignDashboardRow, *response.PaginationMeta, error)
+	GetCampaignListByBrand(brandID uint64) ([]dto.SimpleListResponse, error)
 
 	// Meta API sync (used by sync job)
 	SyncCampaigns(adAccountID string) (int, error)
@@ -39,6 +40,10 @@ func NewService(client *meta_client.Client, repo Repository) Service {
 }
 
 // --- DB READ METHODS (for API handlers) ---
+
+func (s *serviceImpl) GetCampaignListByBrand(brandID uint64) ([]dto.SimpleListResponse, error) {
+	return s.repo.FindSimpleListByBrand(brandID)
+}
 
 func (s *serviceImpl) GetCampaigns(filter CampaignFilter) ([]dto.CampaignResponse, *response.PaginationMeta, error) {
 	campaigns, total, err := s.repo.FindAll(filter)
