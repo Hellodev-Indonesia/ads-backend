@@ -1915,10 +1915,6 @@ paths:
       - application/json
       description: Retrieve ads from local database (synced from Meta)
       parameters:
-      - description: Filter by brand ID
-        in: query
-        name: brand_id
-        type: integer
       - description: Filter by campaign ID
         in: query
         name: campaign_id
@@ -1980,10 +1976,6 @@ paths:
       - application/json
       description: Retrieve adsets from local database (synced from Meta)
       parameters:
-      - description: Filter by brand ID
-        in: query
-        name: brand_id
-        type: integer
       - description: Filter by campaign ID
         in: query
         name: campaign_id
@@ -2097,6 +2089,192 @@ paths:
       summary: Get Ad Accounts by Brand
       tags:
       - Meta Ad Accounts
+  /meta/brands/{brand_id}/ads:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve ads for a specific brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Filter by campaign ID
+        in: query
+        name: campaign_id
+        type: string
+      - description: Filter by adset ID
+        in: query
+        name: adset_id
+        type: string
+      - description: Filter by status (ACTIVE, PAUSED, etc)
+        in: query
+        name: status
+        type: string
+      - description: Search by ad name
+        in: query
+        name: search
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.AdResponse'
+                  type: array
+                meta:
+                  $ref: '#/definitions/response.PaginationMeta'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Ads by Brand ID
+      tags:
+      - Meta Ads
+  /meta/brands/{brand_id}/adsets:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve adsets for a specific brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Filter by campaign ID
+        in: query
+        name: campaign_id
+        type: string
+      - description: Filter by status (ACTIVE, PAUSED, etc)
+        in: query
+        name: status
+        type: string
+      - description: Search by adset name
+        in: query
+        name: search
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.AdSetResponse'
+                  type: array
+                meta:
+                  $ref: '#/definitions/response.PaginationMeta'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get AdSets by Brand ID
+      tags:
+      - Meta AdSets
+  /meta/brands/{brand_id}/campaigns:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve campaigns for a specific brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - description: Filter by status (ACTIVE, PAUSED, etc)
+        in: query
+        name: status
+        type: string
+      - description: Search by campaign name
+        in: query
+        name: search
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.CampaignResponse'
+                  type: array
+                meta:
+                  $ref: '#/definitions/response.PaginationMeta'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Campaigns by Brand ID
+      tags:
+      - Meta Campaigns
   /meta/campaigns:
     get:
       consumes:
@@ -2107,10 +2285,6 @@ paths:
         in: query
         name: ad_account_id
         type: string
-      - description: Filter by brand ID
-        in: query
-        name: brand_id
-        type: integer
       - description: Filter by status (ACTIVE, PAUSED, etc)
         in: query
         name: status

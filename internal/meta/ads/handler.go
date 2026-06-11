@@ -26,7 +26,6 @@ var _ = dto.CreativeResponse{}
 // @Tags         Meta Ads
 // @Accept       json
 // @Produce      json
-// @Param        brand_id       query     int     false  "Filter by brand ID"
 // @Param        campaign_id    query     string  false  "Filter by campaign ID"
 // @Param        adset_id       query     string  false  "Filter by adset ID"
 // @Param        status         query     string  false  "Filter by status (ACTIVE, PAUSED, etc)"
@@ -39,15 +38,7 @@ var _ = dto.CreativeResponse{}
 // @Security BearerAuth
 // @Router       /meta/ads [get]
 func (h *Handler) GetAds(c *gin.Context) {
-	var brandID *uint64
-	if bid := c.Query("brand_id"); bid != "" {
-		if id, err := strconv.ParseUint(bid, 10, 64); err == nil {
-			brandID = &id
-		}
-	}
-
 	filter := AdFilter{
-		BrandID:    brandID,
 		CampaignID: c.Query("campaign_id"),
 		AdSetID:    c.Query("adset_id"),
 		Status:     c.Query("status"),
@@ -62,6 +53,50 @@ func (h *Handler) GetAds(c *gin.Context) {
 		return
 	}
 	response.SuccessWithPagination(c, "Successfully retrieved ads", resp, meta)
+}
+
+// GetAdsByBrand godoc
+// @Summary      Get Ads by Brand ID
+// @Description  Retrieve ads for a specific brand
+// @Tags         Meta Ads
+// @Accept       json
+// @Produce      json
+// @Param        brand_id       path      int     true   "Brand ID"
+// @Param        campaign_id    query     string  false  "Filter by campaign ID"
+// @Param        adset_id       query     string  false  "Filter by adset ID"
+// @Param        status         query     string  false  "Filter by status (ACTIVE, PAUSED, etc)"
+// @Param        search         query     string  false  "Search by ad name"
+// @Param        page           query     int     false  "Page number" default(1)
+// @Param        limit          query     int     false  "Items per page" default(25)
+// @Success      200            {object}  response.Response{data=[]dto.AdResponse,meta=response.PaginationMeta}
+// @Failure      400            {object}  response.ErrorResponse
+// @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
+// @Router       /meta/brands/{brand_id}/ads [get]
+func (h *Handler) GetAdsByBrand(c *gin.Context) {
+	brandIDParam := c.Param("brand_id")
+	brandID, err := strconv.ParseUint(brandIDParam, 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid brand ID", nil)
+		return
+	}
+
+	filter := AdFilter{
+		BrandID:    &brandID,
+		CampaignID: c.Query("campaign_id"),
+		AdSetID:    c.Query("adset_id"),
+		Status:     c.Query("status"),
+		Search:     c.Query("search"),
+		Page:       parseQueryInt(c, "page", 1),
+		Limit:      parseQueryInt(c, "limit", 25),
+	}
+
+	resp, meta, err := h.service.GetAds(filter)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	response.SuccessWithPagination(c, "Successfully retrieved ads for brand", resp, meta)
 }
 
 // GetCreative godoc

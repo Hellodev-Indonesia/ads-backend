@@ -6,6 +6,7 @@ import (
 )
 
 func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
-	r.GET("/meta/ads", middleware.AuthMiddleware(), middleware.RequirePermission("meta.campaign.view"), h.GetAds)
-	r.GET("/meta/creatives/:id", middleware.AuthMiddleware(), middleware.RequirePermission("meta.campaign.view"), h.GetCreative)
+	r.GET("/meta/ads", middleware.AuthMiddleware(), middleware.RequirePermission("meta.ads.view"), h.GetAds)
+	r.GET("/meta/brands/:brand_id/ads", middleware.AuthMiddleware(), middleware.RequirePermission("meta.ads.view"), h.GetAdsByBrand)
+	r.GET("/meta/creatives/:id", middleware.AuthMiddleware(), middleware.RequirePermission("meta.ads.view"), h.GetCreative)
 }
