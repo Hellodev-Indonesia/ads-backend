@@ -21,9 +21,14 @@ type AdSetDashboardRow struct {
 	NewMessagingConnections     string `json:"new_messaging_connections"`
 	Purchases                   string `json:"purchases"`
 
-	Ends string `json:"ends,omitempty"`
+	Schedule string `json:"schedule,omitempty"`
+	Ends     string `json:"ends,omitempty"`
 
 	AttributionSetting interface{} `json:"attribution_setting,omitempty"`
+
+	BidStrategy         string `json:"bid_strategy,omitempty"`
+	LastSignificantEdit string `json:"last_significant_edit,omitempty"`
+	CostPerPurchase     string `json:"cost_per_purchase,omitempty"`
 
 	DateStart string `json:"date_start"`
 	DateStop  string `json:"date_stop"`

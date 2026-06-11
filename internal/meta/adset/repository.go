@@ -109,6 +109,9 @@ type adSetDashboardScan struct {
 	CostPerActionType json.RawMessage `gorm:"column:cost_per_action_type"`
 	DateStart         *string         `gorm:"column:date_start"`
 	DateStop          *string         `gorm:"column:date_stop"`
+	BidStrategy       string          `gorm:"column:bid_strategy"`
+	UpdatedTime       *time.Time      `gorm:"column:updated_time"`
+	StartTime         *time.Time      `gorm:"column:start_time"`
 }
 func (r *repository) FindAdSetDashboard(filter AdSetFilter) ([]adSetDashboardScan, int64, error) {
 	if filter.Limit <= 0 {
@@ -160,7 +163,10 @@ SELECT
   s.effective_status,
   s.daily_budget,
   s.lifetime_budget,
+  s.start_time,
   s.end_time,
+  s.updated_time,
+  s.bid_strategy,
   s.attribution_spec
 FROM meta_ad_sets s
 JOIN meta_campaigns c ON s.campaign_id = c.id

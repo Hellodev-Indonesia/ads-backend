@@ -293,6 +293,14 @@ func mapAdSetScanToDTO(r adSetDashboardScan) dto.AdSetDashboardRow {
 		AmountSpent:     formatNullFloat(r.Spend),
 		Impressions:     formatNullInt(r.Impressions),
 		Reach:           formatNullInt(r.Reach),
+		BidStrategy:     r.BidStrategy,
+	}
+
+	if r.UpdatedTime != nil {
+		row.LastSignificantEdit = r.UpdatedTime.Format(time.RFC3339)
+	}
+	if r.StartTime != nil {
+		row.Schedule = r.StartTime.Format("2006-01-02")
 	}
 
 	if r.EndTime != nil {
@@ -345,6 +353,14 @@ func mapAdSetScanToDTO(r adSetDashboardScan) dto.AdSetDashboardRow {
 	} else {
 		val, _ := strconv.ParseFloat(row.CostPerResult, 64)
 		row.CostPerResult = formatFloat(math.Ceil(val))
+	}
+
+	spent, _ := strconv.ParseFloat(row.AmountSpent, 64)
+	purchases, _ := strconv.ParseFloat(row.Purchases, 64)
+	if purchases > 0 {
+		row.CostPerPurchase = formatFloat(math.Ceil(spent / purchases))
+	} else {
+		row.CostPerPurchase = "0"
 	}
 
 	if r.AttributionSpec != nil {

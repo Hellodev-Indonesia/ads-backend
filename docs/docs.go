@@ -4272,6 +4272,9 @@ const docTemplate = `{
                 "campaign_name": {
                     "type": "string"
                 },
+                "cost_per_purchase": {
+                    "type": "string"
+                },
                 "cost_per_result": {
                     "type": "string"
                 },
@@ -4288,6 +4291,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "impressions": {
+                    "type": "string"
+                },
+                "last_significant_edit": {
                     "type": "string"
                 },
                 "new_messaging_connections": {
@@ -4363,6 +4369,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "attribution_setting": {},
+                "bid_strategy": {
+                    "type": "string"
+                },
                 "budget": {
                     "type": "string"
                 },
@@ -4370,6 +4379,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "campaign_name": {
+                    "type": "string"
+                },
+                "cost_per_purchase": {
                     "type": "string"
                 },
                 "cost_per_result": {
@@ -4390,6 +4402,9 @@ const docTemplate = `{
                 "impressions": {
                     "type": "string"
                 },
+                "last_significant_edit": {
+                    "type": "string"
+                },
                 "new_messaging_connections": {
                     "type": "string"
                 },
@@ -4400,6 +4415,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "results": {
+                    "type": "string"
+                },
+                "schedule": {
                     "type": "string"
                 },
                 "status": {
@@ -4595,6 +4613,9 @@ const docTemplate = `{
                 "attribution_setting": {
                     "description": "From adset.attribution_spec"
                 },
+                "bid_strategy": {
+                    "type": "string"
+                },
                 "budget": {
                     "description": "Budget: whichever is set (daily takes precedence)",
                     "type": "string"
@@ -4603,6 +4624,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "campaign_name": {
+                    "type": "string"
+                },
+                "cost_per_purchase": {
                     "type": "string"
                 },
                 "cost_per_result": {
@@ -4618,10 +4642,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "ends": {
-                    "description": "Campaign schedule",
                     "type": "string"
                 },
                 "impressions": {
+                    "type": "string"
+                },
+                "last_significant_edit": {
                     "type": "string"
                 },
                 "new_messaging_connections": {
@@ -4638,6 +4664,10 @@ const docTemplate = `{
                 },
                 "results": {
                     "description": "Derived from insights.actions JSON",
+                    "type": "string"
+                },
+                "schedule": {
+                    "description": "Campaign schedule",
                     "type": "string"
                 },
                 "status": {

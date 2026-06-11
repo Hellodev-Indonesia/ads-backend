@@ -40,6 +40,8 @@ definitions:
         type: string
       campaign_name:
         type: string
+      cost_per_purchase:
+        type: string
       cost_per_result:
         type: string
       creative_id:
@@ -51,6 +53,8 @@ definitions:
       effective_status:
         type: string
       impressions:
+        type: string
+      last_significant_edit:
         type: string
       new_messaging_connections:
         type: string
@@ -103,11 +107,15 @@ definitions:
       amount_spent:
         type: string
       attribution_setting: {}
+      bid_strategy:
+        type: string
       budget:
         type: string
       campaign_id:
         type: string
       campaign_name:
+        type: string
+      cost_per_purchase:
         type: string
       cost_per_result:
         type: string
@@ -121,6 +129,8 @@ definitions:
         type: string
       impressions:
         type: string
+      last_significant_edit:
+        type: string
       new_messaging_connections:
         type: string
       purchases:
@@ -128,6 +138,8 @@ definitions:
       reach:
         type: string
       results:
+        type: string
+      schedule:
         type: string
       status:
         type: string
@@ -260,12 +272,16 @@ definitions:
         type: string
       attribution_setting:
         description: From adset.attribution_spec
+      bid_strategy:
+        type: string
       budget:
         description: 'Budget: whichever is set (daily takes precedence)'
         type: string
       campaign_id:
         type: string
       campaign_name:
+        type: string
+      cost_per_purchase:
         type: string
       cost_per_result:
         type: string
@@ -276,9 +292,10 @@ definitions:
       effective_status:
         type: string
       ends:
-        description: Campaign schedule
         type: string
       impressions:
+        type: string
+      last_significant_edit:
         type: string
       new_messaging_connections:
         type: string
@@ -290,6 +307,9 @@ definitions:
         type: string
       results:
         description: Derived from insights.actions JSON
+        type: string
+      schedule:
+        description: Campaign schedule
         type: string
       status:
         type: string

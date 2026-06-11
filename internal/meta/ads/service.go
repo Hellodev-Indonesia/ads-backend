@@ -295,6 +295,10 @@ func mapAdScanToDTO(r adDashboardScan) dto.AdDashboardRow {
 		Reach:           formatNullInt(r.Reach),
 	}
 
+	if r.UpdatedTime != nil {
+		row.LastSignificantEdit = r.UpdatedTime.Format(time.RFC3339)
+	}
+
 	if r.DateStart != nil && len(*r.DateStart) >= 10 {
 		row.DateStart = (*r.DateStart)[:10]
 	}
@@ -342,6 +346,14 @@ func mapAdScanToDTO(r adDashboardScan) dto.AdDashboardRow {
 	} else {
 		val, _ := strconv.ParseFloat(row.CostPerResult, 64)
 		row.CostPerResult = formatFloat(math.Ceil(val))
+	}
+
+	spent, _ := strconv.ParseFloat(row.AmountSpent, 64)
+	purchases, _ := strconv.ParseFloat(row.Purchases, 64)
+	if purchases > 0 {
+		row.CostPerPurchase = formatFloat(math.Ceil(spent / purchases))
+	} else {
+		row.CostPerPurchase = "0"
 	}
 
 	return row

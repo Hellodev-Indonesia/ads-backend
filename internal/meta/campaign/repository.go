@@ -135,6 +135,9 @@ type campaignDashboardScan struct {
 	AttributionSpec   json.RawMessage `gorm:"column:attribution_spec"`
 	DateStart         *string         `gorm:"column:date_start"`
 	DateStop          *string         `gorm:"column:date_stop"`
+	BidStrategy       string          `gorm:"column:bid_strategy"`
+	UpdatedTime       *time.Time      `gorm:"column:updated_time"`
+	StartTime         *time.Time      `gorm:"column:start_time"`
 }
 func (r *repository) FindCampaignDashboard(filter CampaignFilter) ([]campaignDashboardScan, int64, error) {
 	if filter.Limit <= 0 {
@@ -184,7 +187,10 @@ SELECT
   c.objective,
   c.daily_budget,
   c.lifetime_budget,
+  c.start_time,
   c.stop_time,
+  c.updated_time,
+  c.bid_strategy,
   a.attribution_spec,
   COALESCE(s_sum.sum_daily, 0) AS adset_daily_budget,
   COALESCE(s_sum.sum_lifetime, 0) AS adset_lifetime_budget

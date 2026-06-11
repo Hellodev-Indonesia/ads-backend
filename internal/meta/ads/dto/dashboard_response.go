@@ -22,6 +22,9 @@ type AdDashboardRow struct {
 	NewMessagingConnections     string `json:"new_messaging_connections"`
 	Purchases                   string `json:"purchases"`
 
+	LastSignificantEdit string `json:"last_significant_edit,omitempty"`
+	CostPerPurchase     string `json:"cost_per_purchase,omitempty"`
+
 	DateStart string `json:"date_start"`
 	DateStop  string `json:"date_stop"`
 }

@@ -24,10 +24,15 @@ type CampaignDashboardRow struct {
 	Purchases                   string `json:"purchases"`
 
 	// Campaign schedule
-	Ends string `json:"ends,omitempty"`
+	Schedule string `json:"schedule,omitempty"`
+	Ends     string `json:"ends,omitempty"`
 
 	// From adset.attribution_spec
 	AttributionSetting interface{} `json:"attribution_setting,omitempty"`
+
+	BidStrategy         string `json:"bid_strategy,omitempty"`
+	LastSignificantEdit string `json:"last_significant_edit,omitempty"`
+	CostPerPurchase     string `json:"cost_per_purchase,omitempty"`
 
 	DateStart string `json:"date_start"`
 	DateStop  string `json:"date_stop"`

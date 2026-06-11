@@ -3,6 +3,7 @@ package ads
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -113,6 +114,7 @@ type adDashboardScan struct {
 	CostPerActionType json.RawMessage `gorm:"column:cost_per_action_type"`
 	DateStart         *string         `gorm:"column:date_start"`
 	DateStop          *string         `gorm:"column:date_stop"`
+	UpdatedTime       *time.Time      `gorm:"column:updated_time"`
 }
 func (r *repository) FindAdDashboard(filter AdFilter) ([]adDashboardScan, int64, error) {
 	if filter.Limit <= 0 {
@@ -168,10 +170,11 @@ SELECT
   a.name             AS ad_name,
   a.status,
   a.effective_status,
-  a.creative_id
+  a.creative_id,
+  a.updated_time
 FROM meta_ads a
-JOIN meta_ad_sets s ON a.adset_id = s.id
 JOIN meta_campaigns c ON a.campaign_id = c.id
+JOIN meta_ad_sets s ON a.adset_id = s.id
 ` + where + ` ORDER BY a.created_time DESC LIMIT ? OFFSET ?`
 
 	queryArgs := append(args, filter.Limit, offset)
