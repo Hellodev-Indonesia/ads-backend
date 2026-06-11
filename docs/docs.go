@@ -2485,6 +2485,12 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Filter by multiple brand IDs (comma separated)",
+                        "name": "brand_ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Search by brand name",
                         "name": "search",
                         "in": "query"

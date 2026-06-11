@@ -2326,6 +2326,10 @@ paths:
       description: Returns aggregated metrics for each brand (ad account count, active
         campaign count, total spends)
       parameters:
+      - description: Filter by multiple brand IDs (comma separated)
+        in: query
+        name: brand_ids
+        type: string
       - description: Search by brand name
         in: query
         name: search

@@ -3,6 +3,7 @@ package dashboard
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -11,6 +12,7 @@ import (
 type DashboardFilter struct {
 	AccountID  string
 	BrandID    *uint64
+	BrandIDs   []uint64
 	CampaignID string
 	AdSetID    string
 	Status     string
@@ -685,6 +687,15 @@ func (r *repository) FindBrandDashboard(filter DashboardFilter) ([]brandDashboar
 	if filter.Search != "" {
 		where += " AND b.name LIKE ?"
 		args = append(args, "%"+filter.Search+"%")
+	}
+
+	if len(filter.BrandIDs) > 0 {
+		var placeHolders []string
+		for _, id := range filter.BrandIDs {
+			placeHolders = append(placeHolders, "?")
+			args = append(args, id)
+		}
+		where += " AND b.id IN (" + strings.Join(placeHolders, ",") + ")"
 	}
 
 	var total int64

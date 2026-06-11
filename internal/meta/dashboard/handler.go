@@ -3,6 +3,7 @@ package dashboard
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/alex/ads_backend/pkg/response"
 	"github.com/gin-gonic/gin"
@@ -187,6 +188,7 @@ func (h *Handler) GetAdDashboard(c *gin.Context) {
 // @Tags         Meta Dashboard
 // @Accept       json
 // @Produce      json
+// @Param        brand_ids      query     string  false  "Filter by multiple brand IDs (comma separated)"
 // @Param        search         query     string  false  "Search by brand name"
 // @Param        date_start     query     string  false  "Filter by date start (YYYY-MM-DD)"
 // @Param        date_stop      query     string  false  "Filter by date stop (YYYY-MM-DD)"
@@ -198,8 +200,18 @@ func (h *Handler) GetAdDashboard(c *gin.Context) {
 // @Security BearerAuth
 // @Router       /meta/dashboard/brands [get]
 func (h *Handler) GetBrandDashboard(c *gin.Context) {
+	var brandIDs []uint64
+	if bids := c.Query("brand_ids"); bids != "" {
+		for _, bidStr := range strings.Split(bids, ",") {
+			if id, err := strconv.ParseUint(strings.TrimSpace(bidStr), 10, 64); err == nil {
+				brandIDs = append(brandIDs, id)
+			}
+		}
+	}
+
 	filter := DashboardFilter{
 		Search:    c.Query("search"),
+		BrandIDs:  brandIDs,
 		DateStart: c.Query("date_start"),
 		DateStop:  c.Query("date_stop"),
 		Page:      parseQueryInt(c, "page", 1),
