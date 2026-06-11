@@ -30,10 +30,12 @@ type syncEvent struct {
 	BatchID    uint64 `json:"batch_id,omitempty"`
 	BatchCode  string `json:"batch_code,omitempty"`
 	Step       string `json:"step,omitempty"`
-	Count      int    `json:"count,omitempty"`
-	DurationMs int64  `json:"duration_ms,omitempty"`
-	Error      string `json:"error,omitempty"`
-	Percentage uint8  `json:"percentage,omitempty"`
+	Count          int    `json:"count,omitempty"`
+	DurationMs     int64  `json:"duration_ms,omitempty"`
+	Error          string `json:"error,omitempty"`
+	Percentage     uint8  `json:"percentage,omitempty"`
+	CurrentAccount int    `json:"current_account,omitempty"`
+	TotalAccounts  int    `json:"total_accounts,omitempty"`
 }
 
 var stepLabels = map[string]string{
@@ -215,6 +217,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			metasync.SyncTypeAdAccounts,
 			"/me/adaccounts",
 			&currentStep, totalSteps,
+			0, 0,
 			func() (int, error) { return j.adAccountService.SyncAdAccounts() },
 		)
 		adAccountsCount += c
@@ -236,6 +239,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				metasync.SyncTypeAdAccounts,
 				"/me/adaccounts (fallback)",
 				&currentStep, totalSteps,
+				0, 0,
 				func() (int, error) { return j.adAccountService.SyncAdAccounts() },
 			)
 			if err != nil {
@@ -282,6 +286,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeCampaigns,
 					fmt.Sprintf("/%s/campaigns", accountID),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) { return j.campaignService.SyncCampaigns(accountID) },
 				)
 				mu.Lock()
@@ -300,6 +305,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeAdsets,
 					fmt.Sprintf("/%s/adsets", accountID),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) { return j.adSetService.SyncAdSets(accountID) },
 				)
 				mu.Lock()
@@ -319,6 +325,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeAds,
 					fmt.Sprintf("/%s/ads", accountID),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) {
 						count, models, e := j.adsService.SyncAdsWithList(accountID)
 						if e == nil {
@@ -355,6 +362,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeAdCreatives,
 					fmt.Sprintf("/%s/creatives", accountID),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) { return j.adCreativeService.SyncCreatives(accountID, adRecords) },
 				)
 				mu.Lock()
@@ -382,6 +390,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeCampaignInsights,
 					fmt.Sprintf("/%s/insights?level=campaign", accountID),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) { return j.insightService.SyncCampaignInsights(req) },
 				)
 				mu.Lock()
@@ -400,6 +409,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeAdInsights,
 					fmt.Sprintf("/%s/insights?level=%s", accountID, req.Level),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) { return j.insightService.SyncAdInsights(req) },
 				)
 				mu.Lock()
@@ -422,6 +432,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeCampaigns,
 					fmt.Sprintf("/%s/campaigns (missing: %d)", accountID, len(missingCampaigns)),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) { return j.campaignService.SyncCampaignsByIDs(accountID, missingCampaigns) },
 				)
 				mu.Lock()
@@ -439,6 +450,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeAdsets,
 					fmt.Sprintf("/%s/adsets (missing: %d)", accountID, len(missingAdSets)),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) { return j.adSetService.SyncAdSetsByIDs(accountID, missingAdSets) },
 				)
 				mu.Lock()
@@ -457,6 +469,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeAds,
 					fmt.Sprintf("/%s/ads (missing: %d)", accountID, len(missingAds)),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) {
 						count, models, e := j.adsService.SyncAdsByIDs(accountID, missingAds)
 						if e == nil {
@@ -491,6 +504,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 					metasync.SyncTypeAdCreatives,
 					fmt.Sprintf("/%s/creatives (missing: %d)", accountID, len(adRecords)),
 					&currentStep, totalSteps,
+					i+1, len(accountIDs),
 					func() (int, error) { return j.adCreativeService.SyncCreatives(accountID, adRecords) },
 				)
 				mu.Lock()
@@ -557,6 +571,8 @@ func (j *MetaAdsSyncJob) runSyncStep(
 	endpoint string,
 	currentStep *int32,
 	totalSteps int32,
+	currentAccount int,
+	totalAccounts int,
 	syncFunc func() (int, error),
 ) (int, error) {
 	step, err := j.syncLogService.StartStep(ctx, batchID, syncType, endpoint)
@@ -568,12 +584,19 @@ func (j *MetaAdsSyncJob) runSyncStep(
 	current := atomic.LoadInt32(currentStep)
 	pct := uint8((float64(current) / float64(totalSteps)) * 100)
 
+	msgPrefix := ""
+	if totalAccounts > 0 {
+		msgPrefix = fmt.Sprintf("[Account %d of %d] ", currentAccount, totalAccounts)
+	}
+
 	j.publish(ctx, syncEvent{
-		Event:      "sync:step:started",
-		Message:    fmt.Sprintf("Syncing %s...", stepLabels[syncType]),
-		BatchID:    batchID,
-		Step:       syncType,
-		Percentage: pct,
+		Event:          "sync:step:started",
+		Message:        fmt.Sprintf("%sSyncing %s...", msgPrefix, stepLabels[syncType]),
+		BatchID:        batchID,
+		Step:           syncType,
+		Percentage:     pct,
+		CurrentAccount: currentAccount,
+		TotalAccounts:  totalAccounts,
 	})
 
 	stepStart := time.Now()
@@ -589,13 +612,15 @@ func (j *MetaAdsSyncJob) runSyncStep(
 			log.Printf("Failed to mark sync step %s as failed: %v", syncType, failErr)
 		}
 		j.publish(ctx, syncEvent{
-			Event:      "sync:step:failed",
-			Message:    fmt.Sprintf("Failed to sync %s", stepLabels[syncType]),
-			BatchID:    batchID,
-			Step:       syncType,
-			DurationMs: durationMs,
-			Percentage: completedPct,
-			Error:      err.Error(),
+			Event:          "sync:step:failed",
+			Message:        fmt.Sprintf("%sFailed to sync %s", msgPrefix, stepLabels[syncType]),
+			BatchID:        batchID,
+			Step:           syncType,
+			DurationMs:     durationMs,
+			Percentage:     completedPct,
+			Error:          err.Error(),
+			CurrentAccount: currentAccount,
+			TotalAccounts:  totalAccounts,
 		})
 		return count, err
 	}
@@ -609,13 +634,15 @@ func (j *MetaAdsSyncJob) runSyncStep(
 	}
 
 	j.publish(ctx, syncEvent{
-		Event:      "sync:step:completed",
-		Message:    fmt.Sprintf("Synced %d records for %s", count, stepLabels[syncType]),
-		BatchID:    batchID,
-		Step:       syncType,
-		DurationMs: durationMs,
-		Percentage: completedPct,
-		Count:      count,
+		Event:          "sync:step:completed",
+		Message:        fmt.Sprintf("%sSynced %d records for %s", msgPrefix, count, stepLabels[syncType]),
+		BatchID:        batchID,
+		Step:           syncType,
+		DurationMs:     durationMs,
+		Percentage:     completedPct,
+		Count:          count,
+		CurrentAccount: currentAccount,
+		TotalAccounts:  totalAccounts,
 	})
 
 	return count, nil

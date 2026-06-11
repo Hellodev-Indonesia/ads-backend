@@ -26,6 +26,7 @@ var _ = dto.CreativeResponse{}
 // @Tags         Meta Ads
 // @Accept       json
 // @Produce      json
+// @Param        brand_id       query     int     false  "Filter by brand ID"
 // @Param        campaign_id    query     string  false  "Filter by campaign ID"
 // @Param        adset_id       query     string  false  "Filter by adset ID"
 // @Param        status         query     string  false  "Filter by status (ACTIVE, PAUSED, etc)"
@@ -38,7 +39,15 @@ var _ = dto.CreativeResponse{}
 // @Security BearerAuth
 // @Router       /meta/ads [get]
 func (h *Handler) GetAds(c *gin.Context) {
+	var brandID *uint64
+	if bid := c.Query("brand_id"); bid != "" {
+		if id, err := strconv.ParseUint(bid, 10, 64); err == nil {
+			brandID = &id
+		}
+	}
+
 	filter := AdFilter{
+		BrandID:    brandID,
 		CampaignID: c.Query("campaign_id"),
 		AdSetID:    c.Query("adset_id"),
 		Status:     c.Query("status"),

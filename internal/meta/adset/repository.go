@@ -7,6 +7,7 @@ import (
 
 type AdSetFilter struct {
 	AccountID  string
+	BrandID    *uint64
 	CampaignID string
 	Status     string
 	Search     string
@@ -51,13 +52,18 @@ func (r *repository) FindAll(filter AdSetFilter) ([]MetaAdSet, int64, error) {
 	query := r.db.Model(&MetaAdSet{})
 
 	if filter.CampaignID != "" {
-		query = query.Where("campaign_id = ?", filter.CampaignID)
+		query = query.Where("meta_ad_sets.campaign_id = ?", filter.CampaignID)
 	}
 	if filter.Status != "" {
-		query = query.Where("status = ?", filter.Status)
+		query = query.Where("meta_ad_sets.status = ?", filter.Status)
 	}
 	if filter.Search != "" {
-		query = query.Where("name LIKE ?", "%"+filter.Search+"%")
+		query = query.Where("meta_ad_sets.name LIKE ?", "%"+filter.Search+"%")
+	}
+	if filter.BrandID != nil {
+		query = query.Joins("JOIN meta_campaigns ON meta_ad_sets.campaign_id = meta_campaigns.id").
+			Joins("JOIN meta_ad_accounts ON meta_campaigns.account_id = meta_ad_accounts.id").
+			Where("meta_ad_accounts.brand_id = ?", *filter.BrandID)
 	}
 
 	query.Count(&total)

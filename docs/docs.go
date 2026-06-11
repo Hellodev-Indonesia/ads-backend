@@ -1833,6 +1833,12 @@ const docTemplate = `{
                 "summary": "Get Ads",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Filter by brand ID",
+                        "name": "brand_id",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "Filter by campaign ID",
                         "name": "campaign_id",
@@ -1930,6 +1936,12 @@ const docTemplate = `{
                 ],
                 "summary": "Get AdSets",
                 "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Filter by brand ID",
+                        "name": "brand_id",
+                        "in": "query"
+                    },
                     {
                         "type": "string",
                         "description": "Filter by campaign ID",
@@ -2126,6 +2138,12 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Ad Account ID (falls back to config.MetaAdAccountID)",
                         "name": "ad_account_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter by brand ID",
+                        "name": "brand_id",
                         "in": "query"
                     },
                     {

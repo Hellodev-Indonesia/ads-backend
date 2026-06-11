@@ -8,6 +8,7 @@ import (
 type CampaignFilter struct {
 	Status    string
 	AccountID string
+	BrandID   *uint64
 	Search    string
 	Page      int
 	Limit     int
@@ -50,13 +51,17 @@ func (r *repository) FindAll(filter CampaignFilter) ([]MetaCampaign, int64, erro
 	query := r.db.Model(&MetaCampaign{})
 
 	if filter.AccountID != "" {
-		query = query.Where("account_id = ?", filter.AccountID)
+		query = query.Where("meta_campaigns.account_id = ?", filter.AccountID)
 	}
 	if filter.Status != "" {
-		query = query.Where("status = ?", filter.Status)
+		query = query.Where("meta_campaigns.status = ?", filter.Status)
 	}
 	if filter.Search != "" {
-		query = query.Where("name LIKE ?", "%"+filter.Search+"%")
+		query = query.Where("meta_campaigns.name LIKE ?", "%"+filter.Search+"%")
+	}
+	if filter.BrandID != nil {
+		query = query.Joins("JOIN meta_ad_accounts ON meta_campaigns.account_id = meta_ad_accounts.id").
+			Where("meta_ad_accounts.brand_id = ?", *filter.BrandID)
 	}
 
 	query.Count(&total)

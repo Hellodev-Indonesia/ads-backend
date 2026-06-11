@@ -26,6 +26,7 @@ var _ = dto.CampaignResponse{}
 // @Accept       json
 // @Produce      json
 // @Param        ad_account_id  query     string  false  "Ad Account ID (falls back to config.MetaAdAccountID)"
+// @Param        brand_id       query     int     false  "Filter by brand ID"
 // @Param        status         query     string  false  "Filter by status (ACTIVE, PAUSED, etc)"
 // @Param        search         query     string  false  "Search by campaign name"
 // @Param        page           query     int     false  "Page number" default(1)
@@ -38,8 +39,16 @@ var _ = dto.CampaignResponse{}
 func (h *Handler) GetCampaigns(c *gin.Context) {
 	adAccountID := c.Query("ad_account_id")
 
+	var brandID *uint64
+	if bid := c.Query("brand_id"); bid != "" {
+		if id, err := strconv.ParseUint(bid, 10, 64); err == nil {
+			brandID = &id
+		}
+	}
+
 	filter := CampaignFilter{
 		AccountID: adAccountID,
+		BrandID:   brandID,
 		Status:    c.Query("status"),
 		Search:    c.Query("search"),
 		Page:      parseQueryInt(c, "page", 1),
