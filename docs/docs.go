@@ -1084,6 +1084,86 @@ const docTemplate = `{
                 }
             }
         },
+        "/core/brands/dashboard": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns aggregated metrics for each brand (ad account count, active campaign count, total spends)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "Brand Dashboard",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter by multiple brand IDs (comma separated)",
+                        "name": "brand_ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by brand name",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date start (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by date stop (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/core/brands/{slug}": {
             "get": {
                 "security": [
@@ -2205,86 +2285,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/meta/brands": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Returns aggregated metrics for each brand (ad account count, active campaign count, total spends)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Meta Ad Accounts"
-                ],
-                "summary": "Brand Dashboard",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Filter by multiple brand IDs (comma separated)",
-                        "name": "brand_ids",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search by brand name",
-                        "name": "search",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by date start (YYYY-MM-DD)",
-                        "name": "date_start",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Filter by date stop (YYYY-MM-DD)",
-                        "name": "date_stop",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 25,
-                        "description": "Items per page",
-                        "name": "limit",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/meta/brands/{brand_id}/ad-accounts": {
             "get": {
                 "security": [
@@ -2448,6 +2448,18 @@ const docTemplate = `{
                         "description": "Items per page",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start Date (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Stop Date (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -2464,7 +2476,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AdResponse"
+                                                "$ref": "#/definitions/dto.AdDashboardRow"
                                             }
                                         },
                                         "meta": {
@@ -2547,6 +2559,18 @@ const docTemplate = `{
                         "description": "Items per page",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start Date (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Stop Date (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -2563,7 +2587,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.AdSetResponse"
+                                                "$ref": "#/definitions/dto.AdSetDashboardRow"
                                             }
                                         },
                                         "meta": {
@@ -2640,6 +2664,18 @@ const docTemplate = `{
                         "description": "Items per page",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start Date (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Stop Date (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -2656,7 +2692,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/dto.CampaignResponse"
+                                                "$ref": "#/definitions/dto.CampaignDashboardRow"
                                             }
                                         },
                                         "meta": {
@@ -4212,6 +4248,68 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.AdDashboardRow": {
+            "type": "object",
+            "properties": {
+                "ad_id": {
+                    "type": "string"
+                },
+                "ad_name": {
+                    "type": "string"
+                },
+                "adset_id": {
+                    "type": "string"
+                },
+                "adset_name": {
+                    "type": "string"
+                },
+                "amount_spent": {
+                    "type": "string"
+                },
+                "campaign_id": {
+                    "type": "string"
+                },
+                "campaign_name": {
+                    "type": "string"
+                },
+                "cost_per_result": {
+                    "type": "string"
+                },
+                "creative_id": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "date_stop": {
+                    "type": "string"
+                },
+                "effective_status": {
+                    "type": "string"
+                },
+                "impressions": {
+                    "type": "string"
+                },
+                "new_messaging_connections": {
+                    "type": "string"
+                },
+                "purchases": {
+                    "type": "string"
+                },
+                "reach": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_messaging_conversations": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.AdResponse": {
             "type": "object",
             "properties": {
@@ -4249,6 +4347,66 @@ const docTemplate = `{
                 "updated_time": {
                     "type": "string",
                     "example": "2026-05-11T12:00:00Z"
+                }
+            }
+        },
+        "dto.AdSetDashboardRow": {
+            "type": "object",
+            "properties": {
+                "adset_id": {
+                    "type": "string"
+                },
+                "adset_name": {
+                    "type": "string"
+                },
+                "amount_spent": {
+                    "type": "string"
+                },
+                "attribution_setting": {},
+                "budget": {
+                    "type": "string"
+                },
+                "campaign_id": {
+                    "type": "string"
+                },
+                "campaign_name": {
+                    "type": "string"
+                },
+                "cost_per_result": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "date_stop": {
+                    "type": "string"
+                },
+                "effective_status": {
+                    "type": "string"
+                },
+                "ends": {
+                    "type": "string"
+                },
+                "impressions": {
+                    "type": "string"
+                },
+                "new_messaging_connections": {
+                    "type": "string"
+                },
+                "purchases": {
+                    "type": "string"
+                },
+                "reach": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_messaging_conversations": {
+                    "type": "string"
                 }
             }
         },

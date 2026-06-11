@@ -2,8 +2,10 @@ package brand
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/alex/ads_backend/internal/core/brand/dto"
+	"github.com/alex/ads_backend/pkg/response"
 	"github.com/alex/ads_backend/pkg/utils"
 	"github.com/gosimple/slug"
 )
@@ -14,6 +16,7 @@ type Service interface {
 	Delete(slug string) error
 	FindBySlug(slug string) (dto.BrandResponse, error)
 	FindAll(filter dto.BrandFilter) ([]dto.BrandResponse, int64, error)
+	GetBrandDashboard(filter dto.BrandDashboardFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error)
 }
 
 type service struct {
@@ -133,4 +136,50 @@ func toBrandResponse(b Brand) dto.BrandResponse {
 		CreatedAt:      b.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt:      b.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
+}
+
+func (s *service) GetBrandDashboard(filter dto.BrandDashboardFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error) {
+	rows, total, err := s.repo.FindBrandDashboard(filter)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to fetch brand dashboard: %w", err)
+	}
+
+	result := make([]dto.BrandDashboardResponse, 0, len(rows))
+	for _, r := range rows {
+		var spend float64
+		if r.TotalSpends != nil {
+			spend = *r.TotalSpends
+		}
+		result = append(result, dto.BrandDashboardResponse{
+			Brand: dto.BrandDashboardInfo{
+				ID:    r.BrandID,
+				Name:  r.BrandName,
+				Slug:  r.BrandSlug,
+				Photo: r.BrandPhoto,
+			},
+			AdAccountCount:      r.AdAccountCount,
+			ActiveCampaignCount: r.ActiveCampaignCount,
+			TotalSpends:         spend,
+		})
+	}
+
+	if filter.Limit <= 0 {
+		filter.Limit = 25
+	}
+	if filter.Page <= 0 {
+		filter.Page = 1
+	}
+	lastPage := int(total) / filter.Limit
+	if int(total)%filter.Limit > 0 {
+		lastPage++
+	}
+
+	meta := &response.PaginationMeta{
+		Page:     filter.Page,
+		Limit:    filter.Limit,
+		Total:    int(total),
+		LastPage: lastPage,
+	}
+
+	return result, meta, nil
 }

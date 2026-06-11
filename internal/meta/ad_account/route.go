@@ -10,7 +10,6 @@ func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
 	group.Use(middleware.AuthMiddleware(), middleware.RequirePermission("meta.campaign.view"))
 	{
 		group.GET("", h.GetAdAccounts)
-	r.GET("/meta/brands", middleware.AuthMiddleware(), middleware.RequirePermission("meta.campaign.view"), h.GetBrandDashboard)
 		group.GET("/businesses", h.GetBusinessOptions)
 		group.GET("/unassigned", h.GetUnassignedAdAccounts)
 		group.PUT("/brand", h.AssignBrand)

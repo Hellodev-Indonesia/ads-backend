@@ -2,7 +2,6 @@ package ad_account
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/url"
 
 	"github.com/alex/ads_backend/internal/meta/ad_account/dto"
@@ -17,7 +16,6 @@ type Service interface {
 	DisconnectBrand(id string) error
 	SyncAdAccounts() (int, error)
 	GetBusinessOptions() ([]dto.BusinessOptionResponse, error)
-	GetBrandDashboard(filter AdAccountFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error)
 }
 
 type serviceImpl struct {
@@ -177,48 +175,4 @@ func (s *serviceImpl) SyncAdAccounts() (int, error) {
 	return len(models), nil
 }
 
-func (s *serviceImpl) GetBrandDashboard(filter AdAccountFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error) {
-	rows, total, err := s.repo.FindBrandDashboard(filter)
-	if err != nil {
-		return nil, nil, fmt.Errorf("failed to fetch brand dashboard: %w", err)
-	}
 
-	result := make([]dto.BrandDashboardResponse, 0, len(rows))
-	for _, r := range rows {
-		var spend float64
-		if r.TotalSpends != nil {
-			spend = *r.TotalSpends
-		}
-		result = append(result, dto.BrandDashboardResponse{
-			Brand: dto.BrandDashboardInfo{
-				ID:    r.BrandID,
-				Name:  r.BrandName,
-				Slug:  r.BrandSlug,
-				Photo: r.BrandPhoto,
-			},
-			AdAccountCount:      r.AdAccountCount,
-			ActiveCampaignCount: r.ActiveCampaignCount,
-			TotalSpends:         spend,
-		})
-	}
-
-	if filter.Limit <= 0 {
-		filter.Limit = 25
-	}
-	if filter.Page <= 0 {
-		filter.Page = 1
-	}
-	lastPage := int(total) / filter.Limit
-	if int(total)%filter.Limit > 0 {
-		lastPage++
-	}
-
-	meta := &response.PaginationMeta{
-		Page:     filter.Page,
-		Limit:    filter.Limit,
-		Total:    int(total),
-		LastPage: lastPage,
-	}
-
-	return result, meta, nil
-}

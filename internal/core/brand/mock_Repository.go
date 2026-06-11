@@ -85,6 +85,43 @@ func (_m *MockRepository) FindAll(filter dto.BrandFilter) ([]Brand, int64, error
 	return r0, r1, r2
 }
 
+// FindBrandDashboard provides a mock function with given fields: filter
+func (_m *MockRepository) FindBrandDashboard(filter dto.BrandDashboardFilter) ([]brandDashboardScan, int64, error) {
+	ret := _m.Called(filter)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindBrandDashboard")
+	}
+
+	var r0 []brandDashboardScan
+	var r1 int64
+	var r2 error
+	if rf, ok := ret.Get(0).(func(dto.BrandDashboardFilter) ([]brandDashboardScan, int64, error)); ok {
+		return rf(filter)
+	}
+	if rf, ok := ret.Get(0).(func(dto.BrandDashboardFilter) []brandDashboardScan); ok {
+		r0 = rf(filter)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]brandDashboardScan)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(dto.BrandDashboardFilter) int64); ok {
+		r1 = rf(filter)
+	} else {
+		r1 = ret.Get(1).(int64)
+	}
+
+	if rf, ok := ret.Get(2).(func(dto.BrandDashboardFilter) error); ok {
+		r2 = rf(filter)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // FindBySlug provides a mock function with given fields: slug
 func (_m *MockRepository) FindBySlug(slug string) (*Brand, error) {
 	ret := _m.Called(slug)

@@ -10,6 +10,7 @@ func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
 	brands.Use(middleware.AuthMiddleware())
 	{
 		brands.GET("", middleware.RequirePermission("core.brand.view"), h.FindAll)
+		brands.GET("/dashboard", middleware.RequirePermission("core.brand.view"), h.GetBrandDashboard)
 		brands.GET("/:slug", middleware.RequirePermission("core.brand.view"), h.FindBySlug)
 		brands.POST("", middleware.RequirePermission("core.brand.create"), h.Create)
 		brands.PUT("/:slug", middleware.RequirePermission("core.brand.update"), h.Update)

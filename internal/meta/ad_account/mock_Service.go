@@ -89,45 +89,6 @@ func (_m *MockService) GetAdAccounts(filter AdAccountFilter) ([]dto.AdAccountRes
 	return r0, r1, r2
 }
 
-// GetBrandDashboard provides a mock function with given fields: filter
-func (_m *MockService) GetBrandDashboard(filter AdAccountFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error) {
-	ret := _m.Called(filter)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetBrandDashboard")
-	}
-
-	var r0 []dto.BrandDashboardResponse
-	var r1 *response.PaginationMeta
-	var r2 error
-	if rf, ok := ret.Get(0).(func(AdAccountFilter) ([]dto.BrandDashboardResponse, *response.PaginationMeta, error)); ok {
-		return rf(filter)
-	}
-	if rf, ok := ret.Get(0).(func(AdAccountFilter) []dto.BrandDashboardResponse); ok {
-		r0 = rf(filter)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]dto.BrandDashboardResponse)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(AdAccountFilter) *response.PaginationMeta); ok {
-		r1 = rf(filter)
-	} else {
-		if ret.Get(1) != nil {
-			r1 = ret.Get(1).(*response.PaginationMeta)
-		}
-	}
-
-	if rf, ok := ret.Get(2).(func(AdAccountFilter) error); ok {
-		r2 = rf(filter)
-	} else {
-		r2 = ret.Error(2)
-	}
-
-	return r0, r1, r2
-}
-
 // GetBusinessOptions provides a mock function with no fields
 func (_m *MockService) GetBusinessOptions() ([]dto.BusinessOptionResponse, error) {
 	ret := _m.Called()

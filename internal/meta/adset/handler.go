@@ -64,7 +64,9 @@ func (h *Handler) GetAdSets(c *gin.Context) {
 // @Param        search         query     string  false  "Search by adset name"
 // @Param        page           query     int     false  "Page number" default(1)
 // @Param        limit          query     int     false  "Items per page" default(25)
-// @Success      200            {object}  response.Response{data=[]dto.AdSetResponse,meta=response.PaginationMeta}
+// @Param        date_start     query     string  false  "Start Date (YYYY-MM-DD)"
+// @Param        date_stop      query     string  false  "Stop Date (YYYY-MM-DD)"
+// @Success      200            {object}  response.Response{data=[]dto.AdSetDashboardRow,meta=response.PaginationMeta}
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
 // @Security BearerAuth
@@ -82,11 +84,13 @@ func (h *Handler) GetAdSetsByBrand(c *gin.Context) {
 		CampaignID: c.Query("campaign_id"),
 		Status:     c.Query("status"),
 		Search:     c.Query("search"),
+		DateStart:  c.Query("date_start"),
+		DateStop:   c.Query("date_stop"),
 		Page:       parseQueryInt(c, "page", 1),
 		Limit:      parseQueryInt(c, "limit", 25),
 	}
 
-	resp, meta, err := h.service.GetAdSets(filter)
+	resp, meta, err := h.service.GetAdSetDashboard(filter)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
 		return

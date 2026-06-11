@@ -24,6 +24,47 @@ definitions:
       timezone_name:
         type: string
     type: object
+  dto.AdDashboardRow:
+    properties:
+      ad_id:
+        type: string
+      ad_name:
+        type: string
+      adset_id:
+        type: string
+      adset_name:
+        type: string
+      amount_spent:
+        type: string
+      campaign_id:
+        type: string
+      campaign_name:
+        type: string
+      cost_per_result:
+        type: string
+      creative_id:
+        type: string
+      date_start:
+        type: string
+      date_stop:
+        type: string
+      effective_status:
+        type: string
+      impressions:
+        type: string
+      new_messaging_connections:
+        type: string
+      purchases:
+        type: string
+      reach:
+        type: string
+      results:
+        type: string
+      status:
+        type: string
+      total_messaging_conversations:
+        type: string
+    type: object
   dto.AdResponse:
     properties:
       adset_id:
@@ -51,6 +92,46 @@ definitions:
         type: string
       updated_time:
         example: "2026-05-11T12:00:00Z"
+        type: string
+    type: object
+  dto.AdSetDashboardRow:
+    properties:
+      adset_id:
+        type: string
+      adset_name:
+        type: string
+      amount_spent:
+        type: string
+      attribution_setting: {}
+      budget:
+        type: string
+      campaign_id:
+        type: string
+      campaign_name:
+        type: string
+      cost_per_result:
+        type: string
+      date_start:
+        type: string
+      date_stop:
+        type: string
+      effective_status:
+        type: string
+      ends:
+        type: string
+      impressions:
+        type: string
+      new_messaging_connections:
+        type: string
+      purchases:
+        type: string
+      reach:
+        type: string
+      results:
+        type: string
+      status:
+        type: string
+      total_messaging_conversations:
         type: string
     type: object
   dto.AdSetResponse:
@@ -1642,6 +1723,59 @@ paths:
       summary: Update Brand
       tags:
       - Brand
+  /core/brands/dashboard:
+    get:
+      consumes:
+      - application/json
+      description: Returns aggregated metrics for each brand (ad account count, active
+        campaign count, total spends)
+      parameters:
+      - description: Filter by multiple brand IDs (comma separated)
+        in: query
+        name: brand_ids
+        type: string
+      - description: Search by brand name
+        in: query
+        name: search
+        type: string
+      - description: Filter by date start (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Filter by date stop (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Brand Dashboard
+      tags:
+      - Brand
   /fraud-logs:
     get:
       consumes:
@@ -2219,59 +2353,6 @@ paths:
       summary: Ad Set Dashboard
       tags:
       - Meta AdSets
-  /meta/brands:
-    get:
-      consumes:
-      - application/json
-      description: Returns aggregated metrics for each brand (ad account count, active
-        campaign count, total spends)
-      parameters:
-      - description: Filter by multiple brand IDs (comma separated)
-        in: query
-        name: brand_ids
-        type: string
-      - description: Search by brand name
-        in: query
-        name: search
-        type: string
-      - description: Filter by date start (YYYY-MM-DD)
-        in: query
-        name: date_start
-        type: string
-      - description: Filter by date stop (YYYY-MM-DD)
-        in: query
-        name: date_stop
-        type: string
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 25
-        description: Items per page
-        in: query
-        name: limit
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Brand Dashboard
-      tags:
-      - Meta Ad Accounts
   /meta/brands/{brand_id}/ad-accounts:
     get:
       consumes:
@@ -2371,6 +2452,14 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: Start Date (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Stop Date (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
       produces:
       - application/json
       responses:
@@ -2382,7 +2471,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/dto.AdResponse'
+                    $ref: '#/definitions/dto.AdDashboardRow'
                   type: array
                 meta:
                   $ref: '#/definitions/response.PaginationMeta'
@@ -2433,6 +2522,14 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: Start Date (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Stop Date (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
       produces:
       - application/json
       responses:
@@ -2444,7 +2541,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/dto.AdSetResponse'
+                    $ref: '#/definitions/dto.AdSetDashboardRow'
                   type: array
                 meta:
                   $ref: '#/definitions/response.PaginationMeta'
@@ -2491,6 +2588,14 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: Start Date (YYYY-MM-DD)
+        in: query
+        name: date_start
+        type: string
+      - description: Stop Date (YYYY-MM-DD)
+        in: query
+        name: date_stop
+        type: string
       produces:
       - application/json
       responses:
@@ -2502,7 +2607,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/dto.CampaignResponse'
+                    $ref: '#/definitions/dto.CampaignDashboardRow'
                   type: array
                 meta:
                   $ref: '#/definitions/response.PaginationMeta'

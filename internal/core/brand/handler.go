@@ -2,6 +2,8 @@ package brand
 
 import (
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/alex/ads_backend/internal/core/brand/dto"
 	"github.com/alex/ads_backend/pkg/response"
@@ -185,4 +187,61 @@ func (h *Handler) Delete(c *gin.Context) {
 	}
 
 	response.Success(c, "Successfully deleted brand", nil)
+}
+
+// GetBrandDashboard godoc
+// @Summary      Brand Dashboard
+// @Description  Returns aggregated metrics for each brand (ad account count, active campaign count, total spends)
+// @Tags         Brand
+// @Accept       json
+// @Produce      json
+// @Param        brand_ids      query     string  false  "Filter by multiple brand IDs (comma separated)"
+// @Param        search         query     string  false  "Search by brand name"
+// @Param        date_start     query     string  false  "Filter by date start (YYYY-MM-DD)"
+// @Param        date_stop      query     string  false  "Filter by date stop (YYYY-MM-DD)"
+// @Param        page           query     int     false  "Page number" default(1)
+// @Param        limit          query     int     false  "Items per page" default(25)
+// @Success      200            {object}  response.Response
+// @Failure      400            {object}  response.ErrorResponse
+// @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
+// @Router       /core/brands/dashboard [get]
+func (h *Handler) GetBrandDashboard(c *gin.Context) {
+	var brandIDs []uint64
+	if bids := c.Query("brand_ids"); bids != "" {
+		for _, bidStr := range strings.Split(bids, ",") {
+			if id, err := strconv.ParseUint(strings.TrimSpace(bidStr), 10, 64); err == nil {
+				brandIDs = append(brandIDs, id)
+			}
+		}
+	}
+
+	filter := dto.BrandDashboardFilter{
+		Search:    c.Query("search"),
+		BrandIDs:  brandIDs,
+		DateStart: c.Query("date_start"),
+		DateStop:  c.Query("date_stop"),
+		Page:      parseQueryInt(c, "page", 1),
+		Limit:     parseQueryInt(c, "limit", 25),
+	}
+
+	rows, meta, err := h.service.GetBrandDashboard(filter)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	response.SuccessWithPagination(c, "Successfully retrieved brand dashboard", rows, meta)
+}
+
+func parseQueryInt(c *gin.Context, key string, defaultVal int) int {
+	val := c.Query(key)
+	if val == "" {
+		return defaultVal
+	}
+	v, err := strconv.Atoi(val)
+	if err != nil || v <= 0 {
+		return defaultVal
+	}
+	return v
 }
