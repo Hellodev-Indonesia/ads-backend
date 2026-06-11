@@ -1926,7 +1926,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Dashboard"
+                    "Meta Ads"
                 ],
                 "summary": "Ad Dashboard",
                 "parameters": [
@@ -2122,7 +2122,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Dashboard"
+                    "Meta AdSets"
                 ],
                 "summary": "Ad Set Dashboard",
                 "parameters": [
@@ -2220,7 +2220,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Dashboard"
+                    "Meta Ad Accounts"
                 ],
                 "summary": "Brand Dashboard",
                 "parameters": [

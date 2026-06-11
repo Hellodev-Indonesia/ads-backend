@@ -147,7 +147,7 @@ func parseQueryInt(c *gin.Context, key string, defaultVal int) int {
 // GetAdDashboard godoc
 // @Summary      Ad Dashboard
 // @Description  Returns ads with performance metrics joined from insights
-// @Tags         Meta Dashboard
+// @Tags         Meta Ads
 // @Accept       json
 // @Produce      json
 // @Param        ad_account_id  query     string  false  "Ad Account ID"

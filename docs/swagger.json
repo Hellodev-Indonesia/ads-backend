@@ -1920,7 +1920,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Dashboard"
+                    "Meta Ads"
                 ],
                 "summary": "Ad Dashboard",
                 "parameters": [
@@ -2116,7 +2116,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Dashboard"
+                    "Meta AdSets"
                 ],
                 "summary": "Ad Set Dashboard",
                 "parameters": [
@@ -2214,7 +2214,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Meta Dashboard"
+                    "Meta Ad Accounts"
                 ],
                 "summary": "Brand Dashboard",
                 "parameters": [

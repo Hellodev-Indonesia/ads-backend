@@ -2097,7 +2097,7 @@ paths:
       - BearerAuth: []
       summary: Ad Dashboard
       tags:
-      - Meta Dashboard
+      - Meta Ads
   /meta/adsets:
     get:
       consumes:
@@ -2218,7 +2218,7 @@ paths:
       - BearerAuth: []
       summary: Ad Set Dashboard
       tags:
-      - Meta Dashboard
+      - Meta AdSets
   /meta/brands:
     get:
       consumes:
@@ -2271,7 +2271,7 @@ paths:
       - BearerAuth: []
       summary: Brand Dashboard
       tags:
-      - Meta Dashboard
+      - Meta Ad Accounts
   /meta/brands/{brand_id}/ad-accounts:
     get:
       consumes:

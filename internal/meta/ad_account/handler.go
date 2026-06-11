@@ -280,7 +280,7 @@ func (h *Handler) GetBusinessOptions(c *gin.Context) {
 // GetBrandDashboard godoc
 // @Summary      Brand Dashboard
 // @Description  Returns aggregated metrics for each brand (ad account count, active campaign count, total spends)
-// @Tags         Meta Dashboard
+// @Tags         Meta Ad Accounts
 // @Accept       json
 // @Produce      json
 // @Param        brand_ids      query     string  false  "Filter by multiple brand IDs (comma separated)"
