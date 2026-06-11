@@ -33,6 +33,7 @@ var _ = dto.CampaignResponse{}
 // @Success      200            {object}  response.Response{data=[]dto.CampaignResponse,meta=response.PaginationMeta}
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/campaigns [get]
 func (h *Handler) GetCampaigns(c *gin.Context) {
 	adAccountID := c.Query("ad_account_id")

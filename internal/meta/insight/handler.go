@@ -34,6 +34,7 @@ var _ = dto.InsightResponse{}
 // @Success      200            {object}  response.Response{data=[]dto.InsightResponse,meta=response.PaginationMeta}
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/insights/campaign [get]
 func (h *Handler) GetCampaignInsights(c *gin.Context) {
 	filter := InsightFilter{
@@ -70,6 +71,7 @@ func (h *Handler) GetCampaignInsights(c *gin.Context) {
 // @Success      200            {object}  response.Response{data=[]dto.InsightResponse,meta=response.PaginationMeta}
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/insights/ad [get]
 func (h *Handler) GetAdInsights(c *gin.Context) {
 	filter := InsightFilter{

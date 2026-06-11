@@ -36,6 +36,7 @@ func NewHandler(job JobTrigger, service *Service) *Handler {
 // @Failure      409  {object}  response.ErrorResponse  "Sync already in progress"
 // @Failure      500  {object}  response.ErrorResponse
 // @Security     BearerAuth
+// @Security BearerAuth
 // @Router       /meta/sync [post]
 func (h *Handler) TriggerSync(c *gin.Context) {
 	var req dto.TriggerSyncRequest
@@ -81,6 +82,7 @@ func (h *Handler) TriggerSync(c *gin.Context) {
 // @Produce      json
 // @Success      200  {object}  response.Response
 // @Security     BearerAuth
+// @Security BearerAuth
 // @Router       /meta/sync/status [get]
 func (h *Handler) SyncStatus(c *gin.Context) {
 	respData := gin.H{
@@ -108,6 +110,7 @@ func (h *Handler) SyncStatus(c *gin.Context) {
 // @Success      200    {object}  response.PaginationResponse{data=[]MetaSyncBatch}
 // @Failure      500    {object}  response.ErrorResponse
 // @Security     BearerAuth
+// @Security BearerAuth
 // @Router       /meta/sync/batches [get]
 func (h *Handler) ListBatches(c *gin.Context) {
 	page := parseIntQuery(c, "page", 1)
@@ -142,6 +145,7 @@ func (h *Handler) ListBatches(c *gin.Context) {
 // @Failure      404  {object}  response.ErrorResponse
 // @Failure      500  {object}  response.ErrorResponse
 // @Security     BearerAuth
+// @Security BearerAuth
 // @Router       /meta/sync/batches/{id} [get]
 func (h *Handler) GetBatch(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)

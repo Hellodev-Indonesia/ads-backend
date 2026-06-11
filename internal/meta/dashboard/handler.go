@@ -33,6 +33,7 @@ func NewHandler(service Service) *Handler {
 // @Success      200            {object}  response.Response
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/dashboard/campaigns [get]
 func (h *Handler) GetCampaignDashboard(c *gin.Context) {
 	adAccountID := c.Query("ad_account_id")
@@ -96,6 +97,7 @@ func parseQueryInt(c *gin.Context, key string, defaultVal int) int {
 // @Success      200            {object}  response.Response
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/dashboard/adsets [get]
 func (h *Handler) GetAdSetDashboard(c *gin.Context) {
 	var brandID *uint64
@@ -146,6 +148,7 @@ func (h *Handler) GetAdSetDashboard(c *gin.Context) {
 // @Success      200            {object}  response.Response
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/dashboard/ads [get]
 func (h *Handler) GetAdDashboard(c *gin.Context) {
 	var brandID *uint64
@@ -192,6 +195,7 @@ func (h *Handler) GetAdDashboard(c *gin.Context) {
 // @Success      200            {object}  response.Response
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/dashboard/brands [get]
 func (h *Handler) GetBrandDashboard(c *gin.Context) {
 	filter := DashboardFilter{

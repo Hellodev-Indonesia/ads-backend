@@ -1480,6 +1480,11 @@ const docTemplate = `{
         },
         "/meta/ad-accounts": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieve all ad accounts associated with the system user token",
                 "consumes": [
                     "application/json"
@@ -1571,6 +1576,11 @@ const docTemplate = `{
         },
         "/meta/ad-accounts/brand": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Assign a brand to multiple Meta ad accounts (or unassign if brand_id is null)",
                 "consumes": [
                     "application/json"
@@ -1620,6 +1630,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "description": "Get unique business options available in ad accounts",
@@ -1660,6 +1673,11 @@ const docTemplate = `{
         },
         "/meta/ad-accounts/unassigned": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get paginated list of Meta ad accounts that are not assigned to any brand",
                 "consumes": [
                     "application/json"
@@ -1748,6 +1766,11 @@ const docTemplate = `{
         },
         "/meta/ad-accounts/{id}/disconnect": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Disconnect a brand from a specific Meta ad account",
                 "consumes": [
                     "application/json"
@@ -1792,6 +1815,11 @@ const docTemplate = `{
         },
         "/meta/ads": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieve ads from local database (synced from Meta)",
                 "consumes": [
                     "application/json"
@@ -1885,6 +1913,11 @@ const docTemplate = `{
         },
         "/meta/adsets": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieve adsets from local database (synced from Meta)",
                 "consumes": [
                     "application/json"
@@ -1972,6 +2005,11 @@ const docTemplate = `{
         },
         "/meta/brands/{brand_id}/ad-accounts": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get paginated list of Meta ad accounts for a specific brand",
                 "consumes": [
                     "application/json"
@@ -2067,6 +2105,11 @@ const docTemplate = `{
         },
         "/meta/campaigns": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieve campaigns from local database (synced from Meta)",
                 "consumes": [
                     "application/json"
@@ -2154,6 +2197,11 @@ const docTemplate = `{
         },
         "/meta/creatives/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieve details of a specific ad creative from the local database (synced from Meta)",
                 "consumes": [
                     "application/json"
@@ -2216,6 +2264,11 @@ const docTemplate = `{
         },
         "/meta/dashboard/ads": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Returns ads with performance metrics joined from insights",
                 "consumes": [
                     "application/json"
@@ -2315,6 +2368,11 @@ const docTemplate = `{
         },
         "/meta/dashboard/adsets": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Returns ad sets with performance metrics joined from insights",
                 "consumes": [
                     "application/json"
@@ -2408,6 +2466,11 @@ const docTemplate = `{
         },
         "/meta/dashboard/brands": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Returns aggregated metrics for each brand (ad account count, active campaign count, total spends)",
                 "consumes": [
                     "application/json"
@@ -2477,6 +2540,11 @@ const docTemplate = `{
         },
         "/meta/dashboard/campaigns": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Returns campaigns with performance metrics (spend, impressions, reach, actions) joined from insights and adsets",
                 "consumes": [
                     "application/json"
@@ -2564,6 +2632,11 @@ const docTemplate = `{
         },
         "/meta/insights/ad": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieve ad-level insights from local database (synced from Meta)",
                 "consumes": [
                     "application/json"
@@ -2669,6 +2742,11 @@ const docTemplate = `{
         },
         "/meta/insights/campaign": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieve campaign-level insights from local database (synced from Meta)",
                 "consumes": [
                     "application/json"
@@ -2765,6 +2843,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "description": "Manually trigger a full Meta Ads sync. Returns immediately; subscribe to the Centrifugo channel for real-time progress.",
@@ -2807,6 +2888,9 @@ const docTemplate = `{
         "/meta/sync/batches": {
             "get": {
                 "security": [
+                    {
+                        "BearerAuth": []
+                    },
                     {
                         "BearerAuth": []
                     }
@@ -2871,6 +2955,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "BearerAuth": []
+                    },
+                    {
+                        "BearerAuth": []
                     }
                 ],
                 "description": "Returns a single sync batch with its steps.",
@@ -2927,6 +3014,9 @@ const docTemplate = `{
         "/meta/sync/status": {
             "get": {
                 "security": [
+                    {
+                        "BearerAuth": []
+                    },
                     {
                         "BearerAuth": []
                     }

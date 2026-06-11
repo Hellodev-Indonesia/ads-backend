@@ -35,6 +35,7 @@ var _ = dto.CreativeResponse{}
 // @Success      200            {object}  response.Response{data=[]dto.AdResponse,meta=response.PaginationMeta}
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/ads [get]
 func (h *Handler) GetAds(c *gin.Context) {
 	filter := AdFilter{
@@ -65,6 +66,7 @@ func (h *Handler) GetAds(c *gin.Context) {
 // @Success      200      {object}  response.Response{data=dto.CreativeResponse}
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/creatives/{id} [get]
 func (h *Handler) GetCreative(c *gin.Context) {
 	creativeID := c.Param("id")

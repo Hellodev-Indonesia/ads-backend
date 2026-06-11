@@ -1757,6 +1757,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get Meta Ad Accounts
       tags:
       - Meta Ad Accounts
@@ -1786,6 +1788,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Disconnect Brand from Ad Account
       tags:
       - Meta Ad Accounts
@@ -1817,6 +1821,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Assign or Unassign Brand to Ad Accounts
       tags:
       - Meta Ad Accounts
@@ -1840,6 +1846,7 @@ paths:
                   type: array
               type: object
       security:
+      - BearerAuth: []
       - BearerAuth: []
       summary: Get Business Options
       tags:
@@ -1897,6 +1904,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get Unassigned Ad Accounts
       tags:
       - Meta Ad Accounts
@@ -1956,6 +1965,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get Ads
       tags:
       - Meta Ads
@@ -2011,6 +2022,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get AdSets
       tags:
       - Meta AdSets
@@ -2071,6 +2084,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get Ad Accounts by Brand
       tags:
       - Meta Ad Accounts
@@ -2126,6 +2141,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get Campaigns
       tags:
       - Meta Campaigns
@@ -2165,6 +2182,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get Ad Creative
       tags:
       - Meta Ads
@@ -2231,6 +2250,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Ad Dashboard
       tags:
       - Meta Dashboard
@@ -2293,6 +2314,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Ad Set Dashboard
       tags:
       - Meta Dashboard
@@ -2340,6 +2363,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Brand Dashboard
       tags:
       - Meta Dashboard
@@ -2399,6 +2424,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Campaign Dashboard
       tags:
       - Meta Dashboard
@@ -2466,6 +2493,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get Ad Insights
       tags:
       - Meta Insights
@@ -2526,6 +2555,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Get Campaign Insights
       tags:
       - Meta Insights
@@ -2553,6 +2584,7 @@ paths:
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       security:
+      - BearerAuth: []
       - BearerAuth: []
       summary: Trigger Meta Ads Sync
       tags:
@@ -2592,6 +2624,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
+      - BearerAuth: []
       summary: List Sync Batches
       tags:
       - Meta Sync
@@ -2626,6 +2659,7 @@ paths:
             $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
+      - BearerAuth: []
       summary: Get Sync Batch
       tags:
       - Meta Sync
@@ -2640,6 +2674,7 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       security:
+      - BearerAuth: []
       - BearerAuth: []
       summary: Get Sync Status
       tags:

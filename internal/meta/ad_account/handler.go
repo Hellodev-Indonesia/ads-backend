@@ -34,6 +34,7 @@ var _ = dto.AdAccountResponse{}
 // @Success      200      {object}  response.Response{data=[]dto.AdAccountResponse,meta=response.Meta}
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/ad-accounts [get]
 func (h *Handler) GetAdAccounts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
@@ -94,6 +95,7 @@ func (h *Handler) GetAdAccounts(c *gin.Context) {
 // @Failure      400       {object}  response.ErrorResponse
 // @Failure      401       {object}  response.ErrorResponse
 // @Failure      500       {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/ad-accounts/unassigned [get]
 func (h *Handler) GetUnassignedAdAccounts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
@@ -139,6 +141,7 @@ func (h *Handler) GetUnassignedAdAccounts(c *gin.Context) {
 // @Success      200      {object}  response.SuccessResponse
 // @Failure      400      {object}  response.ErrorResponse
 // @Failure      500      {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/ad-accounts/brand [put]
 func (h *Handler) AssignBrand(c *gin.Context) {
 	var req dto.AssignBrandRequest
@@ -175,6 +178,7 @@ func (h *Handler) AssignBrand(c *gin.Context) {
 // @Success      200  {object}  response.SuccessResponse
 // @Failure      400  {object}  response.ErrorResponse
 // @Failure      500  {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/ad-accounts/{id}/disconnect [put]
 func (h *Handler) DisconnectBrand(c *gin.Context) {
 	id := c.Param("id")
@@ -207,6 +211,7 @@ func (h *Handler) DisconnectBrand(c *gin.Context) {
 // @Failure      400       {object}  response.ErrorResponse
 // @Failure      401       {object}  response.ErrorResponse
 // @Failure      500       {object}  response.ErrorResponse
+// @Security BearerAuth
 // @Router       /meta/brands/{brand_id}/ad-accounts [get]
 func (h *Handler) GetAdAccountsByBrand(c *gin.Context) {
 	brandIDStr := c.Param("brand_id")
@@ -259,6 +264,7 @@ func (h *Handler) GetAdAccountsByBrand(c *gin.Context) {
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} response.SuccessResponse{data=[]dto.BusinessOptionResponse}
+// @Security BearerAuth
 // @Router /meta/ad-accounts/businesses [get]
 func (h *Handler) GetBusinessOptions(c *gin.Context) {
 	businesses, err := h.service.GetBusinessOptions()
