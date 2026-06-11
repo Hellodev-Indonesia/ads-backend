@@ -1,6 +1,8 @@
 package insight
 
 import (
+	"strings"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -105,11 +107,13 @@ func (r *repository) FindAdInsights(filter InsightFilter) ([]MetaInsight, int64,
 }
 
 func (r *repository) FindMissingCampaignIDs(accountID, dateStart, dateStop string) ([]string, error) {
+	accountID = strings.TrimPrefix(accountID, "act_")
 	var missingIDs []string
 	query := r.db.Table("meta_insights").
 		Select("DISTINCT meta_insights.campaign_id").
 		Joins("LEFT JOIN meta_campaigns ON meta_insights.campaign_id = meta_campaigns.id").
-		Where("meta_insights.account_id = ? AND meta_insights.level = 'campaign'", accountID).
+		Where("meta_insights.account_id = ?", accountID).
+		Where("meta_insights.campaign_id != ''").
 		Where("meta_campaigns.id IS NULL")
 
 	if dateStart != "" {
@@ -124,11 +128,12 @@ func (r *repository) FindMissingCampaignIDs(accountID, dateStart, dateStop strin
 }
 
 func (r *repository) FindMissingAdSetIDs(accountID, dateStart, dateStop string) ([]string, error) {
+	accountID = strings.TrimPrefix(accountID, "act_")
 	var missingIDs []string
 	query := r.db.Table("meta_insights").
 		Select("DISTINCT meta_insights.adset_id").
 		Joins("LEFT JOIN meta_ad_sets ON meta_insights.adset_id = meta_ad_sets.id").
-		Where("meta_insights.account_id = ? AND meta_insights.level = 'adset'", accountID).
+		Where("meta_insights.account_id = ?", accountID).
 		Where("meta_insights.adset_id != ''").
 		Where("meta_ad_sets.id IS NULL")
 
@@ -144,11 +149,12 @@ func (r *repository) FindMissingAdSetIDs(accountID, dateStart, dateStop string) 
 }
 
 func (r *repository) FindMissingAdIDs(accountID, dateStart, dateStop string) ([]string, error) {
+	accountID = strings.TrimPrefix(accountID, "act_")
 	var missingIDs []string
 	query := r.db.Table("meta_insights").
 		Select("DISTINCT meta_insights.ad_id").
 		Joins("LEFT JOIN meta_ads ON meta_insights.ad_id = meta_ads.id").
-		Where("meta_insights.account_id = ? AND meta_insights.level = 'ad'", accountID).
+		Where("meta_insights.account_id = ?", accountID).
 		Where("meta_insights.ad_id != ''").
 		Where("meta_ads.id IS NULL")
 

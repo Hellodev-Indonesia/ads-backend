@@ -60,6 +60,15 @@ func (c *Client) Publish(ctx context.Context, channel string, data any) error {
 		return fmt.Errorf("centrifugo returned status %d", resp.StatusCode)
 	}
 
-	log.Printf("[Centrifugo] Successfully published to channel %s", channel)
+	dataStr := ""
+	if b, err := json.Marshal(data); err == nil {
+		if len(b) > 200 {
+			dataStr = string(b[:197]) + "..."
+		} else {
+			dataStr = string(b)
+		}
+	}
+
+	log.Printf("[Centrifugo] Successfully published to channel %s: %s", channel, dataStr)
 	return nil
 }

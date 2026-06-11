@@ -162,7 +162,12 @@ func (j *MetaAdsSyncJob) Start(ctx context.Context, req syncDto.TriggerSyncReque
 		DateStop:  req.DateStop,
 	}
 
-	go j.executeAll(batches, false, insightReq, accountIDs)
+	insightsOnly := false
+	if req.DateStart != "" || req.DateStop != "" {
+		insightsOnly = true
+	}
+
+	go j.executeAll(batches, insightsOnly, insightReq, accountIDs)
 
 	return batches, nil
 }
@@ -217,17 +222,36 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 			hasError = true
 			firstError = setFirstError(firstError, err)
 		}
+	}
 
-		// Re-fetch active ad accounts if we didn't specify one
-		if len(accountIDs) == 0 {
-			accounts, _, _ := j.adAccountService.GetAdAccounts(ad_account.AdAccountFilter{Limit: 1000})
-			for _, acc := range accounts {
-				if acc.IsActive {
-					accountIDs = append(accountIDs, acc.ID)
-				}
+	// Re-fetch active ad accounts if we didn't specify one
+	if len(accountIDs) == 0 {
+		accounts, _, _ := j.adAccountService.GetAdAccounts(ad_account.AdAccountFilter{Limit: 1000})
+
+		// Fallback: If local DB is completely empty (e.g., after migrate-fresh or seeder deletion),
+		// we must fetch the ad accounts from Meta first, even if this is an insightsOnly sync.
+		if len(accounts) == 0 {
+			_, err := j.runSyncStep(
+				ctx, batch.ID,
+				metasync.SyncTypeAdAccounts,
+				"/me/adaccounts (fallback)",
+				&currentStep, totalSteps,
+				func() (int, error) { return j.adAccountService.SyncAdAccounts() },
+			)
+			if err != nil {
+				hasError = true
+				firstError = setFirstError(firstError, err)
 			}
-			totalSteps += int32(len(accountIDs)) * stepsPerAccount
+			// Fetch again from DB after syncing
+			accounts, _, _ = j.adAccountService.GetAdAccounts(ad_account.AdAccountFilter{Limit: 1000})
 		}
+
+		for _, acc := range accounts {
+			if acc.IsActive {
+				accountIDs = append(accountIDs, acc.ID)
+			}
+		}
+		totalSteps += int32(len(accountIDs)) * stepsPerAccount
 	}
 
 	var wg sync.WaitGroup
@@ -513,10 +537,17 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 		})
 	}
 
-	log.Printf(
-		"Meta Ads sync finished in %s (ad_accounts: %d, campaigns: %d, adsets: %d, ads: %d, ad_creatives: %d, campaign_insights: %d, ad_insights: %d)",
-		elapsed, adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount,
-	)
+	if insightsOnly {
+		log.Printf(
+			"Meta Ads sync finished in %s (campaigns: %d, adsets: %d, ads: %d, ad_creatives: %d, campaign_insights: %d, ad_insights: %d)",
+			elapsed, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount,
+		)
+	} else {
+		log.Printf(
+			"Meta Ads sync finished in %s (ad_accounts: %d, campaigns: %d, adsets: %d, ads: %d, ad_creatives: %d, campaign_insights: %d, ad_insights: %d)",
+			elapsed, adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount,
+		)
+	}
 }
 
 func (j *MetaAdsSyncJob) runSyncStep(
