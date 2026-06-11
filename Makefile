@@ -22,7 +22,7 @@ seed: ## Run database seeders
 	go run cmd/seed/main.go
 
 docs: ## Generate Swagger/Scalar documentation
-	go run github.com/swaggo/swag/cmd/swag@latest init -g cmd/api/main.go
+	go run github.com/swaggo/swag/cmd/swag@latest init -g cmd/api/main.go --parseDependency --parseInternal
 
 migrate-up: ## Run database migrations
 	migrate -path database/migrations -database "$(DB_DSN)" up

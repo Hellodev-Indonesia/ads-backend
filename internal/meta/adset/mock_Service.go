@@ -53,6 +53,36 @@ func (_m *MockService) GetAdSetDashboard(filter AdSetFilter) ([]dto.AdSetDashboa
 	return r0, r1, r2
 }
 
+// GetAdSetListByBrand provides a mock function with given fields: brandID, campaignIDs
+func (_m *MockService) GetAdSetListByBrand(brandID uint64, campaignIDs []string) ([]dto.SimpleListResponse, error) {
+	ret := _m.Called(brandID, campaignIDs)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAdSetListByBrand")
+	}
+
+	var r0 []dto.SimpleListResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint64, []string) ([]dto.SimpleListResponse, error)); ok {
+		return rf(brandID, campaignIDs)
+	}
+	if rf, ok := ret.Get(0).(func(uint64, []string) []dto.SimpleListResponse); ok {
+		r0 = rf(brandID, campaignIDs)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dto.SimpleListResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint64, []string) error); ok {
+		r1 = rf(brandID, campaignIDs)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetAdSets provides a mock function with given fields: filter
 func (_m *MockService) GetAdSets(filter AdSetFilter) ([]dto.AdSetResponse, *response.PaginationMeta, error) {
 	ret := _m.Called(filter)

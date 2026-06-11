@@ -83,6 +83,36 @@ func (_m *MockService) GetCampaignDashboard(filter CampaignFilter) ([]dto.Campai
 	return r0, r1, r2
 }
 
+// GetCampaignListByBrand provides a mock function with given fields: brandID
+func (_m *MockService) GetCampaignListByBrand(brandID uint64) ([]dto.SimpleListResponse, error) {
+	ret := _m.Called(brandID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetCampaignListByBrand")
+	}
+
+	var r0 []dto.SimpleListResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint64) ([]dto.SimpleListResponse, error)); ok {
+		return rf(brandID)
+	}
+	if rf, ok := ret.Get(0).(func(uint64) []dto.SimpleListResponse); ok {
+		r0 = rf(brandID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dto.SimpleListResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint64) error); ok {
+		r1 = rf(brandID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetCampaigns provides a mock function with given fields: filter
 func (_m *MockService) GetCampaigns(filter CampaignFilter) ([]dto.CampaignResponse, *response.PaginationMeta, error) {
 	ret := _m.Called(filter)
