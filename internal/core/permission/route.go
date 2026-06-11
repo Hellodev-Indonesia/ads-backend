@@ -6,7 +6,7 @@ import (
 )
 
 func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
-	perms := r.Group("/permissions")
+	perms := r.Group("/core/permissions")
 	perms.Use(middleware.AuthMiddleware())
 	{
 		perms.GET("", h.FindAll)

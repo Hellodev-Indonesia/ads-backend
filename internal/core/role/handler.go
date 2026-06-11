@@ -28,7 +28,7 @@ func NewHandler(service Service) *Handler {
 // @Param        page   query     int     false  "Page number" default(1)
 // @Param        limit  query     int     false  "Items per page" default(25)
 // @Success      200    {object}  response.PaginationResponse{data=[]dto.RoleResponse}
-// @Router       /roles [get]
+// @Router       /core/roles [get]
 func (h *Handler) FindAll(c *gin.Context) {
 	var filter dto.RoleFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -53,7 +53,7 @@ func (h *Handler) FindAll(c *gin.Context) {
 // @Security     BearerAuth
 // @Param        id       path      int     true  "Role ID"
 // @Success      200      {object}  response.SuccessResponse{data=dto.RoleResponse}
-// @Router       /roles/{id} [get]
+// @Router       /core/roles/{id} [get]
 func (h *Handler) FindByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, _ := strconv.Atoi(idStr)
@@ -75,7 +75,7 @@ func (h *Handler) FindByID(c *gin.Context) {
 // @Security     BearerAuth
 // @Param        request  body      dto.RoleRequest  true  "Create Role Request"
 // @Success      201      {object}  response.SuccessResponse
-// @Router       /roles [post]
+// @Router       /core/roles [post]
 func (h *Handler) Create(c *gin.Context) {
 	var req dto.RoleRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -102,7 +102,7 @@ func (h *Handler) Create(c *gin.Context) {
 // @Param        id       path      int     true  "Role ID"
 // @Param        request  body      dto.RoleRequest  true  "Update Role Request"
 // @Success      200      {object}  response.SuccessResponse
-// @Router       /roles/{id} [put]
+// @Router       /core/roles/{id} [put]
 func (h *Handler) Update(c *gin.Context) {
 	idStr := c.Param("id")
 	id, _ := strconv.Atoi(idStr)
@@ -131,7 +131,7 @@ func (h *Handler) Update(c *gin.Context) {
 // @Security     BearerAuth
 // @Param        id       path      int     true  "Role ID"
 // @Success      200      {object}  response.SuccessResponse
-// @Router       /roles/{id} [delete]
+// @Router       /core/roles/{id} [delete]
 func (h *Handler) Delete(c *gin.Context) {
 	idStr := c.Param("id")
 	id, _ := strconv.Atoi(idStr)
@@ -155,7 +155,7 @@ func (h *Handler) Delete(c *gin.Context) {
 // @Param        id       path      int     true  "Role ID"
 // @Param        request  body      dto.AssignPermissionRequest  true  "Assign Permission Request"
 // @Success      200      {object}  response.SuccessResponse
-// @Router       /roles/{id}/permissions [post]
+// @Router       /core/roles/{id}/permissions [post]
 func (h *Handler) AssignPermissions(c *gin.Context) {
 	roleIDStr := c.Param("id")
 	roleID, _ := strconv.Atoi(roleIDStr)

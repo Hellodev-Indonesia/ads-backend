@@ -28,7 +28,7 @@ func NewHandler(service Service) *Handler {
 // @Param        page   query     int     false  "Page number" default(1)
 // @Param        limit  query     int     false  "Items per page" default(25)
 // @Success      200    {object}  response.PaginationResponse{data=[]dto.PermissionResponse}
-// @Router       /permissions [get]
+// @Router       /core/permissions [get]
 func (h *Handler) FindAll(c *gin.Context) {
 	var filter dto.PermissionFilter
 	if err := c.ShouldBindQuery(&filter); err != nil {
@@ -53,7 +53,7 @@ func (h *Handler) FindAll(c *gin.Context) {
 // @Security     BearerAuth
 // @Param        id       path      int     true  "Permission ID"
 // @Success      200      {object}  response.SuccessResponse{data=dto.PermissionResponse}
-// @Router       /permissions/{id} [get]
+// @Router       /core/permissions/{id} [get]
 func (h *Handler) FindByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, _ := strconv.Atoi(idStr)
@@ -75,7 +75,7 @@ func (h *Handler) FindByID(c *gin.Context) {
 // @Security     BearerAuth
 // @Param        request  body      dto.PermissionRequest  true  "Create Permission Request"
 // @Success      201      {object}  response.SuccessResponse
-// @Router       /permissions [post]
+// @Router       /core/permissions [post]
 func (h *Handler) Create(c *gin.Context) {
 	var req dto.PermissionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -102,7 +102,7 @@ func (h *Handler) Create(c *gin.Context) {
 // @Param        id       path      int     true  "Permission ID"
 // @Param        request  body      dto.PermissionRequest  true  "Update Permission Request"
 // @Success      200      {object}  response.SuccessResponse
-// @Router       /permissions/{id} [put]
+// @Router       /core/permissions/{id} [put]
 func (h *Handler) Update(c *gin.Context) {
 	idStr := c.Param("id")
 	id, _ := strconv.Atoi(idStr)
@@ -131,7 +131,7 @@ func (h *Handler) Update(c *gin.Context) {
 // @Security     BearerAuth
 // @Param        id       path      int     true  "Permission ID"
 // @Success      200      {object}  response.SuccessResponse
-// @Router       /permissions/{id} [delete]
+// @Router       /core/permissions/{id} [delete]
 func (h *Handler) Delete(c *gin.Context) {
 	idStr := c.Param("id")
 	id, _ := strconv.Atoi(idStr)

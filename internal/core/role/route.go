@@ -6,7 +6,7 @@ import (
 )
 
 func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
-	roles := r.Group("/roles")
+	roles := r.Group("/core/roles")
 	roles.Use(middleware.AuthMiddleware())
 	{
 		roles.GET("", h.FindAll)
