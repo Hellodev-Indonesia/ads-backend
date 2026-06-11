@@ -443,6 +443,7 @@ func (s *serviceImpl) GetBrandDashboard(filter DashboardFilter) ([]dto.BrandDash
 		result = append(result, dto.BrandDashboardResponse{
 			BrandID:             r.BrandID,
 			BrandName:           r.BrandName,
+			BrandPhoto:          r.BrandPhoto,
 			AdAccountCount:      r.AdAccountCount,
 			ActiveCampaignCount: r.ActiveCampaignCount,
 			TotalSpends:         spend,

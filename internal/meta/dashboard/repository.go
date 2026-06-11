@@ -85,6 +85,7 @@ type adDashboardScan struct {
 type brandDashboardScan struct {
 	BrandID             uint64   `gorm:"column:brand_id"`
 	BrandName           string   `gorm:"column:brand_name"`
+	BrandPhoto          *string  `gorm:"column:brand_photo"`
 	AdAccountCount      int      `gorm:"column:ad_account_count"`
 	ActiveCampaignCount int      `gorm:"column:active_campaign_count"`
 	TotalSpends         *float64 `gorm:"column:total_spends"`
@@ -708,6 +709,7 @@ func (r *repository) FindBrandDashboard(filter DashboardFilter) ([]brandDashboar
 SELECT 
     b.id AS brand_id,
     b.name AS brand_name,
+    b.photo AS brand_photo,
     COUNT(DISTINCT a.id) AS ad_account_count,
     COUNT(DISTINCT CASE WHEN c.effective_status = 'ACTIVE' THEN c.id END) AS active_campaign_count,
     SUM(i.spend) AS total_spends
@@ -716,7 +718,7 @@ LEFT JOIN meta_ad_accounts a ON b.id = a.brand_id
 LEFT JOIN meta_campaigns c ON a.id COLLATE utf8mb4_unicode_ci = c.account_id COLLATE utf8mb4_unicode_ci
 LEFT JOIN meta_insights i ON c.id COLLATE utf8mb4_unicode_ci = i.campaign_id COLLATE utf8mb4_unicode_ci AND i.level = 'campaign'` + insightWhere + `
 ` + where + `
-GROUP BY b.id, b.name
+GROUP BY b.id, b.name, b.photo
 ORDER BY b.name ASC
 LIMIT ? OFFSET ?
 `
