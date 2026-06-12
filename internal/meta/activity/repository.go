@@ -8,6 +8,7 @@ import (
 
 type Repository interface {
 	UpsertBatch(activities []MetaActivity) error
+	FindAll(filter dto.ActivityFilter) ([]ActivityWithAdAccount, int64, error)
 	FindAllByBrand(brandID uint64, filter dto.ActivityFilter) ([]ActivityWithAdAccount, int64, error)
 }
 
@@ -41,6 +42,33 @@ func (r *repository) FindAllByBrand(brandID uint64, filter dto.ActivityFilter) (
 	q := r.db.Table("meta_activities act").
 		Joins("JOIN meta_ad_accounts a ON act.ad_account_id = a.id").
 		Where("a.brand_id = ?", brandID)
+
+	q.Count(&total)
+
+	limit := filter.Limit
+	page := filter.Page
+	if limit <= 0 {
+		limit = 25
+	}
+	if page <= 0 {
+		page = 1
+	}
+
+	err := q.Select("act.*, a.name as ad_account_name, a.business_name as ad_account_business_name").
+		Order("act.event_time DESC").
+		Limit(limit).
+		Offset((page - 1) * limit).
+		Scan(&list).Error
+
+	return list, total, err
+}
+
+func (r *repository) FindAll(filter dto.ActivityFilter) ([]ActivityWithAdAccount, int64, error) {
+	var list []ActivityWithAdAccount
+	var total int64
+
+	q := r.db.Table("meta_activities act").
+		Joins("JOIN meta_ad_accounts a ON act.ad_account_id = a.id")
 
 	q.Count(&total)
 

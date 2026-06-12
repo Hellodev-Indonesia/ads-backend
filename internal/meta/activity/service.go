@@ -12,6 +12,7 @@ import (
 )
 
 type Service interface {
+	FindAll(filter dto.ActivityFilter) ([]dto.ActivityResponse, int64, error)
 	FindAllByBrand(brandID uint64, filter dto.ActivityFilter) ([]dto.ActivityResponse, int64, error)
 	SyncActivities(adAccountID string) (int, error)
 }
@@ -23,6 +24,19 @@ type serviceImpl struct {
 
 func NewService(client *meta_client.Client, repo Repository) Service {
 	return &serviceImpl{client, repo}
+}
+
+func (s *serviceImpl) FindAll(filter dto.ActivityFilter) ([]dto.ActivityResponse, int64, error) {
+	rows, total, err := s.repo.FindAll(filter)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var results []dto.ActivityResponse
+	for _, r := range rows {
+		results = append(results, toResponse(r))
+	}
+	return results, total, nil
 }
 
 func (s *serviceImpl) FindAllByBrand(brandID uint64, filter dto.ActivityFilter) ([]dto.ActivityResponse, int64, error) {

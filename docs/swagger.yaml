@@ -2447,6 +2447,51 @@ paths:
       summary: Resolve a fraud log
       tags:
       - Fraud Logs
+  /meta/activities:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve meta activities across all ad accounts
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse'
+                  type: array
+                meta:
+                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get All Activities
+      tags:
+      - Meta Activities
   /meta/ad-accounts:
     get:
       consumes:

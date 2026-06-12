@@ -6,5 +6,6 @@ import (
 )
 
 func RegisterRoutes(r *gin.RouterGroup, h *Handler) {
+	r.GET("/meta/activities", middleware.AuthMiddleware(), middleware.RequirePermission("meta.activity.view"), h.GetAllActivities)
 	r.GET("/meta/brands/:brand_id/activities", middleware.AuthMiddleware(), middleware.RequirePermission("meta.activity.view"), h.GetActivitiesByBrand)
 }
