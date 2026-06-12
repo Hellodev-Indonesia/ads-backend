@@ -24,7 +24,7 @@ type FraudLogResponse struct {
 type SimpleBrand struct {
 	ID    uint64  `json:"id"`
 	Name  string  `json:"name"`
-	Photo *string `json:"photo,omitempty"`
+	Photo *string `json:"photo"`
 }
 
 type SimpleAdAccount struct {
