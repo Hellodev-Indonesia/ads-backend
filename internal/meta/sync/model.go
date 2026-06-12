@@ -29,6 +29,7 @@ const (
 	SyncTypeCampaignInsights = "campaign_insights"
 	SyncTypeAdInsights       = "ad_insights"
 	SyncTypeBusinesses       = "businesses"
+	SyncTypeActivities       = "activities"
 )
 
 type MetaSyncBatch struct {

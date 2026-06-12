@@ -113,7 +113,14 @@ func (h *Handler) Resolve(c *gin.Context) {
 		return
 	}
 
-	log, err := h.service.Resolve(id)
+	userIDVal, exists := c.Get("user_id")
+	if !exists {
+		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
+	}
+	userID := uint64(userIDVal.(float64))
+
+	log, err := h.service.Resolve(id, userID)
 	if err != nil {
 		response.Error(c, http.StatusNotFound, err.Error(), nil)
 		return

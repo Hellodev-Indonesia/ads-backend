@@ -3027,6 +3027,87 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/brands/{brand_id}/activities": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve meta activities for all ad accounts under a specific brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Activities"
+                ],
+                "summary": "Get Activities by Brand ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 25,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse"
+                                            }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/brands/{brand_id}/ad-accounts": {
             "get": {
                 "security": [
@@ -4717,6 +4798,9 @@ const docTemplate = `{
                 "resolved_at": {
                     "type": "string"
                 },
+                "resolved_by": {
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleUser"
+                },
                 "severity": {
                     "type": "string"
                 },
@@ -4783,6 +4867,17 @@ const docTemplate = `{
             "properties": {
                 "id": {
                     "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleUser": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -4921,6 +5016,29 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.RoleBrief"
                     }
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse": {
+            "type": "object",
+            "properties": {
+                "activity": {
+                    "type": "string"
+                },
+                "activity_details": {
+                    "type": "string"
+                },
+                "ad_account": {
+                    "type": "string"
+                },
+                "change_by": {
+                    "type": "string"
+                },
+                "date_and_time": {
+                    "type": "string"
+                },
+                "item_changed": {
+                    "type": "string"
                 }
             }
         },

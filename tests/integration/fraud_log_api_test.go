@@ -18,6 +18,10 @@ func setupFraudLogRouter(mockService fraud_log.Service) *gin.Engine {
 	handler := fraud_log.NewHandler(mockService)
 
 	logs := router.Group("/fraud-logs")
+	logs.Use(func(c *gin.Context) {
+		c.Set("user_id", float64(2)) // float64 because JWT parses numbers as float64
+		c.Next()
+	})
 	{
 		logs.GET("", handler.FindAll)
 		logs.GET("/:id", handler.FindByID)
@@ -56,7 +60,7 @@ func TestFraudLogAPI_Resolve(t *testing.T) {
 	mockService := fraud_log.NewMockService(t)
 	router := setupFraudLogRouter(mockService)
 
-	mockService.On("Resolve", uint64(1)).Return(dto.FraudLogResponse{
+	mockService.On("Resolve", uint64(1), uint64(2)).Return(dto.FraudLogResponse{
 		ID:     1,
 		Status: "resolved",
 	}, nil)

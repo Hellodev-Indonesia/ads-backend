@@ -21,6 +21,7 @@ type FraudLog struct {
 	Status        string     `gorm:"size:50;not null;default:'open';index" json:"status"`
 	DetectedAt    *time.Time `json:"detected_at"`
 	ResolvedAt    *time.Time `json:"resolved_at"`
+	ResolvedBy    *uint64    `json:"resolved_by"`
 	CreatedAt     time.Time  `json:"created_at"`
 	UpdatedAt     time.Time  `json:"updated_at"`
 }

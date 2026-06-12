@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/alex/ads_backend/internal/meta/ad_account"
+	"github.com/alex/ads_backend/internal/meta/activity"
 	adcreative "github.com/alex/ads_backend/internal/meta/ad_creative"
 	"github.com/alex/ads_backend/internal/meta/ads"
 	"github.com/alex/ads_backend/internal/meta/adset"
@@ -47,6 +48,7 @@ var stepLabels = map[string]string{
 	metasync.SyncTypeCampaignInsights: "campaign insights",
 	metasync.SyncTypeAdInsights:       "ad insights",
 	metasync.SyncTypeBusinesses:       "businesses",
+	metasync.SyncTypeActivities:       "activities",
 }
 
 type MetaAdsSyncJob struct {
@@ -56,6 +58,7 @@ type MetaAdsSyncJob struct {
 	adsService        ads.Service
 	insightService    insight.Service
 	adCreativeService adcreative.Service
+	activityService   activity.Service
 	syncLogService    *metasync.Service
 	publisher         Publisher
 	running           atomic.Bool
@@ -70,6 +73,7 @@ func NewMetaAdsSyncJob(
 	syncLogService *metasync.Service,
 	publisher Publisher,
 	adCreativeService adcreative.Service,
+	activityService activity.Service,
 ) *MetaAdsSyncJob {
 	return &MetaAdsSyncJob{
 		adAccountService:  adAccountService,
@@ -78,6 +82,7 @@ func NewMetaAdsSyncJob(
 		adsService:        adsService,
 		insightService:    insightService,
 		adCreativeService: adCreativeService,
+		activityService:   activityService,
 		syncLogService:    syncLogService,
 		publisher:         publisher,
 	}
@@ -194,14 +199,14 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 
 	hasError := false
 	var firstError error
-	var adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount int
+	var adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount, activityCount int
 
 	var totalSteps int32 = 0
 	if !insightsOnly {
 		totalSteps += 1 // Ad Accounts step
 	}
 	var stepsPerAccount int32 = 0
-	stepsPerAccount += 4 // 4 master data steps (either full or missing)
+	stepsPerAccount += 5 // 5 master data steps (campaign, adset, ad, adcreative, activity)
 	if insightReq.Level == "" || insightReq.Level == "campaign" {
 		stepsPerAccount += 1
 	}
@@ -367,6 +372,25 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				)
 				mu.Lock()
 				adCreativeCount += c
+				if err != nil {
+					accountHasError = true
+					hasError = true
+					firstError = setFirstError(firstError, err)
+				}
+				mu.Unlock()
+			}
+
+			if !accountHasError && !insightsOnly {
+				c, err := j.runSyncStep(
+					ctx, batch.ID,
+					metasync.SyncTypeActivities,
+					fmt.Sprintf("/%s/activities", accountID),
+					&currentStep, totalSteps,
+					i+1, len(accountIDs),
+					func() (int, error) { return j.activityService.SyncActivities(accountID) },
+				)
+				mu.Lock()
+				activityCount += c
 				if err != nil {
 					accountHasError = true
 					hasError = true
@@ -553,13 +577,13 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 
 	if insightsOnly {
 		log.Printf(
-			"Meta Ads sync finished in %s (campaigns: %d, adsets: %d, ads: %d, ad_creatives: %d, campaign_insights: %d, ad_insights: %d)",
-			elapsed, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount,
+			"Meta Ads sync finished in %s (campaigns: %d, adsets: %d, ads: %d, ad_creatives: %d, campaign_insights: %d, ad_insights: %d, activities: %d)",
+			elapsed, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount, activityCount,
 		)
 	} else {
 		log.Printf(
-			"Meta Ads sync finished in %s (ad_accounts: %d, campaigns: %d, adsets: %d, ads: %d, ad_creatives: %d, campaign_insights: %d, ad_insights: %d)",
-			elapsed, adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount,
+			"Meta Ads sync finished in %s (ad_accounts: %d, campaigns: %d, adsets: %d, ads: %d, ad_creatives: %d, campaign_insights: %d, ad_insights: %d, activities: %d)",
+			elapsed, adAccountsCount, campaignCount, adSetCount, adsCount, adCreativeCount, campaignInsightCount, adInsightCount, activityCount,
 		)
 	}
 }

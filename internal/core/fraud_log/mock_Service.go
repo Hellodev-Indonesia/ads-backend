@@ -135,9 +135,9 @@ func (_m *MockService) FindByID(id uint64) (dto.FraudLogResponse, error) {
 	return r0, r1
 }
 
-// Resolve provides a mock function with given fields: id
-func (_m *MockService) Resolve(id uint64) (dto.FraudLogResponse, error) {
-	ret := _m.Called(id)
+// Resolve provides a mock function with given fields: id, userID
+func (_m *MockService) Resolve(id uint64, userID uint64) (dto.FraudLogResponse, error) {
+	ret := _m.Called(id, userID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Resolve")
@@ -145,17 +145,17 @@ func (_m *MockService) Resolve(id uint64) (dto.FraudLogResponse, error) {
 
 	var r0 dto.FraudLogResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint64) (dto.FraudLogResponse, error)); ok {
-		return rf(id)
+	if rf, ok := ret.Get(0).(func(uint64, uint64) (dto.FraudLogResponse, error)); ok {
+		return rf(id, userID)
 	}
-	if rf, ok := ret.Get(0).(func(uint64) dto.FraudLogResponse); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(uint64, uint64) dto.FraudLogResponse); ok {
+		r0 = rf(id, userID)
 	} else {
 		r0 = ret.Get(0).(dto.FraudLogResponse)
 	}
 
-	if rf, ok := ret.Get(1).(func(uint64) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(uint64, uint64) error); ok {
+		r1 = rf(id, userID)
 	} else {
 		r1 = ret.Error(1)
 	}

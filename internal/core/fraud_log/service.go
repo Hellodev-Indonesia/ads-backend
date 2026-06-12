@@ -11,7 +11,7 @@ type Service interface {
 	Create(input dto.CreateFraudLogInput) (*FraudLog, error)
 	FindByID(id uint64) (dto.FraudLogResponse, error)
 	FindAll(filter dto.FraudLogFilter) ([]dto.FraudLogResponse, int64, error)
-	Resolve(id uint64) (dto.FraudLogResponse, error)
+	Resolve(id uint64, userID uint64) (dto.FraudLogResponse, error)
 	ExistsOpenDuplicate(creativeID, eventType, newValue string) (bool, error)
 }
 
@@ -68,7 +68,7 @@ func (s *service) FindAll(filter dto.FraudLogFilter) ([]dto.FraudLogResponse, in
 	return responses, total, nil
 }
 
-func (s *service) Resolve(id uint64) (dto.FraudLogResponse, error) {
+func (s *service) Resolve(id uint64, userID uint64) (dto.FraudLogResponse, error) {
 	log, err := s.repo.FindByID(id)
 	if err != nil {
 		return dto.FraudLogResponse{}, errors.New("fraud log not found")
@@ -79,10 +79,13 @@ func (s *service) Resolve(id uint64) (dto.FraudLogResponse, error) {
 	now := time.Now()
 	log.Status = "resolved"
 	log.ResolvedAt = &now
+	log.ResolvedBy = &userID
 	if err := s.repo.Update(&log.FraudLog); err != nil {
 		return dto.FraudLogResponse{}, err
 	}
-	return toResponse(*log), nil
+	// Need to refetch to get the user name
+	updatedLog, _ := s.repo.FindByID(id)
+	return toResponse(*updatedLog), nil
 }
 
 func (s *service) ExistsOpenDuplicate(creativeID, eventType, newValue string) (bool, error) {
@@ -143,6 +146,12 @@ func toResponse(l FraudLogWithNames) dto.FraudLogResponse {
 	if l.ResolvedAt != nil {
 		s := l.ResolvedAt.Format("2006-01-02 15:04:05")
 		r.ResolvedAt = &s
+	}
+	if l.ResolvedBy != nil && l.ResolvedByName != nil {
+		r.ResolvedBy = &dto.SimpleUser{
+			ID:   *l.ResolvedBy,
+			Name: *l.ResolvedByName,
+		}
 	}
 	return r
 }

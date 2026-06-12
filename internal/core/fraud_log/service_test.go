@@ -118,7 +118,7 @@ func TestService_Resolve(t *testing.T) {
 	mockRepo.On("FindByID", uint64(1)).Return(existing, nil)
 	mockRepo.On("Update", mock.AnythingOfType("*fraud_log.FraudLog")).Return(nil)
 
-	resp, err := svc.Resolve(1)
+	resp, err := svc.Resolve(1, 2)
 
 	assert.NoError(t, err)
 	assert.Equal(t, "resolved", resp.Status)
@@ -140,7 +140,7 @@ func TestService_Resolve_AlreadyResolved(t *testing.T) {
 
 	mockRepo.On("FindByID", uint64(1)).Return(existing, nil)
 
-	resp, err := svc.Resolve(1)
+	resp, err := svc.Resolve(1, 2)
 
 	assert.NoError(t, err)
 	assert.Equal(t, "resolved", resp.Status)

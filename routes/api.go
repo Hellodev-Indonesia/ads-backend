@@ -17,6 +17,7 @@ import (
 	"github.com/alex/ads_backend/internal/meta/adset"
 	"github.com/alex/ads_backend/internal/meta/campaign"
 	"github.com/alex/ads_backend/internal/meta/insight"
+	"github.com/alex/ads_backend/internal/meta/activity"
 	"github.com/alex/ads_backend/internal/meta/sync"
 	"github.com/alex/ads_backend/internal/notification/alert"
 	"github.com/alex/ads_backend/pkg/centrifugo"
@@ -91,6 +92,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		insightRepo := insight.NewRepository(config.DB)
 		syncRepo := sync.NewRepository(config.DB)
 		adCreativeRepo := adcreative.NewRepository(config.DB)
+		activityRepo := activity.NewRepository(config.DB)
 
 		// Services (Meta client + Repository)
 		adAccountService := ad_account.NewService(metaClient, adAccountRepo)
@@ -100,6 +102,7 @@ func RegisterApiRoutes(router *gin.Engine) {
 		insightService := insight.NewService(metaClient, insightRepo)
 		syncService := sync.NewService(syncRepo)
 		adCreativeService := adcreative.NewService(metaClient, adCreativeRepo, adAccountRepo, whitelistSvc, fraudLogSvc, alertSvc)
+		activityService := activity.NewService(metaClient, activityRepo)
 
 		// Sub-module handlers
 		adAccountHandler := ad_account.NewHandler(adAccountService)
@@ -107,15 +110,16 @@ func RegisterApiRoutes(router *gin.Engine) {
 		adSetHandler := adset.NewHandler(adSetService)
 		adsHandler := ads.NewHandler(adsService)
 		insightHandler := insight.NewHandler(insightService)
+		activityHandler := activity.NewHandler(activityService)
 
 		// Centrifugo publisher for real-time sync events
 		centrifugoClient := centrifugo.NewClient(config.CentrifugoConfig.URL, config.CentrifugoConfig.APIKey)
 
 		// Sync job
-		syncJob := jobs.NewMetaAdsSyncJob(adAccountService, campaignService, adSetService, adsService, insightService, syncService, centrifugoClient, adCreativeService)
+		syncJob := jobs.NewMetaAdsSyncJob(adAccountService, campaignService, adSetService, adsService, insightService, syncService, centrifugoClient, adCreativeService, activityService)
 
 		// Register Meta Routes
-		meta.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler)
+		meta.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler, activityHandler)
 
 		syncHandler := sync.NewHandler(syncJob, syncService)
 		sync.RegisterRoutes(v1, syncHandler)

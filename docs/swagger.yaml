@@ -238,6 +238,8 @@ definitions:
         type: string
       resolved_at:
         type: string
+      resolved_by:
+        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleUser'
       severity:
         type: string
       status:
@@ -281,6 +283,13 @@ definitions:
     properties:
       id:
         type: string
+      name:
+        type: string
+    type: object
+  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleUser:
+    properties:
+      id:
+        type: integer
       name:
         type: string
     type: object
@@ -371,6 +380,21 @@ definitions:
         items:
           $ref: '#/definitions/github_com_alex_ads_backend_internal_core_user_dto.RoleBrief'
         type: array
+    type: object
+  github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse:
+    properties:
+      activity:
+        type: string
+      activity_details:
+        type: string
+      ad_account:
+        type: string
+      change_by:
+        type: string
+      date_and_time:
+        type: string
+      item_changed:
+        type: string
     type: object
   github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse:
     properties:
@@ -2879,6 +2903,56 @@ paths:
       summary: Ad Set Dashboard
       tags:
       - Meta AdSets
+  /meta/brands/{brand_id}/activities:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve meta activities for all ad accounts under a specific brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: brand_id
+        required: true
+        type: integer
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 25
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse'
+                  type: array
+                meta:
+                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Activities by Brand ID
+      tags:
+      - Meta Activities
   /meta/brands/{brand_id}/ad-accounts:
     get:
       consumes:

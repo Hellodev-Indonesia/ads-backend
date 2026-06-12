@@ -17,8 +17,14 @@ type FraudLogResponse struct {
 	Status        string  `json:"status"`
 	DetectedAt    *string `json:"detected_at,omitempty"`
 	ResolvedAt    *string `json:"resolved_at,omitempty"`
+	ResolvedBy    *SimpleUser `json:"resolved_by,omitempty"`
 	CreatedAt     string  `json:"created_at"`
 	UpdatedAt     string  `json:"updated_at"`
+}
+
+type SimpleUser struct {
+	ID   uint64 `json:"id"`
+	Name string `json:"name"`
 }
 
 type SimpleBrand struct {
