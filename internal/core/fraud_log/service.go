@@ -79,7 +79,7 @@ func (s *service) Resolve(id uint64) (dto.FraudLogResponse, error) {
 	now := time.Now()
 	log.Status = "resolved"
 	log.ResolvedAt = &now
-	if err := s.repo.Update(log); err != nil {
+	if err := s.repo.Update(&log.FraudLog); err != nil {
 		return dto.FraudLogResponse{}, err
 	}
 	return toResponse(*log), nil
@@ -89,14 +89,10 @@ func (s *service) ExistsOpenDuplicate(creativeID, eventType, newValue string) (b
 	return s.repo.ExistsOpenDuplicate(creativeID, eventType, newValue)
 }
 
-func toResponse(l FraudLog) dto.FraudLogResponse {
+func toResponse(l FraudLogWithNames) dto.FraudLogResponse {
 	r := dto.FraudLogResponse{
 		ID:            l.ID,
-		BrandID:       l.BrandID,
 		AdAccountID:   l.AdAccountID,
-		CampaignID:    l.CampaignID,
-		AdsetID:       l.AdsetID,
-		AdID:          l.AdID,
 		CreativeID:    l.CreativeID,
 		EventType:     l.EventType,
 		Severity:      l.Severity,
@@ -107,6 +103,31 @@ func toResponse(l FraudLog) dto.FraudLogResponse {
 		Status:        l.Status,
 		CreatedAt:     l.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt:     l.UpdatedAt.Format("2006-01-02 15:04:05"),
+	}
+
+	if l.BrandID != nil && l.BrandName != nil {
+		r.Brand = &dto.SimpleBrand{
+			ID:   *l.BrandID,
+			Name: *l.BrandName,
+		}
+	}
+	if l.CampaignID != nil && l.CampaignName != nil {
+		r.Campaign = &dto.SimpleCampaign{
+			ID:   *l.CampaignID,
+			Name: *l.CampaignName,
+		}
+	}
+	if l.AdsetID != nil && l.AdSetName != nil {
+		r.Adset = &dto.SimpleAdSet{
+			ID:   *l.AdsetID,
+			Name: *l.AdSetName,
+		}
+	}
+	if l.AdID != nil && l.AdName != nil {
+		r.Ad = &dto.SimpleAd{
+			ID:   *l.AdID,
+			Name: *l.AdName,
+		}
 	}
 	if l.DetectedAt != nil {
 		s := l.DetectedAt.Format("2006-01-02 15:04:05")

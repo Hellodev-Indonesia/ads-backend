@@ -59,24 +59,24 @@ func (_m *MockRepository) ExistsOpenDuplicate(creativeID string, eventType strin
 }
 
 // FindAll provides a mock function with given fields: filter
-func (_m *MockRepository) FindAll(filter dto.FraudLogFilter) ([]FraudLog, int64, error) {
+func (_m *MockRepository) FindAll(filter dto.FraudLogFilter) ([]FraudLogWithNames, int64, error) {
 	ret := _m.Called(filter)
 
 	if len(ret) == 0 {
 		panic("no return value specified for FindAll")
 	}
 
-	var r0 []FraudLog
+	var r0 []FraudLogWithNames
 	var r1 int64
 	var r2 error
-	if rf, ok := ret.Get(0).(func(dto.FraudLogFilter) ([]FraudLog, int64, error)); ok {
+	if rf, ok := ret.Get(0).(func(dto.FraudLogFilter) ([]FraudLogWithNames, int64, error)); ok {
 		return rf(filter)
 	}
-	if rf, ok := ret.Get(0).(func(dto.FraudLogFilter) []FraudLog); ok {
+	if rf, ok := ret.Get(0).(func(dto.FraudLogFilter) []FraudLogWithNames); ok {
 		r0 = rf(filter)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]FraudLog)
+			r0 = ret.Get(0).([]FraudLogWithNames)
 		}
 	}
 
@@ -96,23 +96,23 @@ func (_m *MockRepository) FindAll(filter dto.FraudLogFilter) ([]FraudLog, int64,
 }
 
 // FindByID provides a mock function with given fields: id
-func (_m *MockRepository) FindByID(id uint64) (*FraudLog, error) {
+func (_m *MockRepository) FindByID(id uint64) (*FraudLogWithNames, error) {
 	ret := _m.Called(id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for FindByID")
 	}
 
-	var r0 *FraudLog
+	var r0 *FraudLogWithNames
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint64) (*FraudLog, error)); ok {
+	if rf, ok := ret.Get(0).(func(uint64) (*FraudLogWithNames, error)); ok {
 		return rf(id)
 	}
-	if rf, ok := ret.Get(0).(func(uint64) *FraudLog); ok {
+	if rf, ok := ret.Get(0).(func(uint64) *FraudLogWithNames); ok {
 		r0 = rf(id)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*FraudLog)
+			r0 = ret.Get(0).(*FraudLogWithNames)
 		}
 	}
 

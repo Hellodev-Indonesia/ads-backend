@@ -51,14 +51,16 @@ func TestService_FindByID(t *testing.T) {
 
 	now := time.Now()
 	msg := "test message"
-	existing := &fraud_log.FraudLog{
-		ID:         1,
-		BrandID:    ptr(1),
-		EventType:  "fake_click",
-		Message:    &msg,
-		CreatedAt:  now,
-		UpdatedAt:  now,
-		DetectedAt: &now,
+	existing := &fraud_log.FraudLogWithNames{
+		FraudLog: fraud_log.FraudLog{
+			ID:         1,
+			BrandID:    ptr(1),
+			EventType:  "fake_click",
+			Message:    &msg,
+			CreatedAt:  now,
+			UpdatedAt:  now,
+			DetectedAt: &now,
+		},
 	}
 
 	mockRepo.On("FindByID", uint64(1)).Return(existing, nil)
@@ -78,8 +80,16 @@ func TestService_FindAll(t *testing.T) {
 		Limit: 10,
 	}
 
-	logs := []fraud_log.FraudLog{
-		{ID: 1, BrandID: ptr(1), EventType: "fake_click", CreatedAt: time.Now(), UpdatedAt: time.Now()},
+	logs := []fraud_log.FraudLogWithNames{
+		{
+			FraudLog: fraud_log.FraudLog{
+				ID:        1,
+				BrandID:   ptr(1),
+				EventType: "fake_click",
+				CreatedAt: time.Now(),
+				UpdatedAt: time.Now(),
+			},
+		},
 	}
 
 	mockRepo.On("FindAll", filter).Return(logs, int64(1), nil)
@@ -95,12 +105,14 @@ func TestService_Resolve(t *testing.T) {
 	mockRepo, svc := setupService(t)
 
 	now := time.Now()
-	existing := &fraud_log.FraudLog{
-		ID:        1,
-		BrandID:   ptr(1),
-		Status:    "open",
-		CreatedAt: now,
-		UpdatedAt: now,
+	existing := &fraud_log.FraudLogWithNames{
+		FraudLog: fraud_log.FraudLog{
+			ID:        1,
+			BrandID:   ptr(1),
+			Status:    "open",
+			CreatedAt: now,
+			UpdatedAt: now,
+		},
 	}
 
 	mockRepo.On("FindByID", uint64(1)).Return(existing, nil)
@@ -116,12 +128,14 @@ func TestService_Resolve_AlreadyResolved(t *testing.T) {
 	mockRepo, svc := setupService(t)
 
 	now := time.Now()
-	existing := &fraud_log.FraudLog{
-		ID:        1,
-		BrandID:   ptr(1),
-		Status:    "resolved",
-		CreatedAt: now,
-		UpdatedAt: now,
+	existing := &fraud_log.FraudLogWithNames{
+		FraudLog: fraud_log.FraudLog{
+			ID:        1,
+			BrandID:   ptr(1),
+			Status:    "resolved",
+			CreatedAt: now,
+			UpdatedAt: now,
+		},
 	}
 
 	mockRepo.On("FindByID", uint64(1)).Return(existing, nil)
@@ -147,7 +161,7 @@ func TestService_ExistsOpenDuplicate(t *testing.T) {
 func TestService_FindByID_NotFound(t *testing.T) {
 	mockRepo, svc := setupService(t)
 
-	mockRepo.On("FindByID", uint64(99)).Return(nil, errors.New("not found"))
+	mockRepo.On("FindByID", uint64(99)).Return((*fraud_log.FraudLogWithNames)(nil), errors.New("not found"))
 
 	resp, err := svc.FindByID(99)
 

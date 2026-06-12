@@ -2,12 +2,12 @@ package dto
 
 type FraudLogResponse struct {
 	ID            uint64  `json:"id"`
-	BrandID       *uint64 `json:"brand_id,omitempty"`
-	AdAccountID   *string `json:"ad_account_id,omitempty"`
-	CampaignID    *string `json:"campaign_id,omitempty"`
-	AdsetID       *string `json:"adset_id,omitempty"`
-	AdID          *string `json:"ad_id,omitempty"`
-	CreativeID    *string `json:"creative_id,omitempty"`
+	Brand         *SimpleBrand    `json:"brand,omitempty"`
+	AdAccountID   *string         `json:"ad_account_id,omitempty"`
+	Campaign      *SimpleCampaign `json:"campaign,omitempty"`
+	Adset         *SimpleAdSet    `json:"adset,omitempty"`
+	Ad            *SimpleAd       `json:"ad,omitempty"`
+	CreativeID    *string         `json:"creative_id,omitempty"`
 	EventType     string  `json:"event_type"`
 	Severity      string  `json:"severity"`
 	OldValue      *string `json:"old_value,omitempty"`
@@ -19,6 +19,26 @@ type FraudLogResponse struct {
 	ResolvedAt    *string `json:"resolved_at,omitempty"`
 	CreatedAt     string  `json:"created_at"`
 	UpdatedAt     string  `json:"updated_at"`
+}
+
+type SimpleBrand struct {
+	ID   uint64 `json:"id"`
+	Name string `json:"name"`
+}
+
+type SimpleCampaign struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type SimpleAdSet struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type SimpleAd struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type FraudLogFilter struct {

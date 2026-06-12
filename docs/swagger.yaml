@@ -208,16 +208,16 @@ definitions:
     type: object
   github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse:
     properties:
+      ad:
+        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd'
       ad_account_id:
         type: string
-      ad_id:
-        type: string
-      adset_id:
-        type: string
-      brand_id:
-        type: integer
-      campaign_id:
-        type: string
+      adset:
+        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet'
+      brand:
+        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleBrand'
+      campaign:
+        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleCampaign'
       created_at:
         type: string
       creative_id:
@@ -243,6 +243,34 @@ definitions:
       status:
         type: string
       updated_at:
+        type: string
+    type: object
+  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleBrand:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleCampaign:
+    properties:
+      id:
+        type: string
+      name:
         type: string
     type: object
   github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest:

@@ -4652,20 +4652,20 @@ const docTemplate = `{
         "github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse": {
             "type": "object",
             "properties": {
+                "ad": {
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd"
+                },
                 "ad_account_id": {
                     "type": "string"
                 },
-                "ad_id": {
-                    "type": "string"
+                "adset": {
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet"
                 },
-                "adset_id": {
-                    "type": "string"
+                "brand": {
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleBrand"
                 },
-                "brand_id": {
-                    "type": "integer"
-                },
-                "campaign_id": {
-                    "type": "string"
+                "campaign": {
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleCampaign"
                 },
                 "created_at": {
                     "type": "string"
@@ -4704,6 +4704,50 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleBrand": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleCampaign": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 }
             }

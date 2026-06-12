@@ -8,9 +8,17 @@ import (
 type Repository interface {
 	Create(log *FraudLog) error
 	Update(log *FraudLog) error
-	FindByID(id uint64) (*FraudLog, error)
-	FindAll(filter dto.FraudLogFilter) ([]FraudLog, int64, error)
+	FindByID(id uint64) (*FraudLogWithNames, error)
+	FindAll(filter dto.FraudLogFilter) ([]FraudLogWithNames, int64, error)
 	ExistsOpenDuplicate(creativeID, eventType, newValue string) (bool, error)
+}
+
+type FraudLogWithNames struct {
+	FraudLog
+	BrandName    *string `gorm:"column:brand_name"`
+	CampaignName *string `gorm:"column:campaign_name"`
+	AdSetName    *string `gorm:"column:adset_name"`
+	AdName       *string `gorm:"column:ad_name"`
 }
 
 type repository struct {
@@ -29,40 +37,46 @@ func (r *repository) Update(log *FraudLog) error {
 	return r.db.Save(log).Error
 }
 
-func (r *repository) FindByID(id uint64) (*FraudLog, error) {
-	var log FraudLog
-	err := r.db.First(&log, id).Error
+func (r *repository) FindByID(id uint64) (*FraudLogWithNames, error) {
+	var log FraudLogWithNames
+	err := r.db.Model(&FraudLog{}).
+		Select("fraud_logs.*, b.name as brand_name, c.name as campaign_name, s.name as adset_name, a.name as ad_name").
+		Joins("LEFT JOIN brands b ON fraud_logs.brand_id = b.id").
+		Joins("LEFT JOIN meta_campaigns c ON fraud_logs.campaign_id = c.id").
+		Joins("LEFT JOIN meta_ad_sets s ON fraud_logs.adset_id = s.id").
+		Joins("LEFT JOIN meta_ads a ON fraud_logs.ad_id = a.id").
+		First(&log, id).Error
 	return &log, err
 }
 
-func (r *repository) FindAll(filter dto.FraudLogFilter) ([]FraudLog, int64, error) {
-	var logs []FraudLog
+func (r *repository) FindAll(filter dto.FraudLogFilter) ([]FraudLogWithNames, int64, error) {
+	var logs []FraudLogWithNames
 	var total int64
 
 	q := r.db.Model(&FraudLog{})
 	if filter.BrandID != nil {
-		q = q.Where("brand_id = ?", *filter.BrandID)
+		q = q.Where("fraud_logs.brand_id = ?", *filter.BrandID)
 	}
 	if filter.AdAccountID != "" {
-		q = q.Where("ad_account_id = ?", filter.AdAccountID)
+		q = q.Where("fraud_logs.ad_account_id = ?", filter.AdAccountID)
 	}
 	if filter.CampaignID != "" {
-		q = q.Where("campaign_id = ?", filter.CampaignID)
+		q = q.Where("fraud_logs.campaign_id = ?", filter.CampaignID)
 	}
 	if filter.CreativeID != "" {
-		q = q.Where("creative_id = ?", filter.CreativeID)
+		q = q.Where("fraud_logs.creative_id = ?", filter.CreativeID)
 	}
 	if filter.Severity != "" {
-		q = q.Where("severity = ?", filter.Severity)
+		q = q.Where("fraud_logs.severity = ?", filter.Severity)
 	}
 	if filter.Status != "" {
-		q = q.Where("status = ?", filter.Status)
+		q = q.Where("fraud_logs.status = ?", filter.Status)
 	}
 	if filter.DateStart != "" {
-		q = q.Where("created_at >= ?", filter.DateStart)
+		q = q.Where("fraud_logs.created_at >= ?", filter.DateStart)
 	}
 	if filter.DateStop != "" {
-		q = q.Where("created_at <= ?", filter.DateStop+" 23:59:59")
+		q = q.Where("fraud_logs.created_at <= ?", filter.DateStop+" 23:59:59")
 	}
 
 	if err := q.Count(&total).Error; err != nil {
@@ -78,7 +92,13 @@ func (r *repository) FindAll(filter dto.FraudLogFilter) ([]FraudLog, int64, erro
 		page = 1
 	}
 
-	err := q.Order("created_at DESC").Limit(limit).Offset((page - 1) * limit).Find(&logs).Error
+	q = q.Select("fraud_logs.*, b.name as brand_name, c.name as campaign_name, s.name as adset_name, a.name as ad_name").
+		Joins("LEFT JOIN brands b ON fraud_logs.brand_id = b.id").
+		Joins("LEFT JOIN meta_campaigns c ON fraud_logs.campaign_id = c.id").
+		Joins("LEFT JOIN meta_ad_sets s ON fraud_logs.adset_id = s.id").
+		Joins("LEFT JOIN meta_ads a ON fraud_logs.ad_id = a.id")
+
+	err := q.Order("fraud_logs.created_at DESC").Limit(limit).Offset((page - 1) * limit).Find(&logs).Error
 	return logs, total, err
 }
 
