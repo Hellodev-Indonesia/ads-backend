@@ -146,9 +146,9 @@ func (_m *MockRepository) FindSimpleListByBrand(brandID uint64) ([]dto.SimpleLis
 	return r0, r1
 }
 
-// GetSummaryByBrand provides a mock function with given fields: brandID, dateStart, dateStop
-func (_m *MockRepository) GetSummaryByBrand(brandID uint64, dateStart string, dateStop string) ([]InsightSummaryRow, error) {
-	ret := _m.Called(brandID, dateStart, dateStop)
+// GetSummaryByBrand provides a mock function with given fields: brandID, dateStart, dateStop, campaignIDs, adsetIDs
+func (_m *MockRepository) GetSummaryByBrand(brandID uint64, dateStart string, dateStop string, campaignIDs []string, adsetIDs []string) ([]InsightSummaryRow, error) {
+	ret := _m.Called(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetSummaryByBrand")
@@ -156,19 +156,19 @@ func (_m *MockRepository) GetSummaryByBrand(brandID uint64, dateStart string, da
 
 	var r0 []InsightSummaryRow
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint64, string, string) ([]InsightSummaryRow, error)); ok {
-		return rf(brandID, dateStart, dateStop)
+	if rf, ok := ret.Get(0).(func(uint64, string, string, []string, []string) ([]InsightSummaryRow, error)); ok {
+		return rf(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
 	}
-	if rf, ok := ret.Get(0).(func(uint64, string, string) []InsightSummaryRow); ok {
-		r0 = rf(brandID, dateStart, dateStop)
+	if rf, ok := ret.Get(0).(func(uint64, string, string, []string, []string) []InsightSummaryRow); ok {
+		r0 = rf(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]InsightSummaryRow)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(uint64, string, string) error); ok {
-		r1 = rf(brandID, dateStart, dateStop)
+	if rf, ok := ret.Get(1).(func(uint64, string, string, []string, []string) error); ok {
+		r1 = rf(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
 	} else {
 		r1 = ret.Error(1)
 	}

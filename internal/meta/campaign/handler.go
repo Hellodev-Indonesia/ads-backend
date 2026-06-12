@@ -109,6 +109,8 @@ func (h *Handler) GetCampaignsByBrand(c *gin.Context) {
 // @Param        brand_id       path      int     true   "Brand ID"
 // @Param        date_start     query     string  false  "Start Date (YYYY-MM-DD)"
 // @Param        date_stop      query     string  false  "Stop Date (YYYY-MM-DD)"
+// @Param        campaign_ids   query     []string false "Filter by Campaign IDs"
+// @Param        adset_ids      query     []string false "Filter by AdSet IDs"
 // @Success      200            {object}  response.Response{data=dto.CampaignSummaryResponse}
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
@@ -124,8 +126,10 @@ func (h *Handler) GetCampaignSummaryByBrand(c *gin.Context) {
 
 	dateStart := c.Query("date_start")
 	dateStop := c.Query("date_stop")
+	campaignIDs := c.QueryArray("campaign_ids")
+	adsetIDs := c.QueryArray("adset_ids")
 
-	resp, err := h.service.GetSummaryByBrand(brandID, dateStart, dateStop)
+	resp, err := h.service.GetSummaryByBrand(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
 		return

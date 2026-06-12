@@ -3635,6 +3635,26 @@ const docTemplate = `{
                         "description": "Stop Date (YYYY-MM-DD)",
                         "name": "date_stop",
                         "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Filter by Campaign IDs",
+                        "name": "campaign_ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Filter by AdSet IDs",
+                        "name": "adset_ids",
+                        "in": "query"
                     }
                 ],
                 "responses": {

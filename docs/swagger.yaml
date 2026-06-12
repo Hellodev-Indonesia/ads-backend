@@ -3253,6 +3253,20 @@ paths:
         in: query
         name: date_stop
         type: string
+      - collectionFormat: csv
+        description: Filter by Campaign IDs
+        in: query
+        items:
+          type: string
+        name: campaign_ids
+        type: array
+      - collectionFormat: csv
+        description: Filter by AdSet IDs
+        in: query
+        items:
+          type: string
+        name: adset_ids
+        type: array
       produces:
       - application/json
       responses:

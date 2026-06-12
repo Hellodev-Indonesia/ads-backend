@@ -35,7 +35,7 @@ type Repository interface {
 	UpsertBatch(campaigns []MetaCampaign) error
 	FindAll(filter CampaignFilter) ([]MetaCampaign, int64, error)
 	FindByID(id string) (*MetaCampaign, error)
-	GetSummaryByBrand(brandID uint64, dateStart, dateStop string) ([]InsightSummaryRow, error)
+	GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) ([]InsightSummaryRow, error)
 	FindCampaignDashboard(filter CampaignFilter) ([]campaignDashboardScan, int64, error)
 	FindSimpleListByBrand(brandID uint64) ([]dto.SimpleListResponse, error)
 }
@@ -102,7 +102,7 @@ func (r *repository) FindByID(id string) (*MetaCampaign, error) {
 	return &campaign, err
 }
 
-func (r *repository) GetSummaryByBrand(brandID uint64, dateStart, dateStop string) ([]InsightSummaryRow, error) {
+func (r *repository) GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) ([]InsightSummaryRow, error) {
 	var rows []InsightSummaryRow
 	query := r.db.Table("meta_insights").
 		Select("spend, impressions, reach, actions").
@@ -114,6 +114,12 @@ func (r *repository) GetSummaryByBrand(brandID uint64, dateStart, dateStop strin
 	}
 	if dateStop != "" {
 		query = query.Where("date_stop <= ?", dateStop)
+	}
+	if len(campaignIDs) > 0 {
+		query = query.Where("campaign_id IN ?", campaignIDs)
+	}
+	if len(adsetIDs) > 0 {
+		query = query.Where("campaign_id IN (SELECT campaign_id FROM meta_ad_sets WHERE id IN ?)", adsetIDs)
 	}
 
 	err := query.Scan(&rows).Error

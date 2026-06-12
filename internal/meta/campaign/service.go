@@ -21,7 +21,7 @@ type Service interface {
 	// DB reads (used by handlers)
 	GetCampaigns(filter CampaignFilter) ([]dto.CampaignResponse, *response.PaginationMeta, error)
 	GetCampaignByID(id string) (*dto.CampaignResponse, error)
-	GetSummaryByBrand(brandID uint64, dateStart, dateStop string) (*dto.CampaignSummaryResponse, error)
+	GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) (*dto.CampaignSummaryResponse, error)
 	GetCampaignDashboard(filter CampaignFilter) ([]dto.CampaignDashboardRow, *response.PaginationMeta, error)
 	GetCampaignListByBrand(brandID uint64) ([]dto.SimpleListResponse, error)
 
@@ -92,8 +92,8 @@ type metaAction struct {
 	Value      string `json:"value"`
 }
 
-func (s *serviceImpl) GetSummaryByBrand(brandID uint64, dateStart, dateStop string) (*dto.CampaignSummaryResponse, error) {
-	rows, err := s.repo.GetSummaryByBrand(brandID, dateStart, dateStop)
+func (s *serviceImpl) GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) (*dto.CampaignSummaryResponse, error) {
+	rows, err := s.repo.GetSummaryByBrand(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get summary: %w", err)
 	}
