@@ -14,3 +14,7 @@ type ContactPerson struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
+
+func (ContactPerson) TableName() string {
+	return "contact_persons"
+}
