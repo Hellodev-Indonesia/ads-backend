@@ -4655,8 +4655,8 @@ const docTemplate = `{
                 "ad": {
                     "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd"
                 },
-                "ad_account_id": {
-                    "type": "string"
+                "ad_account": {
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdAccount"
                 },
                 "adset": {
                     "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet"
@@ -4719,6 +4719,20 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdAccount": {
+            "type": "object",
+            "properties": {
+                "business_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet": {
             "type": "object",
             "properties": {
@@ -4737,6 +4751,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "photo": {
                     "type": "string"
                 }
             }

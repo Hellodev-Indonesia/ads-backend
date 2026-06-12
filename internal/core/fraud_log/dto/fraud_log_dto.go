@@ -2,8 +2,8 @@ package dto
 
 type FraudLogResponse struct {
 	ID            uint64  `json:"id"`
-	Brand         *SimpleBrand    `json:"brand,omitempty"`
-	AdAccountID   *string         `json:"ad_account_id,omitempty"`
+	Brand         *SimpleBrand     `json:"brand,omitempty"`
+	AdAccount     *SimpleAdAccount `json:"ad_account,omitempty"`
 	Campaign      *SimpleCampaign `json:"campaign,omitempty"`
 	Adset         *SimpleAdSet    `json:"adset,omitempty"`
 	Ad            *SimpleAd       `json:"ad,omitempty"`
@@ -22,8 +22,15 @@ type FraudLogResponse struct {
 }
 
 type SimpleBrand struct {
-	ID   uint64 `json:"id"`
-	Name string `json:"name"`
+	ID    uint64  `json:"id"`
+	Name  string  `json:"name"`
+	Photo *string `json:"photo,omitempty"`
+}
+
+type SimpleAdAccount struct {
+	ID           string  `json:"id"`
+	Name         string  `json:"name"`
+	BusinessName *string `json:"business_name,omitempty"`
 }
 
 type SimpleCampaign struct {

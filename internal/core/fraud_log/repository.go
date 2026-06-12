@@ -15,10 +15,13 @@ type Repository interface {
 
 type FraudLogWithNames struct {
 	FraudLog
-	BrandName    *string `gorm:"column:brand_name"`
-	CampaignName *string `gorm:"column:campaign_name"`
-	AdSetName    *string `gorm:"column:adset_name"`
-	AdName       *string `gorm:"column:ad_name"`
+	BrandName             *string `gorm:"column:brand_name"`
+	BrandPhoto            *string `gorm:"column:brand_photo"`
+	AdAccountName         *string `gorm:"column:ad_account_name"`
+	AdAccountBusinessName *string `gorm:"column:ad_account_business_name"`
+	CampaignName          *string `gorm:"column:campaign_name"`
+	AdSetName             *string `gorm:"column:adset_name"`
+	AdName                *string `gorm:"column:ad_name"`
 }
 
 type repository struct {
@@ -40,8 +43,9 @@ func (r *repository) Update(log *FraudLog) error {
 func (r *repository) FindByID(id uint64) (*FraudLogWithNames, error) {
 	var log FraudLogWithNames
 	err := r.db.Model(&FraudLog{}).
-		Select("fraud_logs.*, b.name as brand_name, c.name as campaign_name, s.name as adset_name, a.name as ad_name").
+		Select("fraud_logs.*, b.name as brand_name, b.photo as brand_photo, acc.name as ad_account_name, acc.business_name as ad_account_business_name, c.name as campaign_name, s.name as adset_name, a.name as ad_name").
 		Joins("LEFT JOIN brands b ON fraud_logs.brand_id = b.id").
+		Joins("LEFT JOIN meta_ad_accounts acc ON fraud_logs.ad_account_id = acc.id").
 		Joins("LEFT JOIN meta_campaigns c ON fraud_logs.campaign_id = c.id").
 		Joins("LEFT JOIN meta_ad_sets s ON fraud_logs.adset_id = s.id").
 		Joins("LEFT JOIN meta_ads a ON fraud_logs.ad_id = a.id").
@@ -92,8 +96,9 @@ func (r *repository) FindAll(filter dto.FraudLogFilter) ([]FraudLogWithNames, in
 		page = 1
 	}
 
-	q = q.Select("fraud_logs.*, b.name as brand_name, c.name as campaign_name, s.name as adset_name, a.name as ad_name").
+	q = q.Select("fraud_logs.*, b.name as brand_name, b.photo as brand_photo, acc.name as ad_account_name, acc.business_name as ad_account_business_name, c.name as campaign_name, s.name as adset_name, a.name as ad_name").
 		Joins("LEFT JOIN brands b ON fraud_logs.brand_id = b.id").
+		Joins("LEFT JOIN meta_ad_accounts acc ON fraud_logs.ad_account_id = acc.id").
 		Joins("LEFT JOIN meta_campaigns c ON fraud_logs.campaign_id = c.id").
 		Joins("LEFT JOIN meta_ad_sets s ON fraud_logs.adset_id = s.id").
 		Joins("LEFT JOIN meta_ads a ON fraud_logs.ad_id = a.id")

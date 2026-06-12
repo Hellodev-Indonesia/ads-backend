@@ -210,8 +210,8 @@ definitions:
     properties:
       ad:
         $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd'
-      ad_account_id:
-        type: string
+      ad_account:
+        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdAccount'
       adset:
         $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet'
       brand:
@@ -252,6 +252,15 @@ definitions:
       name:
         type: string
     type: object
+  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdAccount:
+    properties:
+      business_name:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
   github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet:
     properties:
       id:
@@ -264,6 +273,8 @@ definitions:
       id:
         type: integer
       name:
+        type: string
+      photo:
         type: string
     type: object
   github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleCampaign:

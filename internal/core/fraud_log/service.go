@@ -92,7 +92,6 @@ func (s *service) ExistsOpenDuplicate(creativeID, eventType, newValue string) (b
 func toResponse(l FraudLogWithNames) dto.FraudLogResponse {
 	r := dto.FraudLogResponse{
 		ID:            l.ID,
-		AdAccountID:   l.AdAccountID,
 		CreativeID:    l.CreativeID,
 		EventType:     l.EventType,
 		Severity:      l.Severity,
@@ -107,8 +106,16 @@ func toResponse(l FraudLogWithNames) dto.FraudLogResponse {
 
 	if l.BrandID != nil && l.BrandName != nil {
 		r.Brand = &dto.SimpleBrand{
-			ID:   *l.BrandID,
-			Name: *l.BrandName,
+			ID:    *l.BrandID,
+			Name:  *l.BrandName,
+			Photo: l.BrandPhoto,
+		}
+	}
+	if l.AdAccountID != nil && l.AdAccountName != nil {
+		r.AdAccount = &dto.SimpleAdAccount{
+			ID:           *l.AdAccountID,
+			Name:         *l.AdAccountName,
+			BusinessName: l.AdAccountBusinessName,
 		}
 	}
 	if l.CampaignID != nil && l.CampaignName != nil {
