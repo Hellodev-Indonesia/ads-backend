@@ -3,6 +3,7 @@ package campaign
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/alex/ads_backend/internal/meta/campaign/dto"
 	"github.com/alex/ads_backend/pkg/response"
@@ -86,8 +87,8 @@ func (h *Handler) GetCampaignsByBrand(c *gin.Context) {
 		Search:      c.Query("search"),
 		DateStart:   c.Query("date_start"),
 		DateStop:    c.Query("date_stop"),
-		CampaignIDs: c.QueryArray("campaign_ids"),
-		AdSetIDs:    c.QueryArray("adset_ids"),
+		CampaignIDs: parseQueryArray(c, "campaign_ids"),
+		AdSetIDs:    parseQueryArray(c, "adset_ids"),
 		Page:        parseQueryInt(c, "page", 1),
 		Limit:       parseQueryInt(c, "limit", 25),
 	}
@@ -203,8 +204,8 @@ func (h *Handler) GetCampaignDashboard(c *gin.Context) {
 		Search:      c.Query("search"),
 		DateStart:   c.Query("date_start"),
 		DateStop:    c.Query("date_stop"),
-		CampaignIDs: c.QueryArray("campaign_ids"),
-		AdSetIDs:    c.QueryArray("adset_ids"),
+		CampaignIDs: parseQueryArray(c, "campaign_ids"),
+		AdSetIDs:    parseQueryArray(c, "adset_ids"),
 		Page:        parseQueryInt(c, "page", 1),
 		Limit:       parseQueryInt(c, "limit", 25),
 	}
@@ -228,4 +229,35 @@ func parseQueryInt(c *gin.Context, key string, defaultVal int) int {
 		return defaultVal
 	}
 	return v
+}
+
+func parseQueryArray(c *gin.Context, key string) []string {
+	vals := c.QueryArray(key)
+	
+	// If the array is empty, check if it's passed as a single string (query params without [])
+	if len(vals) == 0 {
+		val := c.Query(key)
+		if val != "" {
+			vals = []string{val}
+		}
+	}
+	
+	var result []string
+	for _, v := range vals {
+		if strings.Contains(v, ",") {
+			parts := strings.Split(v, ",")
+			for _, p := range parts {
+				trimmed := strings.TrimSpace(p)
+				if trimmed != "" {
+					result = append(result, trimmed)
+				}
+			}
+		} else {
+			trimmed := strings.TrimSpace(v)
+			if trimmed != "" {
+				result = append(result, trimmed)
+			}
+		}
+	}
+	return result
 }

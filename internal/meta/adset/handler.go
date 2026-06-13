@@ -3,6 +3,7 @@ package adset
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/alex/ads_backend/internal/meta/adset/dto"
 	"github.com/alex/ads_backend/pkg/response"
@@ -82,8 +83,8 @@ func (h *Handler) GetAdSetsByBrand(c *gin.Context) {
 	filter := AdSetFilter{
 		BrandID:     &brandID,
 		CampaignID:  c.Query("campaign_id"),
-		CampaignIDs: c.QueryArray("campaign_ids"),
-		AdSetIDs:    c.QueryArray("adset_ids"),
+		CampaignIDs: parseQueryArray(c, "campaign_ids"),
+		AdSetIDs:    parseQueryArray(c, "adset_ids"),
 		Status:      c.Query("status"),
 		Search:      c.Query("search"),
 		DateStart:   c.Query("date_start"),
@@ -133,7 +134,7 @@ func (h *Handler) GetAdSetListByBrand(c *gin.Context) {
 		return
 	}
 
-	campaignIDs := c.QueryArray("campaign_ids")
+	campaignIDs := parseQueryArray(c, "campaign_ids")
 
 	resp, err := h.service.GetAdSetListByBrand(brandID, campaignIDs)
 	if err != nil {
@@ -176,8 +177,8 @@ func (h *Handler) GetAdSetDashboard(c *gin.Context) {
 		AccountID:   c.Query("ad_account_id"),
 		BrandID:     brandID,
 		CampaignID:  c.Query("campaign_id"),
-		CampaignIDs: c.QueryArray("campaign_ids"),
-		AdSetIDs:    c.QueryArray("adset_ids"),
+		CampaignIDs: parseQueryArray(c, "campaign_ids"),
+		AdSetIDs:    parseQueryArray(c, "adset_ids"),
 		Status:      c.Query("status"),
 		Search:      c.Query("search"),
 		DateStart:   c.Query("date_start"),
@@ -193,4 +194,32 @@ func (h *Handler) GetAdSetDashboard(c *gin.Context) {
 	}
 
 	response.SuccessWithPagination(c, "Successfully retrieved adset dashboard", rows, meta)
+}
+
+func parseQueryArray(c *gin.Context, key string) []string {
+	vals := c.QueryArray(key)
+	if len(vals) == 0 {
+		val := c.Query(key)
+		if val != "" {
+			vals = []string{val}
+		}
+	}
+	var result []string
+	for _, v := range vals {
+		if strings.Contains(v, ",") {
+			parts := strings.Split(v, ",")
+			for _, p := range parts {
+				trimmed := strings.TrimSpace(p)
+				if trimmed != "" {
+					result = append(result, trimmed)
+				}
+			}
+		} else {
+			trimmed := strings.TrimSpace(v)
+			if trimmed != "" {
+				result = append(result, trimmed)
+			}
+		}
+	}
+	return result
 }
