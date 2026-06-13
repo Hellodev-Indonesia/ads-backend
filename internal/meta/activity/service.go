@@ -15,6 +15,7 @@ type Service interface {
 	FindAll(filter dto.ActivityFilter) ([]dto.ActivityResponse, int64, error)
 	FindAllByBrand(brandID uint64, filter dto.ActivityFilter) ([]dto.ActivityResponse, int64, error)
 	SyncActivities(adAccountID string) (int, error)
+	FindLatestByObjectIDs(adAccountID string, objectIDs []string) (*MetaActivity, error)
 }
 
 type serviceImpl struct {
@@ -50,6 +51,10 @@ func (s *serviceImpl) FindAllByBrand(brandID uint64, filter dto.ActivityFilter) 
 		results = append(results, toResponse(r))
 	}
 	return results, total, nil
+}
+
+func (s *serviceImpl) FindLatestByObjectIDs(adAccountID string, objectIDs []string) (*MetaActivity, error) {
+	return s.repo.FindLatestByObjectIDs(adAccountID, objectIDs)
 }
 
 func toResponse(act ActivityWithAdAccount) dto.ActivityResponse {
@@ -166,7 +171,6 @@ func (s *serviceImpl) SyncActivities(adAccountID string) (int, error) {
 		}
 
 		models = append(models, MetaActivity{
-			ID:          item.Id,
 			AdAccountID: adAccountID,
 			ActorID:     item.ActorId,
 			ActorName:   item.ActorName,

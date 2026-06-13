@@ -14,6 +14,7 @@ import (
 	fraudlogDto "github.com/alex/ads_backend/internal/core/fraud_log/dto"
 	"github.com/alex/ads_backend/internal/meta/ad_account"
 	adsDto "github.com/alex/ads_backend/internal/meta/ads/dto"
+	"github.com/alex/ads_backend/internal/meta/activity"
 	"github.com/alex/ads_backend/internal/notification/alert"
 	alertDto "github.com/alex/ads_backend/internal/notification/alert/dto"
 	"github.com/alex/ads_backend/pkg/meta_client"
@@ -76,6 +77,7 @@ type serviceImpl struct {
 	whitelistSvc  brand_whitelist_rule.Service
 	fraudLogSvc   fraudlog.Service
 	alertSvc      alert.Service
+	activitySvc   activity.Service
 }
 
 func NewService(
@@ -85,6 +87,7 @@ func NewService(
 	whitelistSvc brand_whitelist_rule.Service,
 	fraudLogSvc fraudlog.Service,
 	alertSvc alert.Service,
+	activitySvc activity.Service,
 ) Service {
 	return &serviceImpl{
 		client:        client,
@@ -93,6 +96,7 @@ func NewService(
 		whitelistSvc:  whitelistSvc,
 		fraudLogSvc:   fraudLogSvc,
 		alertSvc:      alertSvc,
+		activitySvc:   activitySvc,
 	}
 }
 
@@ -247,6 +251,26 @@ func (s *serviceImpl) runPolicyCheck(
 		matchedRuleID = &result.Rule.ID
 	}
 
+	// Fetch actor from recent activities
+	var actorID, actorName *string
+	// The object updated might be the Creative, Ad, AdSet, or Campaign
+	objectIDs := []string{creative.CreativeID}
+	if ad.ID != "" {
+		objectIDs = append(objectIDs, ad.ID)
+	}
+	if ad.AdSetID != "" {
+		objectIDs = append(objectIDs, ad.AdSetID)
+	}
+	if ad.CampaignID != "" {
+		objectIDs = append(objectIDs, ad.CampaignID)
+	}
+	
+	latestActivity, err := s.activitySvc.FindLatestByObjectIDs(adAccountID, objectIDs)
+	if err == nil && latestActivity != nil {
+		actorID = latestActivity.ActorID
+		actorName = latestActivity.ActorName
+	}
+
 	msg := buildMessage(eventType, creative.CreativeID, targetURL)
 	input := fraudlogDto.CreateFraudLogInput{
 		BrandID:       &brandID,
@@ -256,6 +280,8 @@ func (s *serviceImpl) runPolicyCheck(
 		AdID:          &ad.ID,
 		CreativeID:    &creative.CreativeID,
 		EventType:     eventType,
+		ActorID:       actorID,
+		ActorName:     actorName,
 		Severity:      severity,
 		OldValue:      oldURL,
 		NewValue:      &newVal,

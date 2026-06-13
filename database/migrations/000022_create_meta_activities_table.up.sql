@@ -1,5 +1,5 @@
 CREATE TABLE meta_activities (
-  id VARCHAR(255) PRIMARY KEY,
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
   ad_account_id VARCHAR(255) NOT NULL,
   actor_id VARCHAR(255) NULL,
   actor_name VARCHAR(255) NULL,

@@ -9,6 +9,8 @@ type FraudLogResponse struct {
 	Ad            *SimpleAd       `json:"ad,omitempty"`
 	CreativeID    *string         `json:"creative_id,omitempty"`
 	EventType     string  `json:"event_type"`
+	ActorID       *string `json:"actor_id,omitempty"`
+	ActorName     *string `json:"actor_name,omitempty"`
 	Severity      string  `json:"severity"`
 	OldValue      *string `json:"old_value,omitempty"`
 	NewValue      *string `json:"new_value,omitempty"`
@@ -76,6 +78,8 @@ type CreateFraudLogInput struct {
 	AdID          *string
 	CreativeID    *string
 	EventType     string
+	ActorID       *string
+	ActorName     *string
 	Severity      string
 	OldValue      *string
 	NewValue      *string

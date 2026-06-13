@@ -101,8 +101,8 @@ func RegisterApiRoutes(router *gin.Engine) {
 		adsService := ads.NewService(metaClient, adsRepo)
 		insightService := insight.NewService(metaClient, insightRepo)
 		syncService := sync.NewService(syncRepo)
-		adCreativeService := adcreative.NewService(metaClient, adCreativeRepo, adAccountRepo, whitelistSvc, fraudLogSvc, alertSvc)
 		activityService := activity.NewService(metaClient, activityRepo)
+		adCreativeService := adcreative.NewService(metaClient, adCreativeRepo, adAccountRepo, whitelistSvc, fraudLogSvc, alertSvc, activityService)
 
 		// Sub-module handlers
 		adAccountHandler := ad_account.NewHandler(adAccountService)

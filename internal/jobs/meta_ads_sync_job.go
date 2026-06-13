@@ -380,7 +380,7 @@ func (j *MetaAdsSyncJob) execute(batch *metasync.MetaSyncBatch, insightsOnly boo
 				mu.Unlock()
 			}
 
-			if !accountHasError && !insightsOnly {
+			if !accountHasError {
 				c, err := j.runSyncStep(
 					ctx, batch.ID,
 					metasync.SyncTypeActivities,

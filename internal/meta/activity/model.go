@@ -6,7 +6,7 @@ import (
 )
 
 type MetaActivity struct {
-	ID          string          `gorm:"primaryKey;column:id"`
+	ID          uint64          `gorm:"primaryKey;autoIncrement;column:id"`
 	AdAccountID string          `gorm:"column:ad_account_id"`
 	ActorID     *string         `gorm:"column:actor_id"`
 	ActorName   *string         `gorm:"column:actor_name"`

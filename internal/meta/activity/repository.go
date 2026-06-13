@@ -3,13 +3,13 @@ package activity
 import (
 	"github.com/alex/ads_backend/internal/meta/activity/dto"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type Repository interface {
 	UpsertBatch(activities []MetaActivity) error
 	FindAll(filter dto.ActivityFilter) ([]ActivityWithAdAccount, int64, error)
 	FindAllByBrand(brandID uint64, filter dto.ActivityFilter) ([]ActivityWithAdAccount, int64, error)
+	FindLatestByObjectIDs(adAccountID string, objectIDs []string) (*MetaActivity, error)
 }
 
 type ActivityWithAdAccount struct {
@@ -30,9 +30,7 @@ func (r *repository) UpsertBatch(activities []MetaActivity) error {
 	if len(activities) == 0 {
 		return nil
 	}
-	return r.db.Clauses(clause.OnConflict{
-		UpdateAll: true,
-	}).CreateInBatches(activities, 100).Error
+	return r.db.CreateInBatches(activities, 100).Error
 }
 
 func (r *repository) FindAllByBrand(brandID uint64, filter dto.ActivityFilter) ([]ActivityWithAdAccount, int64, error) {
@@ -88,4 +86,15 @@ func (r *repository) FindAll(filter dto.ActivityFilter) ([]ActivityWithAdAccount
 		Scan(&list).Error
 
 	return list, total, err
+}
+
+func (r *repository) FindLatestByObjectIDs(adAccountID string, objectIDs []string) (*MetaActivity, error) {
+	var act MetaActivity
+	err := r.db.Where("ad_account_id = ? AND object_id IN ?", adAccountID, objectIDs).
+		Order("event_time DESC").
+		First(&act).Error
+	if err != nil {
+		return nil, err
+	}
+	return &act, nil
 }

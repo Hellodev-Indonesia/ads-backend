@@ -13,6 +13,8 @@ type FraudLog struct {
 	AdID          *string    `gorm:"size:100" json:"ad_id"`
 	CreativeID    *string    `gorm:"size:100;index" json:"creative_id"`
 	EventType     string     `gorm:"size:100;not null" json:"event_type"`
+	ActorID       *string    `gorm:"size:255" json:"actor_id"`
+	ActorName     *string    `gorm:"size:255" json:"actor_name"`
 	Severity      string     `gorm:"size:50;not null" json:"severity"`
 	OldValue      *string    `gorm:"type:text" json:"old_value"`
 	NewValue      *string    `gorm:"type:text" json:"new_value"`

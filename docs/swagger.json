@@ -4821,6 +4821,12 @@
         "github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse": {
             "type": "object",
             "properties": {
+                "actor_id": {
+                    "type": "string"
+                },
+                "actor_name": {
+                    "type": "string"
+                },
                 "ad": {
                     "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd"
                 },
