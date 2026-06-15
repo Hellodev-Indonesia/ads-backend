@@ -1,12 +1,19 @@
 package dto
 
 type ActivityResponse struct {
-	AdAccount       string `json:"ad_account"`
-	Activity        string `json:"activity"`
-	ActivityDetails string `json:"activity_details"`
-	ItemChanged     string `json:"item_changed"`
-	ChangeBy        string `json:"change_by"`
-	DateAndTime     string `json:"date_and_time"`
+	ID          uint64      `json:"id"`
+	AdAccountID string      `json:"ad_account_id"`
+	AdAccount   string      `json:"ad_account"`
+	ActorID     *string     `json:"actor_id"`
+	ActorName   *string     `json:"actor_name"`
+	ObjectID    *string     `json:"object_id"`
+	ObjectName  *string     `json:"object_name"`
+	ObjectType  *string     `json:"object_type"`
+	EventType   *string     `json:"event_type"`
+	EventTime   *string     `json:"event_time"`
+	ExtraData   interface{} `json:"extra_data"`
+	CreatedAt   string      `json:"created_at"`
+	UpdatedAt   string      `json:"updated_at"`
 }
 
 type ActivityFilter struct {

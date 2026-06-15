@@ -67,69 +67,30 @@ func toResponse(act ActivityWithAdAccount) dto.ActivityResponse {
 		acct = *act.AdAccountBusinessName + " - " + acct
 	}
 
-	// Activity details from extra_data
-	details := ""
+	var extraData interface{}
 	if len(act.ExtraData) > 0 && string(act.ExtraData) != "null" {
-		var extraMap map[string]interface{}
-		if err := json.Unmarshal(act.ExtraData, &extraMap); err == nil {
-			if oldVal, ok := extraMap["old_value"]; ok {
-				if newVal, ok := extraMap["new_value"]; ok {
-					details = fmt.Sprintf("From %v to %v", oldVal, newVal)
-				}
-			}
-		}
+		json.Unmarshal(act.ExtraData, &extraData)
 	}
 
 	eventTimeStr := ""
 	if act.EventTime != nil {
-		eventTimeStr = act.EventTime.Format("02 Jan at 15.04")
-	}
-
-	eventType := ""
-	if act.EventType != nil {
-		eventType = formatEventType(*act.EventType)
-	}
-
-	objName := ""
-	if act.ObjectName != nil {
-		objName = *act.ObjectName
-	} else if act.ObjectID != nil {
-		objName = *act.ObjectID
-	}
-
-	actorName := ""
-	if act.ActorName != nil {
-		actorName = *act.ActorName
+		eventTimeStr = act.EventTime.Format("2006-01-02 15:04:05")
 	}
 
 	return dto.ActivityResponse{
-		AdAccount:       acct,
-		Activity:        eventType,
-		ActivityDetails: details,
-		ItemChanged:     objName,
-		ChangeBy:        actorName,
-		DateAndTime:     eventTimeStr,
-	}
-}
-
-func formatEventType(e string) string {
-	// Simple formatting, e.g. "update_status" -> "Update Status"
-	// For production, a more comprehensive mapping is needed.
-	switch e {
-	case "update_status":
-		return "Update Status"
-	case "update_budget":
-		return "Update Budget"
-	case "create_ad_set":
-		return "Create Ad Set"
-	case "create_campaign":
-		return "Create Campaign"
-	case "create_ad":
-		return "Create Ad"
-	case "update_campaign_name":
-		return "Update Campaign Name"
-	default:
-		return e
+		ID:          act.ID,
+		AdAccountID: act.AdAccountID,
+		AdAccount:   acct,
+		ActorID:     act.ActorID,
+		ActorName:   act.ActorName,
+		ObjectID:    act.ObjectID,
+		ObjectName:  act.ObjectName,
+		ObjectType:  act.ObjectType,
+		EventType:   act.EventType,
+		EventTime:   &eventTimeStr,
+		ExtraData:   extraData,
+		CreatedAt:   act.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:   act.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 }
 

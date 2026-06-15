@@ -387,17 +387,30 @@ definitions:
     type: object
   github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse:
     properties:
-      activity:
+      actor_id:
         type: string
-      activity_details:
+      actor_name:
         type: string
       ad_account:
         type: string
-      change_by:
+      ad_account_id:
         type: string
-      date_and_time:
+      created_at:
         type: string
-      item_changed:
+      event_time:
+        type: string
+      event_type:
+        type: string
+      extra_data: {}
+      id:
+        type: integer
+      object_id:
+        type: string
+      object_name:
+        type: string
+      object_type:
+        type: string
+      updated_at:
         type: string
     type: object
   github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse:
