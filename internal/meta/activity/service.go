@@ -77,10 +77,20 @@ func toResponse(act ActivityWithAdAccount) dto.ActivityResponse {
 		eventTimeStr = act.EventTime.Format("2006-01-02 15:04:05")
 	}
 
+	var brand *dto.SimpleBrand
+	if act.BrandID != nil && act.BrandName != nil {
+		brand = &dto.SimpleBrand{
+			ID:    *act.BrandID,
+			Name:  *act.BrandName,
+			Photo: act.BrandPhoto,
+		}
+	}
+
 	return dto.ActivityResponse{
 		ID:          act.ID,
 		AdAccountID: act.AdAccountID,
 		AdAccount:   acct,
+		Brand:       brand,
 		ActorID:     act.ActorID,
 		ActorName:   act.ActorName,
 		ObjectID:    act.ObjectID,

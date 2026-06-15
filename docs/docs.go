@@ -5114,6 +5114,9 @@ const docTemplate = `{
                 "ad_account_id": {
                     "type": "string"
                 },
+                "brand": {
+                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.SimpleBrand"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -5137,6 +5140,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_activity_dto.SimpleBrand": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photo": {
                     "type": "string"
                 }
             }

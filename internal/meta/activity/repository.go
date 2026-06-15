@@ -16,6 +16,9 @@ type ActivityWithAdAccount struct {
 	MetaActivity
 	AdAccountName         *string `gorm:"column:ad_account_name"`
 	AdAccountBusinessName *string `gorm:"column:ad_account_business_name"`
+	BrandID               *uint64 `gorm:"column:brand_id"`
+	BrandName             *string `gorm:"column:brand_name"`
+	BrandPhoto            *string `gorm:"column:brand_photo"`
 }
 
 type repository struct {
@@ -39,6 +42,7 @@ func (r *repository) FindAllByBrand(brandID uint64, filter dto.ActivityFilter) (
 
 	q := r.db.Table("meta_activities act").
 		Joins("JOIN meta_ad_accounts a ON act.ad_account_id COLLATE utf8mb4_unicode_ci = a.id COLLATE utf8mb4_unicode_ci").
+		Joins("LEFT JOIN brands b ON a.brand_id = b.id").
 		Where("a.brand_id = ?", brandID)
 
 	q.Count(&total)
@@ -52,7 +56,7 @@ func (r *repository) FindAllByBrand(brandID uint64, filter dto.ActivityFilter) (
 		page = 1
 	}
 
-	err := q.Select("act.*, a.name as ad_account_name, a.business_name as ad_account_business_name").
+	err := q.Select("act.*, a.name as ad_account_name, a.business_name as ad_account_business_name, b.id as brand_id, b.name as brand_name, b.photo as brand_photo").
 		Order("act.event_time DESC").
 		Limit(limit).
 		Offset((page - 1) * limit).
@@ -66,7 +70,8 @@ func (r *repository) FindAll(filter dto.ActivityFilter) ([]ActivityWithAdAccount
 	var total int64
 
 	q := r.db.Table("meta_activities act").
-		Joins("JOIN meta_ad_accounts a ON act.ad_account_id COLLATE utf8mb4_unicode_ci = a.id COLLATE utf8mb4_unicode_ci")
+		Joins("JOIN meta_ad_accounts a ON act.ad_account_id COLLATE utf8mb4_unicode_ci = a.id COLLATE utf8mb4_unicode_ci").
+		Joins("LEFT JOIN brands b ON a.brand_id = b.id")
 
 	q.Count(&total)
 
@@ -79,7 +84,7 @@ func (r *repository) FindAll(filter dto.ActivityFilter) ([]ActivityWithAdAccount
 		page = 1
 	}
 
-	err := q.Select("act.*, a.name as ad_account_name, a.business_name as ad_account_business_name").
+	err := q.Select("act.*, a.name as ad_account_name, a.business_name as ad_account_business_name, b.id as brand_id, b.name as brand_name, b.photo as brand_photo").
 		Order("act.event_time DESC").
 		Limit(limit).
 		Offset((page - 1) * limit).

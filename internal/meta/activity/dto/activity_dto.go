@@ -4,6 +4,7 @@ type ActivityResponse struct {
 	ID          uint64      `json:"id"`
 	AdAccountID string      `json:"ad_account_id"`
 	AdAccount   string      `json:"ad_account"`
+	Brand       *SimpleBrand `json:"brand,omitempty"`
 	ActorID     *string     `json:"actor_id"`
 	ActorName   *string     `json:"actor_name"`
 	ObjectID    *string     `json:"object_id"`
@@ -19,4 +20,10 @@ type ActivityResponse struct {
 type ActivityFilter struct {
 	Page  int `form:"page"`
 	Limit int `form:"limit"`
+}
+
+type SimpleBrand struct {
+	ID    uint64  `json:"id"`
+	Name  string  `json:"name"`
+	Photo *string `json:"photo"`
 }

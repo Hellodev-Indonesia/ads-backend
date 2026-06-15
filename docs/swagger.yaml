@@ -395,6 +395,8 @@ definitions:
         type: string
       ad_account_id:
         type: string
+      brand:
+        $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.SimpleBrand'
       created_at:
         type: string
       event_time:
@@ -411,6 +413,15 @@ definitions:
       object_type:
         type: string
       updated_at:
+        type: string
+    type: object
+  github_com_alex_ads_backend_internal_meta_activity_dto.SimpleBrand:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      photo:
         type: string
     type: object
   github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse:
