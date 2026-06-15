@@ -38,7 +38,7 @@ func (r *repository) FindAllByBrand(brandID uint64, filter dto.ActivityFilter) (
 	var total int64
 
 	q := r.db.Table("meta_activities act").
-		Joins("JOIN meta_ad_accounts a ON act.ad_account_id = a.id").
+		Joins("JOIN meta_ad_accounts a ON act.ad_account_id COLLATE utf8mb4_unicode_ci = a.id COLLATE utf8mb4_unicode_ci").
 		Where("a.brand_id = ?", brandID)
 
 	q.Count(&total)
@@ -66,7 +66,7 @@ func (r *repository) FindAll(filter dto.ActivityFilter) ([]ActivityWithAdAccount
 	var total int64
 
 	q := r.db.Table("meta_activities act").
-		Joins("JOIN meta_ad_accounts a ON act.ad_account_id = a.id")
+		Joins("JOIN meta_ad_accounts a ON act.ad_account_id COLLATE utf8mb4_unicode_ci = a.id COLLATE utf8mb4_unicode_ci")
 
 	q.Count(&total)
 
