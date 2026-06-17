@@ -14,6 +14,7 @@ func RegisterRoutes(router *gin.RouterGroup, db *gorm.DB) {
 
 	dashboardRoutes := router.Group("/dashboard")
 	// Require permission reporting.dashboard.view to access these endpoints
+	dashboardRoutes.Use(middleware.AuthMiddleware())
 	dashboardRoutes.Use(middleware.RequirePermission("reporting.dashboard.view"))
 	{
 		dashboardRoutes.GET("/summary", handler.GetSummary)

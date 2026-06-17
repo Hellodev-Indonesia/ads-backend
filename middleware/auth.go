@@ -46,11 +46,33 @@ func AuthMiddleware() gin.HandlerFunc {
 // Otoritas Super Admin akan selalu lolos pengecekan ini
 func RequirePermission(permission string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		roles, _ := c.Get("roles")
-		userRoles := roles.([]string)
+		roles, exists := c.Get("roles")
+		if !exists || roles == nil {
+			response.Unauthorized(c, "Unauthorized")
+			c.Abort()
+			return
+		}
+		
+		userRoles, ok := roles.([]string)
+		if !ok {
+			response.Unauthorized(c, "Invalid roles format")
+			c.Abort()
+			return
+		}
 
-		permissions, _ := c.Get("permissions")
-		userPermissions := permissions.([]string)
+		permissions, exists := c.Get("permissions")
+		if !exists || permissions == nil {
+			response.Unauthorized(c, "Unauthorized")
+			c.Abort()
+			return
+		}
+
+		userPermissions, ok := permissions.([]string)
+		if !ok {
+			response.Unauthorized(c, "Invalid permissions format")
+			c.Abort()
+			return
+		}
 
 		// 1. Cek jika user adalah Super Admin (Bypass semuanya)
 		for _, role := range userRoles {
