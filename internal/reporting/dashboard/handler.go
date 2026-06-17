@@ -31,8 +31,10 @@ func NewDashboardHandler(service DashboardService) *DashboardHandler {
 // @Security     BearerAuth
 func (h *DashboardHandler) GetSummary(c *gin.Context) {
 	ctx := c.Request.Context()
+	startDate := c.Query("start_date")
+	endDate := c.Query("end_date")
 	
-	res, err := h.service.GetSummary(ctx)
+	res, err := h.service.GetSummary(ctx, startDate, endDate)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, "Failed to get dashboard summary", err)
 		return
@@ -52,8 +54,10 @@ func (h *DashboardHandler) GetSummary(c *gin.Context) {
 // @Security     BearerAuth
 func (h *DashboardHandler) GetBrandsMonitoring(c *gin.Context) {
 	ctx := c.Request.Context()
+	startDate := c.Query("start_date")
+	endDate := c.Query("end_date")
 
-	res, err := h.service.GetBrandsMonitoring(ctx)
+	res, err := h.service.GetBrandsMonitoring(ctx, startDate, endDate)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, "Failed to get brands monitoring", err)
 		return
@@ -73,8 +77,10 @@ func (h *DashboardHandler) GetBrandsMonitoring(c *gin.Context) {
 // @Security     BearerAuth
 func (h *DashboardHandler) GetRecentActivities(c *gin.Context) {
 	ctx := c.Request.Context()
+	startDate := c.Query("start_date")
+	endDate := c.Query("end_date")
 
-	res, err := h.service.GetRecentActivities(ctx)
+	res, err := h.service.GetRecentActivities(ctx, startDate, endDate)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, "Failed to get recent activities", err)
 		return

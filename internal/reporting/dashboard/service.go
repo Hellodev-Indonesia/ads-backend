@@ -7,9 +7,9 @@ import (
 )
 
 type DashboardService interface {
-	GetSummary(ctx context.Context) (*dto.SummaryResponse, error)
-	GetBrandsMonitoring(ctx context.Context) ([]dto.BrandMonitoringItem, error)
-	GetRecentActivities(ctx context.Context) ([]dto.RecentActivityItem, error)
+	GetSummary(ctx context.Context, startDate, endDate string) (*dto.SummaryResponse, error)
+	GetBrandsMonitoring(ctx context.Context, startDate, endDate string) ([]dto.BrandMonitoringItem, error)
+	GetRecentActivities(ctx context.Context, startDate, endDate string) ([]dto.RecentActivityItem, error)
 }
 
 type dashboardService struct {
@@ -20,8 +20,8 @@ func NewDashboardService(repo DashboardRepository) DashboardService {
 	return &dashboardService{repo: repo}
 }
 
-func (s *dashboardService) GetSummary(ctx context.Context) (*dto.SummaryResponse, error) {
-	totalSpend, totalOngoingAds, securityIssues, err := s.repo.GetSummaryMetrics(ctx)
+func (s *dashboardService) GetSummary(ctx context.Context, startDate, endDate string) (*dto.SummaryResponse, error) {
+	totalSpend, totalOngoingAds, securityIssues, err := s.repo.GetSummaryMetrics(ctx, startDate, endDate)
 	if err != nil {
 		return nil, err
 	}
@@ -39,8 +39,8 @@ func (s *dashboardService) GetSummary(ctx context.Context) (*dto.SummaryResponse
 	}, nil
 }
 
-func (s *dashboardService) GetBrandsMonitoring(ctx context.Context) ([]dto.BrandMonitoringItem, error) {
-	rawItems, err := s.repo.GetBrandsMonitoring(ctx)
+func (s *dashboardService) GetBrandsMonitoring(ctx context.Context, startDate, endDate string) ([]dto.BrandMonitoringItem, error) {
+	rawItems, err := s.repo.GetBrandsMonitoring(ctx, startDate, endDate)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +59,8 @@ func (s *dashboardService) GetBrandsMonitoring(ctx context.Context) ([]dto.Brand
 	return items, nil
 }
 
-func (s *dashboardService) GetRecentActivities(ctx context.Context) ([]dto.RecentActivityItem, error) {
-	rawItems, err := s.repo.GetRecentActivities(ctx)
+func (s *dashboardService) GetRecentActivities(ctx context.Context, startDate, endDate string) ([]dto.RecentActivityItem, error) {
+	rawItems, err := s.repo.GetRecentActivities(ctx, startDate, endDate)
 	if err != nil {
 		return nil, err
 	}

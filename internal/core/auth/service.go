@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/alex/ads_backend/internal/core/auth/dto"
 	"github.com/alex/ads_backend/internal/core/permission"
@@ -65,7 +66,7 @@ func (s *service) Login(req dto.LoginRequest) (*dto.LoginResponse, error) {
 		return nil, err
 	}
 
-	centrifugoToken, _ := utils.GenerateCentrifugoToken(string(rune(u.ID)))
+	centrifugoToken, _ := utils.GenerateCentrifugoToken(fmt.Sprintf("%d", u.ID))
 
 	userResp := dto.AuthUserResponse{
 		ID:    u.ID,
