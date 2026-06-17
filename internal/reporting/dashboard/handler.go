@@ -14,8 +14,7 @@ type DashboardHandler struct {
 }
 
 var _ = dto.SummaryResponse{}
-var _ = dto.BrandMonitoringResponse{}
-var _ = dto.RecentActivityResponse{}
+
 
 func NewDashboardHandler(service DashboardService) *DashboardHandler {
 	return &DashboardHandler{service: service}

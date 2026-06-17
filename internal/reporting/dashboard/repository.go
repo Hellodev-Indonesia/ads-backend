@@ -99,11 +99,11 @@ func (r *dashboardRepository) GetRecentActivities(ctx context.Context) ([]Recent
 			COALESCE(act.object_name, 'Unknown') as activity_details,
 			COALESCE(act.object_type, 'Item') as item_changed,
 			COALESCE(act.actor_name, 'System') as change_by,
-			act.event_time as event_time
+			COALESCE(act.event_time, act.created_at) as event_time
 		FROM meta_activities act
 		LEFT JOIN meta_ad_accounts a ON act.ad_account_id = a.id
 		LEFT JOIN brands b ON a.brand_id = b.id
-		ORDER BY act.event_time DESC
+		ORDER BY event_time DESC
 		LIMIT 50
 	`
 

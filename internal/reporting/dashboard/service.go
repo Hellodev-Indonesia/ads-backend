@@ -8,8 +8,8 @@ import (
 
 type DashboardService interface {
 	GetSummary(ctx context.Context) (*dto.SummaryResponse, error)
-	GetBrandsMonitoring(ctx context.Context) (*dto.BrandMonitoringResponse, error)
-	GetRecentActivities(ctx context.Context) (*dto.RecentActivityResponse, error)
+	GetBrandsMonitoring(ctx context.Context) ([]dto.BrandMonitoringItem, error)
+	GetRecentActivities(ctx context.Context) ([]dto.RecentActivityItem, error)
 }
 
 type dashboardService struct {
@@ -39,7 +39,7 @@ func (s *dashboardService) GetSummary(ctx context.Context) (*dto.SummaryResponse
 	}, nil
 }
 
-func (s *dashboardService) GetBrandsMonitoring(ctx context.Context) (*dto.BrandMonitoringResponse, error) {
+func (s *dashboardService) GetBrandsMonitoring(ctx context.Context) ([]dto.BrandMonitoringItem, error) {
 	rawItems, err := s.repo.GetBrandsMonitoring(ctx)
 	if err != nil {
 		return nil, err
@@ -56,12 +56,10 @@ func (s *dashboardService) GetBrandsMonitoring(ctx context.Context) (*dto.BrandM
 		})
 	}
 
-	return &dto.BrandMonitoringResponse{
-		Items: items,
-	}, nil
+	return items, nil
 }
 
-func (s *dashboardService) GetRecentActivities(ctx context.Context) (*dto.RecentActivityResponse, error) {
+func (s *dashboardService) GetRecentActivities(ctx context.Context) ([]dto.RecentActivityItem, error) {
 	rawItems, err := s.repo.GetRecentActivities(ctx)
 	if err != nil {
 		return nil, err
@@ -86,7 +84,5 @@ func (s *dashboardService) GetRecentActivities(ctx context.Context) (*dto.Recent
 		})
 	}
 
-	return &dto.RecentActivityResponse{
-		Items: items,
-	}, nil
+	return items, nil
 }

@@ -17,10 +17,7 @@ type BrandMonitoringItem struct {
 	TotalSpends    float64 `json:"total_spends"`
 }
 
-// BrandMonitoringResponse represents the list of brands monitoring.
-type BrandMonitoringResponse struct {
-	Items []BrandMonitoringItem `json:"items"`
-}
+
 
 // RecentActivityItem represents a single recent activity formatted for the dashboard.
 type RecentActivityItem struct {
@@ -34,7 +31,4 @@ type RecentActivityItem struct {
 	DateAndTime     string  `json:"date_and_time"`
 }
 
-// RecentActivityResponse represents the list of recent activities.
-type RecentActivityResponse struct {
-	Items []RecentActivityItem `json:"items"`
-}
+
