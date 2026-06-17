@@ -19,6 +19,7 @@ func NewHandler(service Service) *Handler {
 }
 
 var _ = dto.AdSetResponse{}
+var _ = dto.SimpleListResponse{}
 
 // GetAdSets godoc
 // @Summary      Get AdSets
@@ -121,7 +122,7 @@ func parseQueryInt(c *gin.Context, key string, defaultVal int) int {
 // @Produce      json
 // @Param        brand_id       path      int     true   "Brand ID"
 // @Param        campaign_ids   query     []string false "Filter by campaign IDs" collectionFormat(multi)
-// @Success      200            {object}  response.Response{data=[]dto.SimpleListResponse}
+// @Success      200            {object}  response.Response
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
 // @Security BearerAuth

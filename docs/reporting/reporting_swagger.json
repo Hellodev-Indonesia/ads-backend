@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "ERP Ready Backend for Meta Ads \u0026 Business Management",
-        "title": "Ads Backend API",
+        "description": "Reporting Domain API",
+        "title": "Reporting API",
         "contact": {},
         "version": "1.0"
     },
@@ -77,7 +77,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -85,7 +85,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse"
+                                                "$ref": "#/definitions/dto.AlertResponse"
                                             }
                                         }
                                     }
@@ -129,13 +129,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse"
+                                            "$ref": "#/definitions/dto.AlertResponse"
                                         }
                                     }
                                 }
@@ -178,13 +178,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse"
+                                            "$ref": "#/definitions/dto.AlertResponse"
                                         }
                                     }
                                 }
@@ -214,7 +214,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_auth_dto.LoginRequest"
+                            "$ref": "#/definitions/dto.LoginRequest"
                         }
                     }
                 ],
@@ -224,13 +224,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_auth_dto.LoginResponse"
+                                            "$ref": "#/definitions/dto.LoginResponse"
                                         }
                                     }
                                 }
@@ -240,7 +240,7 @@
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -268,7 +268,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -337,7 +337,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -345,7 +345,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
+                                                "$ref": "#/definitions/dto.WhitelistRuleResponse"
                                             }
                                         }
                                     }
@@ -386,7 +386,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CreateWhitelistRuleRequest"
+                            "$ref": "#/definitions/dto.CreateWhitelistRuleRequest"
                         }
                     }
                 ],
@@ -396,13 +396,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
+                                            "$ref": "#/definitions/dto.WhitelistRuleResponse"
                                         }
                                     }
                                 }
@@ -444,7 +444,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLRequest"
+                            "$ref": "#/definitions/dto.CheckURLRequest"
                         }
                     }
                 ],
@@ -454,13 +454,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLResponse"
+                                            "$ref": "#/definitions/dto.CheckURLResponse"
                                         }
                                     }
                                 }
@@ -510,13 +510,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
+                                            "$ref": "#/definitions/dto.WhitelistRuleResponse"
                                         }
                                     }
                                 }
@@ -563,7 +563,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.UpdateWhitelistRuleRequest"
+                            "$ref": "#/definitions/dto.UpdateWhitelistRuleRequest"
                         }
                     }
                 ],
@@ -573,13 +573,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
+                                            "$ref": "#/definitions/dto.WhitelistRuleResponse"
                                         }
                                     }
                                 }
@@ -625,7 +625,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -671,7 +671,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -679,7 +679,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonListResponse"
+                                                "$ref": "#/definitions/dto.ContactPersonListResponse"
                                             }
                                         }
                                     }
@@ -690,7 +690,7 @@
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -719,7 +719,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonRequest"
+                            "$ref": "#/definitions/dto.ContactPersonRequest"
                         }
                     }
                 ],
@@ -729,13 +729,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse"
+                                            "$ref": "#/definitions/dto.ContactPersonResponse"
                                         }
                                     }
                                 }
@@ -745,7 +745,7 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -784,13 +784,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse"
+                                            "$ref": "#/definitions/dto.ContactPersonResponse"
                                         }
                                     }
                                 }
@@ -800,7 +800,7 @@
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -836,7 +836,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonRequest"
+                            "$ref": "#/definitions/dto.ContactPersonRequest"
                         }
                     }
                 ],
@@ -846,13 +846,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse"
+                                            "$ref": "#/definitions/dto.ContactPersonResponse"
                                         }
                                     }
                                 }
@@ -862,13 +862,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -905,7 +905,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
@@ -921,7 +921,7 @@
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -976,7 +976,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -984,7 +984,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse"
+                                                "$ref": "#/definitions/dto.BrandResponse"
                                             }
                                         }
                                     }
@@ -995,7 +995,7 @@
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -1050,13 +1050,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse"
+                                            "$ref": "#/definitions/dto.BrandResponse"
                                         }
                                     }
                                 }
@@ -1066,13 +1066,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -1140,19 +1140,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -1188,13 +1188,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse"
+                                            "$ref": "#/definitions/dto.BrandResponse"
                                         }
                                     }
                                 }
@@ -1204,7 +1204,7 @@
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -1265,13 +1265,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse"
+                                            "$ref": "#/definitions/dto.BrandResponse"
                                         }
                                     }
                                 }
@@ -1281,19 +1281,19 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -1325,25 +1325,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -1395,7 +1395,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1403,7 +1403,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse"
+                                                "$ref": "#/definitions/dto.PermissionResponse"
                                             }
                                         }
                                     }
@@ -1437,7 +1437,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest"
+                            "$ref": "#/definitions/dto.PermissionRequest"
                         }
                     }
                 ],
@@ -1445,7 +1445,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -1484,13 +1484,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse"
+                                            "$ref": "#/definitions/dto.PermissionResponse"
                                         }
                                     }
                                 }
@@ -1530,7 +1530,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest"
+                            "$ref": "#/definitions/dto.PermissionRequest"
                         }
                     }
                 ],
@@ -1538,7 +1538,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -1573,7 +1573,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -1625,7 +1625,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1633,7 +1633,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleResponse"
+                                                "$ref": "#/definitions/dto.RoleResponse"
                                             }
                                         }
                                     }
@@ -1667,7 +1667,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleRequest"
+                            "$ref": "#/definitions/dto.RoleRequest"
                         }
                     }
                 ],
@@ -1675,7 +1675,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -1714,13 +1714,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleResponse"
+                                            "$ref": "#/definitions/dto.RoleResponse"
                                         }
                                     }
                                 }
@@ -1760,7 +1760,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleRequest"
+                            "$ref": "#/definitions/dto.RoleRequest"
                         }
                     }
                 ],
@@ -1768,7 +1768,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -1803,7 +1803,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -1841,7 +1841,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_role_dto.AssignPermissionRequest"
+                            "$ref": "#/definitions/dto.AssignPermissionRequest"
                         }
                     }
                 ],
@@ -1849,7 +1849,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -1907,7 +1907,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -1915,7 +1915,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserResponse"
+                                                "$ref": "#/definitions/dto.UserResponse"
                                             }
                                         }
                                     }
@@ -1949,7 +1949,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserRequest"
+                            "$ref": "#/definitions/dto.UserRequest"
                         }
                     }
                 ],
@@ -1957,7 +1957,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -1996,13 +1996,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserResponse"
+                                            "$ref": "#/definitions/dto.UserResponse"
                                         }
                                     }
                                 }
@@ -2042,7 +2042,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserRequest"
+                            "$ref": "#/definitions/dto.UserRequest"
                         }
                     }
                 ],
@@ -2050,7 +2050,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -2085,7 +2085,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     }
                 }
@@ -2177,7 +2177,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -2185,7 +2185,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse"
+                                                "$ref": "#/definitions/dto.FraudLogResponse"
                                             }
                                         }
                                     }
@@ -2229,13 +2229,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse"
+                                            "$ref": "#/definitions/dto.FraudLogResponse"
                                         }
                                     }
                                 }
@@ -2278,13 +2278,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse"
+                                            "$ref": "#/definitions/dto.FraudLogResponse"
                                         }
                                     }
                                 }
@@ -2334,7 +2334,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -2342,11 +2342,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse"
+                                                "$ref": "#/definitions/dto.ActivityResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -2356,13 +2356,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -2430,7 +2430,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -2438,11 +2438,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse"
+                                                "$ref": "#/definitions/dto.AdAccountResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Meta"
+                                            "$ref": "#/definitions/response.Meta"
                                         }
                                     }
                                 }
@@ -2452,13 +2452,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -2489,7 +2489,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AssignBrandRequest"
+                            "$ref": "#/definitions/dto.AssignBrandRequest"
                         }
                     }
                 ],
@@ -2497,19 +2497,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -2542,7 +2542,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
@@ -2550,7 +2550,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.BusinessOptionResponse"
+                                                "$ref": "#/definitions/dto.BusinessOptionResponse"
                                             }
                                         }
                                     }
@@ -2617,7 +2617,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -2625,7 +2625,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse"
+                                                "$ref": "#/definitions/dto.AdAccountResponse"
                                             }
                                         }
                                     }
@@ -2636,19 +2636,19 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -2685,19 +2685,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                            "$ref": "#/definitions/response.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -2767,7 +2767,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -2775,11 +2775,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.AdResponse"
+                                                "$ref": "#/definitions/dto.AdResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -2789,13 +2789,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -2887,19 +2887,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -2963,7 +2963,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -2971,11 +2971,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_adset_dto.AdSetResponse"
+                                                "$ref": "#/definitions/dto.AdSetResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -2985,13 +2985,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3077,19 +3077,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3142,7 +3142,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3150,11 +3150,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse"
+                                                "$ref": "#/definitions/dto.ActivityResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3164,13 +3164,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3239,7 +3239,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -3247,7 +3247,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse"
+                                                "$ref": "#/definitions/dto.AdAccountResponse"
                                             }
                                         }
                                     }
@@ -3258,19 +3258,19 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3359,7 +3359,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3367,11 +3367,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.AdDashboardRow"
+                                                "$ref": "#/definitions/dto.AdDashboardRow"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3381,13 +3381,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3470,7 +3470,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3478,11 +3478,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_adset_dto.AdSetDashboardRow"
+                                                "$ref": "#/definitions/dto.AdSetDashboardRow"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3492,13 +3492,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3545,19 +3545,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3634,7 +3634,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3642,11 +3642,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow"
+                                                "$ref": "#/definitions/dto.CampaignDashboardRow"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3656,13 +3656,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3699,19 +3699,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3782,13 +3782,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignSummaryResponse"
+                                            "$ref": "#/definitions/dto.CampaignSummaryResponse"
                                         }
                                     }
                                 }
@@ -3798,13 +3798,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3868,7 +3868,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3876,11 +3876,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignResponse"
+                                                "$ref": "#/definitions/dto.CampaignResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -3890,13 +3890,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -3978,7 +3978,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -3986,11 +3986,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow"
+                                                "$ref": "#/definitions/dto.CampaignDashboardRow"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -4000,13 +4000,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -4051,13 +4051,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.CreativeResponse"
+                                            "$ref": "#/definitions/dto.CreativeResponse"
                                         }
                                     }
                                 }
@@ -4067,13 +4067,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -4155,7 +4155,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -4163,11 +4163,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_insight_dto.InsightResponse"
+                                                "$ref": "#/definitions/dto.InsightResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -4177,13 +4177,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -4253,7 +4253,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                    "$ref": "#/definitions/response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -4261,11 +4261,11 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_insight_dto.InsightResponse"
+                                                "$ref": "#/definitions/dto.InsightResponse"
                                             }
                                         },
                                         "meta": {
-                                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta"
+                                            "$ref": "#/definitions/response.PaginationMeta"
                                         }
                                     }
                                 }
@@ -4275,13 +4275,13 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -4308,7 +4308,7 @@
                         "name": "request",
                         "in": "body",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_sync_dto.TriggerSyncRequest"
+                            "$ref": "#/definitions/dto.TriggerSyncRequest"
                         }
                     }
                 ],
@@ -4316,19 +4316,19 @@
                     "202": {
                         "description": "Accepted",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "409": {
                         "description": "Sync already in progress",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -4374,7 +4374,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse"
+                                    "$ref": "#/definitions/response.PaginationResponse"
                                 },
                                 {
                                     "type": "object",
@@ -4382,7 +4382,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/internal_meta_sync.MetaSyncBatch"
+                                                "$ref": "#/definitions/sync.MetaSyncBatch"
                                             }
                                         }
                                     }
@@ -4393,7 +4393,7 @@
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -4432,13 +4432,13 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                    "$ref": "#/definitions/response.SuccessResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/internal_meta_sync.MetaSyncBatch"
+                                            "$ref": "#/definitions/sync.MetaSyncBatch"
                                         }
                                     }
                                 }
@@ -4448,13 +4448,13 @@
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     }
                 }
@@ -4482,7 +4482,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4510,7 +4510,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4538,7 +4538,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4566,7 +4566,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -4574,580 +4574,7 @@
         }
     },
     "definitions": {
-        "github_com_alex_ads_backend_internal_core_auth_dto.AuthUserResponse": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_auth_dto.LoginRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_auth_dto.LoginResponse": {
-            "type": "object",
-            "properties": {
-                "centrifugo_token": {
-                    "type": "string"
-                },
-                "permissions": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "token": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_auth_dto.AuthUserResponse"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse": {
-            "type": "object",
-            "properties": {
-                "ad_account_count": {
-                    "type": "integer"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "photo": {
-                    "type": "string"
-                },
-                "slug": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLRequest": {
-            "type": "object",
-            "required": [
-                "scope",
-                "url"
-            ],
-            "properties": {
-                "scope": {
-                    "type": "string",
-                    "enum": [
-                        "destination_url",
-                        "display_url",
-                        "url_tags",
-                        "domain"
-                    ]
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLResponse": {
-            "type": "object",
-            "properties": {
-                "allowed": {
-                    "type": "boolean"
-                },
-                "matched_rule": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CreateWhitelistRuleRequest": {
-            "type": "object",
-            "required": [
-                "match_type",
-                "scope",
-                "value"
-            ],
-            "properties": {
-                "allow_subdomains": {
-                    "type": "boolean"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "match_type": {
-                    "type": "string",
-                    "enum": [
-                        "exact_url",
-                        "domain",
-                        "path_prefix",
-                        "contains",
-                        "regex"
-                    ]
-                },
-                "scope": {
-                    "type": "string",
-                    "enum": [
-                        "destination_url",
-                        "display_url",
-                        "url_tags",
-                        "domain"
-                    ]
-                },
-                "value": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.UpdateWhitelistRuleRequest": {
-            "type": "object",
-            "properties": {
-                "allow_subdomains": {
-                    "type": "boolean"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "match_type": {
-                    "type": "string",
-                    "enum": [
-                        "exact_url",
-                        "domain",
-                        "path_prefix",
-                        "contains",
-                        "regex"
-                    ]
-                },
-                "scope": {
-                    "type": "string",
-                    "enum": [
-                        "destination_url",
-                        "display_url",
-                        "url_tags",
-                        "domain"
-                    ]
-                },
-                "value": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse": {
-            "type": "object",
-            "properties": {
-                "allow_subdomains": {
-                    "type": "boolean"
-                },
-                "brand_id": {
-                    "type": "integer"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "match_type": {
-                    "type": "string"
-                },
-                "normalized_value": {
-                    "type": "string"
-                },
-                "scope": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "value": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonListResponse": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "phone": {
-                    "type": "string",
-                    "example": "+6281234567890"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonRequest": {
-            "type": "object",
-            "required": [
-                "name",
-                "phone"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 2,
-                    "example": "John Doe"
-                },
-                "phone": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "minLength": 6,
-                    "example": "+6281234567890"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "phone": {
-                    "type": "string",
-                    "example": "+6281234567890"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse": {
-            "type": "object",
-            "properties": {
-                "actor_id": {
-                    "type": "string"
-                },
-                "actor_name": {
-                    "type": "string"
-                },
-                "ad": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd"
-                },
-                "ad_account": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdAccount"
-                },
-                "adset": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet"
-                },
-                "brand": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleBrand"
-                },
-                "campaign": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleCampaign"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "creative_id": {
-                    "type": "string"
-                },
-                "detected_at": {
-                    "type": "string"
-                },
-                "event_type": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "matched_rule_id": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "new_value": {
-                    "type": "string"
-                },
-                "old_value": {
-                    "type": "string"
-                },
-                "resolved_at": {
-                    "type": "string"
-                },
-                "resolved_by": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleUser"
-                },
-                "severity": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdAccount": {
-            "type": "object",
-            "properties": {
-                "business_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleBrand": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "photo": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleCampaign": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleUser": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_role_dto.AssignPermissionRequest": {
-            "type": "object",
-            "required": [
-                "permission_ids"
-            ],
-            "properties": {
-                "permission_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_role_dto.RoleRequest": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_role_dto.RoleResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "permissions": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse"
-                    }
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_user_dto.RoleBrief": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_user_dto.UserRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "name"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string",
-                    "minLength": 6
-                },
-                "role_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_core_user_dto.UserResponse": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_alex_ads_backend_internal_core_user_dto.RoleBrief"
-                    }
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse": {
+        "dto.ActivityResponse": {
             "type": "object",
             "properties": {
                 "actor_id": {
@@ -5163,7 +4590,7 @@
                     "type": "string"
                 },
                 "brand": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.SimpleBrand"
+                    "$ref": "#/definitions/internal_meta_activity_dto.SimpleBrand"
                 },
                 "created_at": {
                     "type": "string"
@@ -5192,21 +4619,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_activity_dto.SimpleBrand": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "photo": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse": {
+        "dto.AdAccountResponse": {
             "type": "object",
             "properties": {
                 "account_status": {
@@ -5241,32 +4654,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_ad_account_dto.AssignBrandRequest": {
-            "type": "object",
-            "properties": {
-                "ad_account_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "brand_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_meta_ad_account_dto.BusinessOptionResponse": {
-            "type": "object",
-            "properties": {
-                "business_id": {
-                    "type": "string"
-                },
-                "business_name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_meta_ads_dto.AdDashboardRow": {
+        "dto.AdDashboardRow": {
             "type": "object",
             "properties": {
                 "ad_id": {
@@ -5334,7 +4722,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_ads_dto.AdResponse": {
+        "dto.AdResponse": {
             "type": "object",
             "properties": {
                 "adset_id": {
@@ -5350,7 +4738,7 @@
                     "example": "2026-05-11T10:00:00Z"
                 },
                 "creative": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.CreativeRef"
+                    "$ref": "#/definitions/dto.CreativeRef"
                 },
                 "effective_status": {
                     "type": "string",
@@ -5374,51 +4762,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_ads_dto.CreativeRef": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string",
-                    "example": "2387654321098"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_meta_ads_dto.CreativeResponse": {
-            "type": "object",
-            "properties": {
-                "asset_feed_spec": {},
-                "body": {
-                    "type": "string",
-                    "example": "Get 20% off today!"
-                },
-                "id": {
-                    "type": "string",
-                    "example": "2387654321098"
-                },
-                "image_url": {
-                    "type": "string",
-                    "example": "https://scontent.xx.fbcdn.net/..."
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Creative Promo 1"
-                },
-                "object_story_spec": {},
-                "thumbnail_url": {
-                    "type": "string",
-                    "example": "https://scontent.xx.fbcdn.net/..."
-                },
-                "title": {
-                    "type": "string",
-                    "example": "Special Offer"
-                },
-                "url_tags": {
-                    "type": "string",
-                    "example": "utm_source=facebook\u0026utm_medium=cpc"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_meta_adset_dto.AdSetDashboardRow": {
+        "dto.AdSetDashboardRow": {
             "type": "object",
             "properties": {
                 "adset_id": {
@@ -5490,7 +4834,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_adset_dto.AdSetResponse": {
+        "dto.AdSetResponse": {
             "type": "object",
             "properties": {
                 "attribution_spec": {},
@@ -5548,7 +4892,124 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow": {
+        "dto.AlertResponse": {
+            "type": "object",
+            "properties": {
+                "brand_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "fraud_log_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_read": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "severity": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.AssignBrandRequest": {
+            "type": "object",
+            "properties": {
+                "ad_account_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "brand_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.AssignPermissionRequest": {
+            "type": "object",
+            "required": [
+                "permission_ids"
+            ],
+            "properties": {
+                "permission_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "dto.AuthUserResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.BrandResponse": {
+            "type": "object",
+            "properties": {
+                "ad_account_count": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photo": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.BusinessOptionResponse": {
+            "type": "object",
+            "properties": {
+                "business_id": {
+                    "type": "string"
+                },
+                "business_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CampaignDashboardRow": {
             "type": "object",
             "properties": {
                 "amount_spent": {
@@ -5623,7 +5084,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignResponse": {
+        "dto.CampaignResponse": {
             "type": "object",
             "properties": {
                 "account_id": {
@@ -5692,7 +5153,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignSummaryResponse": {
+        "dto.CampaignSummaryResponse": {
             "type": "object",
             "properties": {
                 "amount_spent": {
@@ -5718,7 +5179,256 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_insight_dto.InsightResponse": {
+        "dto.CheckURLRequest": {
+            "type": "object",
+            "required": [
+                "scope",
+                "url"
+            ],
+            "properties": {
+                "scope": {
+                    "type": "string",
+                    "enum": [
+                        "destination_url",
+                        "display_url",
+                        "url_tags",
+                        "domain"
+                    ]
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CheckURLResponse": {
+            "type": "object",
+            "properties": {
+                "allowed": {
+                    "type": "boolean"
+                },
+                "matched_rule": {
+                    "$ref": "#/definitions/dto.WhitelistRuleResponse"
+                }
+            }
+        },
+        "dto.ContactPersonListResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+6281234567890"
+                }
+            }
+        },
+        "dto.ContactPersonRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "phone"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 2,
+                    "example": "John Doe"
+                },
+                "phone": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "minLength": 6,
+                    "example": "+6281234567890"
+                }
+            }
+        },
+        "dto.ContactPersonResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+6281234567890"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateWhitelistRuleRequest": {
+            "type": "object",
+            "required": [
+                "match_type",
+                "scope",
+                "value"
+            ],
+            "properties": {
+                "allow_subdomains": {
+                    "type": "boolean"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "match_type": {
+                    "type": "string",
+                    "enum": [
+                        "exact_url",
+                        "domain",
+                        "path_prefix",
+                        "contains",
+                        "regex"
+                    ]
+                },
+                "scope": {
+                    "type": "string",
+                    "enum": [
+                        "destination_url",
+                        "display_url",
+                        "url_tags",
+                        "domain"
+                    ]
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreativeRef": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "2387654321098"
+                }
+            }
+        },
+        "dto.CreativeResponse": {
+            "type": "object",
+            "properties": {
+                "asset_feed_spec": {},
+                "body": {
+                    "type": "string",
+                    "example": "Get 20% off today!"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "2387654321098"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "https://scontent.xx.fbcdn.net/..."
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Creative Promo 1"
+                },
+                "object_story_spec": {},
+                "thumbnail_url": {
+                    "type": "string",
+                    "example": "https://scontent.xx.fbcdn.net/..."
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Special Offer"
+                },
+                "url_tags": {
+                    "type": "string",
+                    "example": "utm_source=facebook\u0026utm_medium=cpc"
+                }
+            }
+        },
+        "dto.FraudLogResponse": {
+            "type": "object",
+            "properties": {
+                "actor_id": {
+                    "type": "string"
+                },
+                "actor_name": {
+                    "type": "string"
+                },
+                "ad": {
+                    "$ref": "#/definitions/dto.SimpleAd"
+                },
+                "ad_account": {
+                    "$ref": "#/definitions/dto.SimpleAdAccount"
+                },
+                "adset": {
+                    "$ref": "#/definitions/dto.SimpleAdSet"
+                },
+                "brand": {
+                    "$ref": "#/definitions/internal_core_fraud_log_dto.SimpleBrand"
+                },
+                "campaign": {
+                    "$ref": "#/definitions/dto.SimpleCampaign"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "creative_id": {
+                    "type": "string"
+                },
+                "detected_at": {
+                    "type": "string"
+                },
+                "event_type": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "matched_rule_id": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "new_value": {
+                    "type": "string"
+                },
+                "old_value": {
+                    "type": "string"
+                },
+                "resolved_at": {
+                    "type": "string"
+                },
+                "resolved_by": {
+                    "$ref": "#/definitions/dto.SimpleUser"
+                },
+                "severity": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.InsightResponse": {
             "type": "object",
             "properties": {
                 "account_currency": {
@@ -5810,7 +5520,179 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_sync_dto.TriggerSyncRequest": {
+        "dto.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "centrifugo_token": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "token": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/dto.AuthUserResponse"
+                }
+            }
+        },
+        "dto.PermissionRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.PermissionResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.RoleBrief": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.RoleRequest": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.RoleResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.PermissionResponse"
+                    }
+                }
+            }
+        },
+        "dto.SimpleAd": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SimpleAdAccount": {
+            "type": "object",
+            "properties": {
+                "business_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SimpleAdSet": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SimpleCampaign": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SimpleUser": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.TriggerSyncRequest": {
             "type": "object",
             "properties": {
                 "ad_account_id": {
@@ -5827,39 +5709,157 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse": {
+        "dto.UpdateWhitelistRuleRequest": {
             "type": "object",
             "properties": {
+                "allow_subdomains": {
+                    "type": "boolean"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "match_type": {
+                    "type": "string",
+                    "enum": [
+                        "exact_url",
+                        "domain",
+                        "path_prefix",
+                        "contains",
+                        "regex"
+                    ]
+                },
+                "scope": {
+                    "type": "string",
+                    "enum": [
+                        "destination_url",
+                        "display_url",
+                        "url_tags",
+                        "domain"
+                    ]
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UserRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "role_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "dto.UserResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.RoleBrief"
+                    }
+                }
+            }
+        },
+        "dto.WhitelistRuleResponse": {
+            "type": "object",
+            "properties": {
+                "allow_subdomains": {
+                    "type": "boolean"
+                },
                 "brand_id": {
                     "type": "integer"
                 },
                 "created_at": {
                     "type": "string"
                 },
-                "fraud_log_id": {
-                    "type": "integer"
+                "description": {
+                    "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "is_read": {
+                "is_active": {
                     "type": "boolean"
                 },
-                "message": {
+                "match_type": {
                     "type": "string"
                 },
-                "severity": {
+                "normalized_value": {
                     "type": "string"
                 },
-                "title": {
+                "scope": {
                     "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "value": {
+                    "type": "string"
                 }
             }
         },
-        "github_com_alex_ads_backend_pkg_response.ErrorResponse": {
+        "internal_core_fraud_log_dto.SimpleBrand": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photo": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_meta_activity_dto.SimpleBrand": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photo": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ErrorResponse": {
             "type": "object",
             "properties": {
                 "errors": {},
@@ -5873,7 +5873,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_pkg_response.Meta": {
+        "response.Meta": {
             "type": "object",
             "properties": {
                 "last_page": {
@@ -5890,7 +5890,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_pkg_response.MetaPaging": {
+        "response.MetaPaging": {
             "type": "object",
             "properties": {
                 "cursors": {
@@ -5912,7 +5912,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_pkg_response.PaginationMeta": {
+        "response.PaginationMeta": {
             "type": "object",
             "properties": {
                 "last_page": {
@@ -5929,7 +5929,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_pkg_response.PaginationResponse": {
+        "response.PaginationResponse": {
             "type": "object",
             "properties": {
                 "data": {},
@@ -5938,7 +5938,7 @@
                     "example": "Success"
                 },
                 "meta": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Meta"
+                    "$ref": "#/definitions/response.Meta"
                 },
                 "success": {
                     "type": "boolean",
@@ -5946,7 +5946,7 @@
                 }
             }
         },
-        "github_com_alex_ads_backend_pkg_response.Response": {
+        "response.Response": {
             "type": "object",
             "properties": {
                 "data": {},
@@ -5955,17 +5955,17 @@
                     "type": "string"
                 },
                 "meta": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Meta"
+                    "$ref": "#/definitions/response.Meta"
                 },
                 "paging": {
-                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.MetaPaging"
+                    "$ref": "#/definitions/response.MetaPaging"
                 },
                 "success": {
                     "type": "boolean"
                 }
             }
         },
-        "github_com_alex_ads_backend_pkg_response.SuccessResponse": {
+        "response.SuccessResponse": {
             "type": "object",
             "properties": {
                 "data": {},
@@ -5979,7 +5979,7 @@
                 }
             }
         },
-        "internal_meta_sync.MetaSyncBatch": {
+        "sync.MetaSyncBatch": {
             "type": "object",
             "properties": {
                 "ad_account_id": {
@@ -6048,7 +6048,7 @@
                 "steps": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/internal_meta_sync.MetaSyncStep"
+                        "$ref": "#/definitions/sync.MetaSyncStep"
                     }
                 },
                 "sync_mode": {
@@ -6068,11 +6068,11 @@
                 }
             }
         },
-        "internal_meta_sync.MetaSyncStep": {
+        "sync.MetaSyncStep": {
             "type": "object",
             "properties": {
                 "batch": {
-                    "$ref": "#/definitions/internal_meta_sync.MetaSyncBatch"
+                    "$ref": "#/definitions/sync.MetaSyncBatch"
                 },
                 "batch_id": {
                     "type": "integer"

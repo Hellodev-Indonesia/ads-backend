@@ -1,391 +1,6 @@
 basePath: /api/v1
 definitions:
-  github_com_alex_ads_backend_internal_core_auth_dto.AuthUserResponse:
-    properties:
-      email:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_auth_dto.LoginRequest:
-    properties:
-      email:
-        type: string
-      password:
-        type: string
-    required:
-    - email
-    - password
-    type: object
-  github_com_alex_ads_backend_internal_core_auth_dto.LoginResponse:
-    properties:
-      centrifugo_token:
-        type: string
-      permissions:
-        items:
-          type: string
-        type: array
-      roles:
-        items:
-          type: string
-        type: array
-      token:
-        type: string
-      user:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_auth_dto.AuthUserResponse'
-    type: object
-  github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse:
-    properties:
-      ad_account_count:
-        type: integer
-      created_at:
-        type: string
-      description:
-        type: string
-      id:
-        type: integer
-      is_active:
-        type: boolean
-      name:
-        type: string
-      photo:
-        type: string
-      slug:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLRequest:
-    properties:
-      scope:
-        enum:
-        - destination_url
-        - display_url
-        - url_tags
-        - domain
-        type: string
-      url:
-        type: string
-    required:
-    - scope
-    - url
-    type: object
-  github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLResponse:
-    properties:
-      allowed:
-        type: boolean
-      matched_rule:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse'
-    type: object
-  github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CreateWhitelistRuleRequest:
-    properties:
-      allow_subdomains:
-        type: boolean
-      description:
-        type: string
-      is_active:
-        type: boolean
-      match_type:
-        enum:
-        - exact_url
-        - domain
-        - path_prefix
-        - contains
-        - regex
-        type: string
-      scope:
-        enum:
-        - destination_url
-        - display_url
-        - url_tags
-        - domain
-        type: string
-      value:
-        type: string
-    required:
-    - match_type
-    - scope
-    - value
-    type: object
-  github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.UpdateWhitelistRuleRequest:
-    properties:
-      allow_subdomains:
-        type: boolean
-      description:
-        type: string
-      is_active:
-        type: boolean
-      match_type:
-        enum:
-        - exact_url
-        - domain
-        - path_prefix
-        - contains
-        - regex
-        type: string
-      scope:
-        enum:
-        - destination_url
-        - display_url
-        - url_tags
-        - domain
-        type: string
-      value:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse:
-    properties:
-      allow_subdomains:
-        type: boolean
-      brand_id:
-        type: integer
-      created_at:
-        type: string
-      description:
-        type: string
-      id:
-        type: integer
-      is_active:
-        type: boolean
-      match_type:
-        type: string
-      normalized_value:
-        type: string
-      scope:
-        type: string
-      updated_at:
-        type: string
-      value:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonListResponse:
-    properties:
-      created_at:
-        type: string
-      id:
-        example: 1
-        type: integer
-      name:
-        example: John Doe
-        type: string
-      phone:
-        example: "+6281234567890"
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonRequest:
-    properties:
-      name:
-        example: John Doe
-        maxLength: 255
-        minLength: 2
-        type: string
-      phone:
-        example: "+6281234567890"
-        maxLength: 50
-        minLength: 6
-        type: string
-    required:
-    - name
-    - phone
-    type: object
-  github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse:
-    properties:
-      created_at:
-        type: string
-      id:
-        example: 1
-        type: integer
-      name:
-        example: John Doe
-        type: string
-      phone:
-        example: "+6281234567890"
-        type: string
-      updated_at:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse:
-    properties:
-      actor_id:
-        type: string
-      actor_name:
-        type: string
-      ad:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd'
-      ad_account:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdAccount'
-      adset:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet'
-      brand:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleBrand'
-      campaign:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleCampaign'
-      created_at:
-        type: string
-      creative_id:
-        type: string
-      detected_at:
-        type: string
-      event_type:
-        type: string
-      id:
-        type: integer
-      matched_rule_id:
-        type: integer
-      message:
-        type: string
-      new_value:
-        type: string
-      old_value:
-        type: string
-      resolved_at:
-        type: string
-      resolved_by:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleUser'
-      severity:
-        type: string
-      status:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAd:
-    properties:
-      id:
-        type: string
-      name:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdAccount:
-    properties:
-      business_name:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleAdSet:
-    properties:
-      id:
-        type: string
-      name:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleBrand:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-      photo:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleCampaign:
-    properties:
-      id:
-        type: string
-      name:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_fraud_log_dto.SimpleUser:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest:
-    properties:
-      description:
-        type: string
-      name:
-        type: string
-    required:
-    - name
-    type: object
-  github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse:
-    properties:
-      description:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_role_dto.AssignPermissionRequest:
-    properties:
-      permission_ids:
-        items:
-          type: integer
-        type: array
-    required:
-    - permission_ids
-    type: object
-  github_com_alex_ads_backend_internal_core_role_dto.RoleRequest:
-    properties:
-      description:
-        type: string
-      name:
-        type: string
-    required:
-    - name
-    type: object
-  github_com_alex_ads_backend_internal_core_role_dto.RoleResponse:
-    properties:
-      description:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      permissions:
-        items:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse'
-        type: array
-    type: object
-  github_com_alex_ads_backend_internal_core_user_dto.RoleBrief:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_core_user_dto.UserRequest:
-    properties:
-      email:
-        type: string
-      name:
-        type: string
-      password:
-        minLength: 6
-        type: string
-      role_ids:
-        items:
-          type: integer
-        type: array
-    required:
-    - email
-    - name
-    type: object
-  github_com_alex_ads_backend_internal_core_user_dto.UserResponse:
-    properties:
-      created_at:
-        type: string
-      email:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      roles:
-        items:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_user_dto.RoleBrief'
-        type: array
-    type: object
-  github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse:
+  dto.ActivityResponse:
     properties:
       actor_id:
         type: string
@@ -396,7 +11,7 @@ definitions:
       ad_account_id:
         type: string
       brand:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.SimpleBrand'
+        $ref: '#/definitions/internal_meta_activity_dto.SimpleBrand'
       created_at:
         type: string
       event_time:
@@ -415,16 +30,7 @@ definitions:
       updated_at:
         type: string
     type: object
-  github_com_alex_ads_backend_internal_meta_activity_dto.SimpleBrand:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-      photo:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse:
+  dto.AdAccountResponse:
     properties:
       account_status:
         example: 1
@@ -448,23 +54,7 @@ definitions:
       timezone_name:
         type: string
     type: object
-  github_com_alex_ads_backend_internal_meta_ad_account_dto.AssignBrandRequest:
-    properties:
-      ad_account_ids:
-        items:
-          type: string
-        type: array
-      brand_id:
-        type: integer
-    type: object
-  github_com_alex_ads_backend_internal_meta_ad_account_dto.BusinessOptionResponse:
-    properties:
-      business_id:
-        type: string
-      business_name:
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_meta_ads_dto.AdDashboardRow:
+  dto.AdDashboardRow:
     properties:
       ad_id:
         type: string
@@ -509,7 +99,7 @@ definitions:
       total_messaging_conversations:
         type: string
     type: object
-  github_com_alex_ads_backend_internal_meta_ads_dto.AdResponse:
+  dto.AdResponse:
     properties:
       adset_id:
         example: "2389876543210"
@@ -521,7 +111,7 @@ definitions:
         example: "2026-05-11T10:00:00Z"
         type: string
       creative:
-        $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.CreativeRef'
+        $ref: '#/definitions/dto.CreativeRef'
       effective_status:
         example: ACTIVE
         type: string
@@ -538,39 +128,7 @@ definitions:
         example: "2026-05-11T12:00:00Z"
         type: string
     type: object
-  github_com_alex_ads_backend_internal_meta_ads_dto.CreativeRef:
-    properties:
-      id:
-        example: "2387654321098"
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_meta_ads_dto.CreativeResponse:
-    properties:
-      asset_feed_spec: {}
-      body:
-        example: Get 20% off today!
-        type: string
-      id:
-        example: "2387654321098"
-        type: string
-      image_url:
-        example: https://scontent.xx.fbcdn.net/...
-        type: string
-      name:
-        example: Creative Promo 1
-        type: string
-      object_story_spec: {}
-      thumbnail_url:
-        example: https://scontent.xx.fbcdn.net/...
-        type: string
-      title:
-        example: Special Offer
-        type: string
-      url_tags:
-        example: utm_source=facebook&utm_medium=cpc
-        type: string
-    type: object
-  github_com_alex_ads_backend_internal_meta_adset_dto.AdSetDashboardRow:
+  dto.AdSetDashboardRow:
     properties:
       adset_id:
         type: string
@@ -618,7 +176,7 @@ definitions:
       total_messaging_conversations:
         type: string
     type: object
-  github_com_alex_ads_backend_internal_meta_adset_dto.AdSetResponse:
+  dto.AdSetResponse:
     properties:
       attribution_spec: {}
       bid_strategy:
@@ -661,7 +219,83 @@ definitions:
         example: "2026-05-11T12:00:00Z"
         type: string
     type: object
-  github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow:
+  dto.AlertResponse:
+    properties:
+      brand_id:
+        type: integer
+      created_at:
+        type: string
+      fraud_log_id:
+        type: integer
+      id:
+        type: integer
+      is_read:
+        type: boolean
+      message:
+        type: string
+      severity:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.AssignBrandRequest:
+    properties:
+      ad_account_ids:
+        items:
+          type: string
+        type: array
+      brand_id:
+        type: integer
+    type: object
+  dto.AssignPermissionRequest:
+    properties:
+      permission_ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - permission_ids
+    type: object
+  dto.AuthUserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.BrandResponse:
+    properties:
+      ad_account_count:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      name:
+        type: string
+      photo:
+        type: string
+      slug:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.BusinessOptionResponse:
+    properties:
+      business_id:
+        type: string
+      business_name:
+        type: string
+    type: object
+  dto.CampaignDashboardRow:
     properties:
       amount_spent:
         description: Insight metrics
@@ -712,7 +346,7 @@ definitions:
       total_messaging_conversations:
         type: string
     type: object
-  github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignResponse:
+  dto.CampaignResponse:
     properties:
       account_id:
         example: "541050504790549"
@@ -763,7 +397,7 @@ definitions:
         example: "2026-05-11T12:00:00Z"
         type: string
     type: object
-  github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignSummaryResponse:
+  dto.CampaignSummaryResponse:
     properties:
       amount_spent:
         type: number
@@ -780,7 +414,182 @@ definitions:
       total_messaging:
         type: integer
     type: object
-  github_com_alex_ads_backend_internal_meta_insight_dto.InsightResponse:
+  dto.CheckURLRequest:
+    properties:
+      scope:
+        enum:
+        - destination_url
+        - display_url
+        - url_tags
+        - domain
+        type: string
+      url:
+        type: string
+    required:
+    - scope
+    - url
+    type: object
+  dto.CheckURLResponse:
+    properties:
+      allowed:
+        type: boolean
+      matched_rule:
+        $ref: '#/definitions/dto.WhitelistRuleResponse'
+    type: object
+  dto.ContactPersonListResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John Doe
+        type: string
+      phone:
+        example: "+6281234567890"
+        type: string
+    type: object
+  dto.ContactPersonRequest:
+    properties:
+      name:
+        example: John Doe
+        maxLength: 255
+        minLength: 2
+        type: string
+      phone:
+        example: "+6281234567890"
+        maxLength: 50
+        minLength: 6
+        type: string
+    required:
+    - name
+    - phone
+    type: object
+  dto.ContactPersonResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John Doe
+        type: string
+      phone:
+        example: "+6281234567890"
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.CreateWhitelistRuleRequest:
+    properties:
+      allow_subdomains:
+        type: boolean
+      description:
+        type: string
+      is_active:
+        type: boolean
+      match_type:
+        enum:
+        - exact_url
+        - domain
+        - path_prefix
+        - contains
+        - regex
+        type: string
+      scope:
+        enum:
+        - destination_url
+        - display_url
+        - url_tags
+        - domain
+        type: string
+      value:
+        type: string
+    required:
+    - match_type
+    - scope
+    - value
+    type: object
+  dto.CreativeRef:
+    properties:
+      id:
+        example: "2387654321098"
+        type: string
+    type: object
+  dto.CreativeResponse:
+    properties:
+      asset_feed_spec: {}
+      body:
+        example: Get 20% off today!
+        type: string
+      id:
+        example: "2387654321098"
+        type: string
+      image_url:
+        example: https://scontent.xx.fbcdn.net/...
+        type: string
+      name:
+        example: Creative Promo 1
+        type: string
+      object_story_spec: {}
+      thumbnail_url:
+        example: https://scontent.xx.fbcdn.net/...
+        type: string
+      title:
+        example: Special Offer
+        type: string
+      url_tags:
+        example: utm_source=facebook&utm_medium=cpc
+        type: string
+    type: object
+  dto.FraudLogResponse:
+    properties:
+      actor_id:
+        type: string
+      actor_name:
+        type: string
+      ad:
+        $ref: '#/definitions/dto.SimpleAd'
+      ad_account:
+        $ref: '#/definitions/dto.SimpleAdAccount'
+      adset:
+        $ref: '#/definitions/dto.SimpleAdSet'
+      brand:
+        $ref: '#/definitions/internal_core_fraud_log_dto.SimpleBrand'
+      campaign:
+        $ref: '#/definitions/dto.SimpleCampaign'
+      created_at:
+        type: string
+      creative_id:
+        type: string
+      detected_at:
+        type: string
+      event_type:
+        type: string
+      id:
+        type: integer
+      matched_rule_id:
+        type: integer
+      message:
+        type: string
+      new_value:
+        type: string
+      old_value:
+        type: string
+      resolved_at:
+        type: string
+      resolved_by:
+        $ref: '#/definitions/dto.SimpleUser'
+      severity:
+        type: string
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.InsightResponse:
     properties:
       account_currency:
         example: USD
@@ -849,7 +658,118 @@ definitions:
         example: "125.50"
         type: string
     type: object
-  github_com_alex_ads_backend_internal_meta_sync_dto.TriggerSyncRequest:
+  dto.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.LoginResponse:
+    properties:
+      centrifugo_token:
+        type: string
+      permissions:
+        items:
+          type: string
+        type: array
+      roles:
+        items:
+          type: string
+        type: array
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/dto.AuthUserResponse'
+    type: object
+  dto.PermissionRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dto.PermissionResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.RoleBrief:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.RoleRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  dto.RoleResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/dto.PermissionResponse'
+        type: array
+    type: object
+  dto.SimpleAd:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.SimpleAdAccount:
+    properties:
+      business_name:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.SimpleAdSet:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.SimpleCampaign:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.SimpleUser:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.TriggerSyncRequest:
     properties:
       ad_account_id:
         example: act_1234567890
@@ -861,28 +781,108 @@ definitions:
         example: "2026-03-31"
         type: string
     type: object
-  github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse:
+  dto.UpdateWhitelistRuleRequest:
     properties:
+      allow_subdomains:
+        type: boolean
+      description:
+        type: string
+      is_active:
+        type: boolean
+      match_type:
+        enum:
+        - exact_url
+        - domain
+        - path_prefix
+        - contains
+        - regex
+        type: string
+      scope:
+        enum:
+        - destination_url
+        - display_url
+        - url_tags
+        - domain
+        type: string
+      value:
+        type: string
+    type: object
+  dto.UserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      role_ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - email
+    - name
+    type: object
+  dto.UserResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/dto.RoleBrief'
+        type: array
+    type: object
+  dto.WhitelistRuleResponse:
+    properties:
+      allow_subdomains:
+        type: boolean
       brand_id:
         type: integer
       created_at:
         type: string
-      fraud_log_id:
-        type: integer
+      description:
+        type: string
       id:
         type: integer
-      is_read:
+      is_active:
         type: boolean
-      message:
+      match_type:
         type: string
-      severity:
+      normalized_value:
         type: string
-      title:
+      scope:
         type: string
       updated_at:
         type: string
+      value:
+        type: string
     type: object
-  github_com_alex_ads_backend_pkg_response.ErrorResponse:
+  internal_core_fraud_log_dto.SimpleBrand:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      photo:
+        type: string
+    type: object
+  internal_meta_activity_dto.SimpleBrand:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      photo:
+        type: string
+    type: object
+  response.ErrorResponse:
     properties:
       errors: {}
       message:
@@ -892,7 +892,7 @@ definitions:
         example: false
         type: boolean
     type: object
-  github_com_alex_ads_backend_pkg_response.Meta:
+  response.Meta:
     properties:
       last_page:
         type: integer
@@ -903,7 +903,7 @@ definitions:
       total:
         type: integer
     type: object
-  github_com_alex_ads_backend_pkg_response.MetaPaging:
+  response.MetaPaging:
     properties:
       cursors:
         properties:
@@ -917,7 +917,7 @@ definitions:
       has_previous:
         type: boolean
     type: object
-  github_com_alex_ads_backend_pkg_response.PaginationMeta:
+  response.PaginationMeta:
     properties:
       last_page:
         type: integer
@@ -928,32 +928,32 @@ definitions:
       total:
         type: integer
     type: object
-  github_com_alex_ads_backend_pkg_response.PaginationResponse:
+  response.PaginationResponse:
     properties:
       data: {}
       message:
         example: Success
         type: string
       meta:
-        $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Meta'
+        $ref: '#/definitions/response.Meta'
       success:
         example: true
         type: boolean
     type: object
-  github_com_alex_ads_backend_pkg_response.Response:
+  response.Response:
     properties:
       data: {}
       errors: {}
       message:
         type: string
       meta:
-        $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Meta'
+        $ref: '#/definitions/response.Meta'
       paging:
-        $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.MetaPaging'
+        $ref: '#/definitions/response.MetaPaging'
       success:
         type: boolean
     type: object
-  github_com_alex_ads_backend_pkg_response.SuccessResponse:
+  response.SuccessResponse:
     properties:
       data: {}
       message:
@@ -963,7 +963,7 @@ definitions:
         example: true
         type: boolean
     type: object
-  internal_meta_sync.MetaSyncBatch:
+  sync.MetaSyncBatch:
     properties:
       ad_account_id:
         type: string
@@ -1009,7 +1009,7 @@ definitions:
         type: string
       steps:
         items:
-          $ref: '#/definitions/internal_meta_sync.MetaSyncStep'
+          $ref: '#/definitions/sync.MetaSyncStep'
         type: array
       sync_mode:
         type: string
@@ -1022,10 +1022,10 @@ definitions:
       updated_count:
         type: integer
     type: object
-  internal_meta_sync.MetaSyncStep:
+  sync.MetaSyncStep:
     properties:
       batch:
-        $ref: '#/definitions/internal_meta_sync.MetaSyncBatch'
+        $ref: '#/definitions/sync.MetaSyncBatch'
       batch_id:
         type: integer
       created_at:
@@ -1074,8 +1074,8 @@ definitions:
 host: localhost:8888
 info:
   contact: {}
-  description: ERP Ready Backend for Meta Ads & Business Management
-  title: Ads Backend API
+  description: Reporting Domain API
+  title: Reporting API
   version: "1.0"
 paths:
   /alerts:
@@ -1119,11 +1119,11 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse'
+                    $ref: '#/definitions/dto.AlertResponse'
                   type: array
               type: object
       security:
@@ -1149,10 +1149,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse'
+                  $ref: '#/definitions/dto.AlertResponse'
               type: object
       security:
       - BearerAuth: []
@@ -1177,10 +1177,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse'
+                  $ref: '#/definitions/dto.AlertResponse'
               type: object
       security:
       - BearerAuth: []
@@ -1198,7 +1198,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_auth_dto.LoginRequest'
+          $ref: '#/definitions/dto.LoginRequest'
       produces:
       - application/json
       responses:
@@ -1206,15 +1206,15 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_auth_dto.LoginResponse'
+                  $ref: '#/definitions/dto.LoginResponse'
               type: object
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       summary: Login
       tags:
       - Authentication
@@ -1229,7 +1229,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Logout
@@ -1273,11 +1273,11 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse'
+                    $ref: '#/definitions/dto.WhitelistRuleResponse'
                   type: array
               type: object
       security:
@@ -1300,7 +1300,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CreateWhitelistRuleRequest'
+          $ref: '#/definitions/dto.CreateWhitelistRuleRequest'
       produces:
       - application/json
       responses:
@@ -1308,10 +1308,10 @@ paths:
           description: Created
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse'
+                  $ref: '#/definitions/dto.WhitelistRuleResponse'
               type: object
       security:
       - BearerAuth: []
@@ -1340,7 +1340,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Delete whitelist rule
@@ -1368,10 +1368,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse'
+                  $ref: '#/definitions/dto.WhitelistRuleResponse'
               type: object
       security:
       - BearerAuth: []
@@ -1398,7 +1398,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.UpdateWhitelistRuleRequest'
+          $ref: '#/definitions/dto.UpdateWhitelistRuleRequest'
       produces:
       - application/json
       responses:
@@ -1406,10 +1406,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.WhitelistRuleResponse'
+                  $ref: '#/definitions/dto.WhitelistRuleResponse'
               type: object
       security:
       - BearerAuth: []
@@ -1432,7 +1432,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLRequest'
+          $ref: '#/definitions/dto.CheckURLRequest'
       produces:
       - application/json
       responses:
@@ -1440,10 +1440,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_whitelist_rule_dto.CheckURLResponse'
+                  $ref: '#/definitions/dto.CheckURLResponse'
               type: object
       security:
       - BearerAuth: []
@@ -1473,17 +1473,17 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonListResponse'
+                    $ref: '#/definitions/dto.ContactPersonListResponse'
                   type: array
               type: object
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List contact persons
@@ -1499,7 +1499,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonRequest'
+          $ref: '#/definitions/dto.ContactPersonRequest'
       produces:
       - application/json
       responses:
@@ -1507,15 +1507,15 @@ paths:
           description: Created
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse'
+                  $ref: '#/definitions/dto.ContactPersonResponse'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Create contact person
@@ -1539,7 +1539,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
                   type: object
@@ -1547,7 +1547,7 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete contact person
@@ -1570,15 +1570,15 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse'
+                  $ref: '#/definitions/dto.ContactPersonResponse'
               type: object
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get contact person by ID
@@ -1599,7 +1599,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonRequest'
+          $ref: '#/definitions/dto.ContactPersonRequest'
       produces:
       - application/json
       responses:
@@ -1607,19 +1607,19 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_contact_person_dto.ContactPersonResponse'
+                  $ref: '#/definitions/dto.ContactPersonResponse'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Update contact person
@@ -1654,17 +1654,17 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse'
+                    $ref: '#/definitions/dto.BrandResponse'
                   type: array
               type: object
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: List Brands
@@ -1699,19 +1699,19 @@ paths:
           description: Created
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse'
+                  $ref: '#/definitions/dto.BrandResponse'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Create Brand
@@ -1732,19 +1732,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Delete Brand
@@ -1765,15 +1765,15 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse'
+                  $ref: '#/definitions/dto.BrandResponse'
               type: object
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Brand Details
@@ -1812,23 +1812,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_brand_dto.BrandResponse'
+                  $ref: '#/definitions/dto.BrandResponse'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Update Brand
@@ -1873,15 +1873,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Brand Dashboard
@@ -1914,11 +1914,11 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse'
+                    $ref: '#/definitions/dto.PermissionResponse'
                   type: array
               type: object
       security:
@@ -1936,14 +1936,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest'
+          $ref: '#/definitions/dto.PermissionRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Create Permission
@@ -1966,7 +1966,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Delete Permission
@@ -1989,10 +1989,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionResponse'
+                  $ref: '#/definitions/dto.PermissionResponse'
               type: object
       security:
       - BearerAuth: []
@@ -2014,14 +2014,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_permission_dto.PermissionRequest'
+          $ref: '#/definitions/dto.PermissionRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Update Permission
@@ -2054,11 +2054,11 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleResponse'
+                    $ref: '#/definitions/dto.RoleResponse'
                   type: array
               type: object
       security:
@@ -2076,14 +2076,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleRequest'
+          $ref: '#/definitions/dto.RoleRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Create Role
@@ -2106,7 +2106,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Delete Role
@@ -2129,10 +2129,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleResponse'
+                  $ref: '#/definitions/dto.RoleResponse'
               type: object
       security:
       - BearerAuth: []
@@ -2154,14 +2154,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_role_dto.RoleRequest'
+          $ref: '#/definitions/dto.RoleRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Update Role
@@ -2183,14 +2183,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_role_dto.AssignPermissionRequest'
+          $ref: '#/definitions/dto.AssignPermissionRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Assign Permissions
@@ -2227,11 +2227,11 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserResponse'
+                    $ref: '#/definitions/dto.UserResponse'
                   type: array
               type: object
       security:
@@ -2249,14 +2249,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserRequest'
+          $ref: '#/definitions/dto.UserRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Register User
@@ -2279,7 +2279,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Delete User
@@ -2302,10 +2302,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserResponse'
+                  $ref: '#/definitions/dto.UserResponse'
               type: object
       security:
       - BearerAuth: []
@@ -2327,14 +2327,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_core_user_dto.UserRequest'
+          $ref: '#/definitions/dto.UserRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
       security:
       - BearerAuth: []
       summary: Update User
@@ -2393,11 +2393,11 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse'
+                    $ref: '#/definitions/dto.FraudLogResponse'
                   type: array
               type: object
       security:
@@ -2423,10 +2423,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse'
+                  $ref: '#/definitions/dto.FraudLogResponse'
               type: object
       security:
       - BearerAuth: []
@@ -2451,10 +2451,10 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_core_fraud_log_dto.FraudLogResponse'
+                  $ref: '#/definitions/dto.FraudLogResponse'
               type: object
       security:
       - BearerAuth: []
@@ -2484,23 +2484,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse'
+                    $ref: '#/definitions/dto.ActivityResponse'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get All Activities
@@ -2543,23 +2543,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse'
+                    $ref: '#/definitions/dto.AdAccountResponse'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Meta'
+                  $ref: '#/definitions/response.Meta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Meta Ad Accounts
@@ -2582,15 +2582,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Disconnect Brand from Ad Account
@@ -2608,22 +2608,22 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AssignBrandRequest'
+          $ref: '#/definitions/dto.AssignBrandRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            $ref: '#/definitions/response.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Assign or Unassign Brand to Ad Accounts
@@ -2641,11 +2641,11 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.BusinessOptionResponse'
+                    $ref: '#/definitions/dto.BusinessOptionResponse'
                   type: array
               type: object
       security:
@@ -2688,25 +2688,25 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse'
+                    $ref: '#/definitions/dto.AdAccountResponse'
                   type: array
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Unassigned Ad Accounts
@@ -2751,23 +2751,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.AdResponse'
+                    $ref: '#/definitions/dto.AdResponse'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Ads
@@ -2827,15 +2827,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Ad Dashboard
@@ -2876,23 +2876,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_adset_dto.AdSetResponse'
+                    $ref: '#/definitions/dto.AdSetResponse'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get AdSets
@@ -2948,15 +2948,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Ad Set Dashboard
@@ -2990,23 +2990,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_activity_dto.ActivityResponse'
+                    $ref: '#/definitions/dto.ActivityResponse'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Activities by Brand ID
@@ -3050,25 +3050,25 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_ad_account_dto.AdAccountResponse'
+                    $ref: '#/definitions/dto.AdAccountResponse'
                   type: array
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Ad Accounts by Brand
@@ -3126,23 +3126,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.AdDashboardRow'
+                    $ref: '#/definitions/dto.AdDashboardRow'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Ads by Brand ID
@@ -3196,23 +3196,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_adset_dto.AdSetDashboardRow'
+                    $ref: '#/definitions/dto.AdSetDashboardRow'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get AdSets by Brand ID
@@ -3242,15 +3242,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Ad Set Simple List by Brand ID
@@ -3300,23 +3300,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow'
+                    $ref: '#/definitions/dto.CampaignDashboardRow'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Campaigns by Brand ID
@@ -3339,15 +3339,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Campaign Simple List by Brand ID
@@ -3393,19 +3393,19 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignSummaryResponse'
+                  $ref: '#/definitions/dto.CampaignSummaryResponse'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Campaign Summary by Brand ID
@@ -3446,23 +3446,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignResponse'
+                    $ref: '#/definitions/dto.CampaignResponse'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Campaigns
@@ -3516,23 +3516,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow'
+                    $ref: '#/definitions/dto.CampaignDashboardRow'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Campaign Dashboard
@@ -3561,19 +3561,19 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.CreativeResponse'
+                  $ref: '#/definitions/dto.CreativeResponse'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Ad Creative
@@ -3626,23 +3626,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_insight_dto.InsightResponse'
+                    $ref: '#/definitions/dto.InsightResponse'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Ad Insights
@@ -3688,23 +3688,23 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            - $ref: '#/definitions/response.Response'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_insight_dto.InsightResponse'
+                    $ref: '#/definitions/dto.InsightResponse'
                   type: array
                 meta:
-                  $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationMeta'
+                  $ref: '#/definitions/response.PaginationMeta'
               type: object
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       summary: Get Campaign Insights
@@ -3719,20 +3719,20 @@ paths:
         in: body
         name: request
         schema:
-          $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_sync_dto.TriggerSyncRequest'
+          $ref: '#/definitions/dto.TriggerSyncRequest'
       responses:
         "202":
           description: Accepted
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
         "409":
           description: Sync already in progress
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       - BearerAuth: []
@@ -3761,17 +3761,17 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.PaginationResponse'
+            - $ref: '#/definitions/response.PaginationResponse'
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/internal_meta_sync.MetaSyncBatch'
+                    $ref: '#/definitions/sync.MetaSyncBatch'
                   type: array
               type: object
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       - BearerAuth: []
@@ -3794,19 +3794,19 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  $ref: '#/definitions/internal_meta_sync.MetaSyncBatch'
+                  $ref: '#/definitions/sync.MetaSyncBatch'
               type: object
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+            $ref: '#/definitions/response.ErrorResponse'
       security:
       - BearerAuth: []
       - BearerAuth: []
@@ -3822,7 +3822,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
       - BearerAuth: []
@@ -3840,7 +3840,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
       summary: Get recent activities
@@ -3858,7 +3858,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
       summary: Get brands monitoring data
@@ -3875,7 +3875,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.Response'
+            $ref: '#/definitions/response.Response'
       security:
       - BearerAuth: []
       summary: Get dashboard summary metrics

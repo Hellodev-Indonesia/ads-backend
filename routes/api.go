@@ -25,6 +25,7 @@ import (
 	"github.com/alex/ads_backend/pkg/swagger"
 	"github.com/alex/ads_backend/routes/core"
 	"github.com/alex/ads_backend/routes/meta"
+	"github.com/alex/ads_backend/routes/reporting"
 	"github.com/gin-gonic/gin"
 )
 
@@ -123,5 +124,8 @@ func RegisterApiRoutes(router *gin.Engine) {
 
 		syncHandler := sync.NewHandler(syncJob, syncService)
 		sync.RegisterRoutes(v1, syncHandler)
+
+		// --- REPORTING DOMAIN ---
+		reporting.RegisterReportingRoutes(v1, config.DB)
 	}
 }

@@ -145,7 +145,7 @@ func (h *Handler) GetCampaignSummaryByBrand(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        brand_id       path      int     true   "Brand ID"
-// @Success      200            {object}  response.Response{data=[]dto.SimpleListResponse}
+// @Success      200            {object}  response.Response
 // @Failure      400            {object}  response.ErrorResponse
 // @Failure      500            {object}  response.ErrorResponse
 // @Security BearerAuth

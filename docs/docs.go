@@ -3551,22 +3551,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_adset_dto.SimpleListResponse"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                         }
                     },
                     "400": {
@@ -3720,22 +3705,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_campaign_dto.SimpleListResponse"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
                         }
                     },
                     "400": {
@@ -4514,6 +4484,90 @@ const docTemplate = `{
                     "Meta Sync"
                 ],
                 "summary": "Get Sync Status",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/reporting/dashboard/activities": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get list of recent activities across brands",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Reporting Dashboard"
+                ],
+                "summary": "Get recent activities",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/reporting/dashboard/brands": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get metrics per brand including ad accounts, active campaigns, and total spends",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Reporting Dashboard"
+                ],
+                "summary": "Get brands monitoring data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/reporting/dashboard/summary": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get total spend, ongoing ads, and security status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Reporting Dashboard"
+                ],
+                "summary": "Get dashboard summary metrics",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -5500,17 +5554,6 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_alex_ads_backend_internal_meta_adset_dto.SimpleListResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "github_com_alex_ads_backend_internal_meta_campaign_dto.CampaignDashboardRow": {
             "type": "object",
             "properties": {
@@ -5678,17 +5721,6 @@ const docTemplate = `{
                 },
                 "total_messaging": {
                     "type": "integer"
-                }
-            }
-        },
-        "github_com_alex_ads_backend_internal_meta_campaign_dto.SimpleListResponse": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
                 }
             }
         },
