@@ -118,7 +118,18 @@ func (h *Handler) Resolve(c *gin.Context) {
 		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
 		return
 	}
-	userID := uint64(userIDVal.(float64))
+	var userID uint64
+	switch v := userIDVal.(type) {
+	case uint:
+		userID = uint64(v)
+	case float64:
+		userID = uint64(v)
+	case uint64:
+		userID = v
+	default:
+		response.Error(c, http.StatusInternalServerError, "Invalid user ID type in context", nil)
+		return
+	}
 
 	log, err := h.service.Resolve(id, userID)
 	if err != nil {
