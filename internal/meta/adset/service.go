@@ -29,6 +29,7 @@ type Service interface {
 	GetAdSets(filter AdSetFilter) ([]dto.AdSetResponse, *response.PaginationMeta, error)
 	GetAdSetDashboard(filter AdSetFilter) ([]dto.AdSetDashboardRow, *response.PaginationMeta, error)
 	GetAdSetListByBrand(brandID uint64, campaignIDs []string) ([]dto.SimpleListResponse, error)
+	GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) (*dto.AdsetSummaryResponse, error)
 
 	// Meta API sync (used by sync job)
 	SyncAdSets(adAccountID string) (int, error)
@@ -80,6 +81,43 @@ func (s *serviceImpl) GetAdSets(filter AdSetFilter) ([]dto.AdSetResponse, *respo
 	}
 
 	return result, meta, nil
+}
+
+func (s *serviceImpl) GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) (*dto.AdsetSummaryResponse, error) {
+	rows, err := s.repo.GetSummaryByBrand(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get summary: %w", err)
+	}
+
+	var summary dto.AdsetSummaryResponse
+	for _, row := range rows {
+		summary.AmountSpent += row.Spend
+		summary.Impressions += row.Impressions
+		summary.Reach += row.Reach
+
+		if len(row.Actions) > 0 {
+			var actions []metaAction
+			if err := json.Unmarshal(row.Actions, &actions); err == nil {
+				for _, act := range actions {
+					val, _ := strconv.ParseInt(act.Value, 10, 64)
+					switch act.ActionType {
+					case "onsite_conversion.total_messaging_connection":
+						summary.TotalMessaging += val
+					case "onsite_conversion.messaging_first_reply":
+						summary.NewMessaging += val
+					case "purchase":
+						summary.PurchaseTotal += val
+					}
+				}
+			}
+		}
+	}
+
+	if summary.PurchaseTotal > 0 {
+		summary.CostPerPurchase = summary.AmountSpent / float64(summary.PurchaseTotal)
+	}
+
+	return &summary, nil
 }
 
 // --- META API SYNC ---

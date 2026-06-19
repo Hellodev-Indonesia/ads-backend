@@ -24,11 +24,19 @@ type AdFilter struct {
 	Limit      int
 }
 
+type InsightSummaryRow struct {
+	Spend       float64
+	Impressions int64
+	Reach       int64
+	Actions     []byte // JSON
+}
+
 type Repository interface {
 	Upsert(ad *MetaAd) error
 	UpsertBatch(ads []MetaAd) error
 	FindAll(filter AdFilter) ([]MetaAd, int64, error)
 	FindCreativeRawPayload(creativeID string) (string, error)
+	GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) ([]InsightSummaryRow, error)
 	FindAdDashboard(filter AdFilter) ([]adDashboardScan, int64, error)
 }
 
@@ -99,6 +107,30 @@ func (r *repository) FindCreativeRawPayload(creativeID string) (string, error) {
 	return result.RawPayload, err
 }
 
+func (r *repository) GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) ([]InsightSummaryRow, error) {
+	var rows []InsightSummaryRow
+	query := r.db.Table("meta_insights").
+		Select("spend, impressions, reach, actions").
+		Where("level = 'ad'").
+		Where("ad_id IN (SELECT id FROM meta_ads WHERE campaign_id IN (SELECT id FROM meta_campaigns WHERE account_id IN (SELECT id FROM meta_ad_accounts WHERE brand_id = ?)))", brandID)
+
+	if dateStart != "" {
+		query = query.Where("date_start >= ?", dateStart)
+	}
+	if dateStop != "" {
+		query = query.Where("date_stop <= ?", dateStop)
+	}
+	if len(campaignIDs) > 0 {
+		query = query.Where("campaign_id IN ?", campaignIDs)
+	}
+	if len(adsetIDs) > 0 {
+		query = query.Where("adset_id IN ?", adsetIDs)
+	}
+
+	err := query.Scan(&rows).Error
+	return rows, err
+}
+
 type adDashboardScan struct {
 	AdID              string          `gorm:"column:ad_id"`
 	AdSetID           string          `gorm:"column:adset_id"`
@@ -109,6 +141,7 @@ type adDashboardScan struct {
 	Status            string          `gorm:"column:status"`
 	EffectiveStatus   string          `gorm:"column:effective_status"`
 	CreativeID        string          `gorm:"column:creative_id"`
+	ImageURL          *string         `gorm:"column:image_url"`
 	Spend             *float64        `gorm:"column:spend"`
 	Impressions       *int64          `gorm:"column:impressions"`
 	Reach             *int64          `gorm:"column:reach"`
@@ -181,10 +214,12 @@ SELECT
   a.status,
   a.effective_status,
   a.creative_id,
+  cr.image_url,
   a.updated_time
 FROM meta_ads a
 JOIN meta_campaigns c ON a.campaign_id = c.id
 JOIN meta_ad_sets s ON a.adset_id = s.id
+LEFT JOIN ad_creatives cr ON a.creative_id = cr.creative_id
 ` + where + ` ORDER BY a.created_time DESC LIMIT ? OFFSET ?`
 
 	queryArgs := append(args, filter.Limit, offset)

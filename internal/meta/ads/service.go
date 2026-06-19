@@ -29,6 +29,7 @@ type Service interface {
 	// DB reads (used by handlers)
 	GetAds(filter AdFilter) ([]dto.AdResponse, *response.PaginationMeta, error)
 	GetAdDashboard(filter AdFilter) ([]dto.AdDashboardRow, *response.PaginationMeta, error)
+	GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) (*dto.AdSummaryResponse, error)
 
 	// Direct Meta API call (creatives stay as direct calls)
 	GetCreative(creativeID string, fields string) (*dto.CreativeResponse, error)
@@ -80,6 +81,43 @@ func (s *serviceImpl) GetAds(filter AdFilter) ([]dto.AdResponse, *response.Pagin
 	}
 
 	return result, meta, nil
+}
+
+func (s *serviceImpl) GetSummaryByBrand(brandID uint64, dateStart, dateStop string, campaignIDs []string, adsetIDs []string) (*dto.AdSummaryResponse, error) {
+	rows, err := s.repo.GetSummaryByBrand(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get summary: %w", err)
+	}
+
+	var summary dto.AdSummaryResponse
+	for _, row := range rows {
+		summary.AmountSpent += row.Spend
+		summary.Impressions += row.Impressions
+		summary.Reach += row.Reach
+
+		if len(row.Actions) > 0 {
+			var actions []metaAction
+			if err := json.Unmarshal(row.Actions, &actions); err == nil {
+				for _, act := range actions {
+					val, _ := strconv.ParseInt(act.Value, 10, 64)
+					switch act.ActionType {
+					case "onsite_conversion.total_messaging_connection":
+						summary.TotalMessaging += val
+					case "onsite_conversion.messaging_first_reply":
+						summary.NewMessaging += val
+					case "purchase":
+						summary.PurchaseTotal += val
+					}
+				}
+			}
+		}
+	}
+
+	if summary.PurchaseTotal > 0 {
+		summary.CostPerPurchase = summary.AmountSpent / float64(summary.PurchaseTotal)
+	}
+
+	return &summary, nil
 }
 
 // --- LOCAL DB READ (creatives are synced in background) ---
@@ -293,6 +331,10 @@ func mapAdScanToDTO(r adDashboardScan) dto.AdDashboardRow {
 		AmountSpent:     formatNullFloat(r.Spend),
 		Impressions:     formatNullInt(r.Impressions),
 		Reach:           formatNullInt(r.Reach),
+	}
+
+	if r.ImageURL != nil {
+		row.ImageURL = *r.ImageURL
 	}
 
 	if r.UpdatedTime != nil {

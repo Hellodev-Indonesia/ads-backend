@@ -3399,6 +3399,99 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/brands/{brand_id}/ads/summary": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve aggregated ad performance metrics for a specific brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Ads"
+                ],
+                "summary": "Get Ad Summary by Brand ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "Filter by campaign IDs",
+                        "name": "campaign_ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "Filter by adset IDs",
+                        "name": "adset_ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start Date (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Stop Date (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_ads_dto.AdSummaryResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/brands/{brand_id}/adsets": {
             "get": {
                 "security": [
@@ -3552,6 +3645,99 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/meta/brands/{brand_id}/adsets/summary": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve aggregated adset performance metrics for a specific brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta AdSets"
+                ],
+                "summary": "Get AdSet Summary by Brand ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "brand_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "Filter by campaign IDs",
+                        "name": "campaign_ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "description": "Filter by adset IDs",
+                        "name": "adset_ids",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start Date (YYYY-MM-DD)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Stop Date (YYYY-MM-DD)",
+                        "name": "date_stop",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_adset_dto.AdsetSummaryResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {
@@ -5314,6 +5500,9 @@ const docTemplate = `{
                 "effective_status": {
                     "type": "string"
                 },
+                "image_url": {
+                    "type": "string"
+                },
                 "impressions": {
                     "type": "string"
                 },
@@ -5377,6 +5566,35 @@ const docTemplate = `{
                 "updated_time": {
                     "type": "string",
                     "example": "2026-05-11T12:00:00Z"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_ads_dto.AdSummaryResponse": {
+            "type": "object",
+            "properties": {
+                "amount_spent": {
+                    "type": "number"
+                },
+                "cost_per_purchase": {
+                    "type": "number"
+                },
+                "cost_per_result": {
+                    "type": "number"
+                },
+                "impressions": {
+                    "type": "integer"
+                },
+                "new_messaging": {
+                    "type": "integer"
+                },
+                "purchase_total": {
+                    "type": "integer"
+                },
+                "reach": {
+                    "type": "integer"
+                },
+                "total_messaging": {
+                    "type": "integer"
                 }
             }
         },
@@ -5551,6 +5769,35 @@ const docTemplate = `{
                 "updated_time": {
                     "type": "string",
                     "example": "2026-05-11T12:00:00Z"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_adset_dto.AdsetSummaryResponse": {
+            "type": "object",
+            "properties": {
+                "amount_spent": {
+                    "type": "number"
+                },
+                "cost_per_purchase": {
+                    "type": "number"
+                },
+                "cost_per_result": {
+                    "type": "number"
+                },
+                "impressions": {
+                    "type": "integer"
+                },
+                "new_messaging": {
+                    "type": "integer"
+                },
+                "purchase_total": {
+                    "type": "integer"
+                },
+                "reach": {
+                    "type": "integer"
+                },
+                "total_messaging": {
+                    "type": "integer"
                 }
             }
         },

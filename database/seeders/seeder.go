@@ -10,6 +10,7 @@ func Run(db *gorm.DB) {
 
 	// Panggil seeder spesifik di sini
 	SeedCore(db)
+	SeedMetaAdAccounts(db)
 
 	log.Println("Seeding completed successfully!")
 }

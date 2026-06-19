@@ -12,6 +12,43 @@ type MockService struct {
 	mock.Mock
 }
 
+// FindAll provides a mock function with given fields: filter
+func (_m *MockService) FindAll(filter dto.ActivityFilter) ([]dto.ActivityResponse, int64, error) {
+	ret := _m.Called(filter)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindAll")
+	}
+
+	var r0 []dto.ActivityResponse
+	var r1 int64
+	var r2 error
+	if rf, ok := ret.Get(0).(func(dto.ActivityFilter) ([]dto.ActivityResponse, int64, error)); ok {
+		return rf(filter)
+	}
+	if rf, ok := ret.Get(0).(func(dto.ActivityFilter) []dto.ActivityResponse); ok {
+		r0 = rf(filter)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dto.ActivityResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(dto.ActivityFilter) int64); ok {
+		r1 = rf(filter)
+	} else {
+		r1 = ret.Get(1).(int64)
+	}
+
+	if rf, ok := ret.Get(2).(func(dto.ActivityFilter) error); ok {
+		r2 = rf(filter)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // FindAllByBrand provides a mock function with given fields: brandID, filter
 func (_m *MockService) FindAllByBrand(brandID uint64, filter dto.ActivityFilter) ([]dto.ActivityResponse, int64, error) {
 	ret := _m.Called(brandID, filter)
@@ -47,6 +84,36 @@ func (_m *MockService) FindAllByBrand(brandID uint64, filter dto.ActivityFilter)
 	}
 
 	return r0, r1, r2
+}
+
+// FindLatestByObjectIDs provides a mock function with given fields: adAccountID, objectIDs
+func (_m *MockService) FindLatestByObjectIDs(adAccountID string, objectIDs []string) (*MetaActivity, error) {
+	ret := _m.Called(adAccountID, objectIDs)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindLatestByObjectIDs")
+	}
+
+	var r0 *MetaActivity
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, []string) (*MetaActivity, error)); ok {
+		return rf(adAccountID, objectIDs)
+	}
+	if rf, ok := ret.Get(0).(func(string, []string) *MetaActivity); ok {
+		r0 = rf(adAccountID, objectIDs)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*MetaActivity)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, []string) error); ok {
+		r1 = rf(adAccountID, objectIDs)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // SyncActivities provides a mock function with given fields: adAccountID

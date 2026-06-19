@@ -10,6 +10,7 @@ type AdDashboardRow struct {
 	Status          string `json:"status"`
 	EffectiveStatus string `json:"effective_status"`
 	CreativeID      string `json:"creative_id,omitempty"`
+	ImageURL        string `json:"image_url,omitempty"`
 
 	AmountSpent string `json:"amount_spent"`
 	Impressions string `json:"impressions"`

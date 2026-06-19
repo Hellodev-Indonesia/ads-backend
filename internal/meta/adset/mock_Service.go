@@ -122,6 +122,36 @@ func (_m *MockService) GetAdSets(filter AdSetFilter) ([]dto.AdSetResponse, *resp
 	return r0, r1, r2
 }
 
+// GetSummaryByBrand provides a mock function with given fields: brandID, dateStart, dateStop, campaignIDs, adsetIDs
+func (_m *MockService) GetSummaryByBrand(brandID uint64, dateStart string, dateStop string, campaignIDs []string, adsetIDs []string) (*dto.AdsetSummaryResponse, error) {
+	ret := _m.Called(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetSummaryByBrand")
+	}
+
+	var r0 *dto.AdsetSummaryResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint64, string, string, []string, []string) (*dto.AdsetSummaryResponse, error)); ok {
+		return rf(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
+	}
+	if rf, ok := ret.Get(0).(func(uint64, string, string, []string, []string) *dto.AdsetSummaryResponse); ok {
+		r0 = rf(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.AdsetSummaryResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint64, string, string, []string, []string) error); ok {
+		r1 = rf(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // SyncAdSets provides a mock function with given fields: adAccountID
 func (_m *MockService) SyncAdSets(adAccountID string) (int, error) {
 	ret := _m.Called(adAccountID)

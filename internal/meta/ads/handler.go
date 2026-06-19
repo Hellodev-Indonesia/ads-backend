@@ -105,6 +105,44 @@ func (h *Handler) GetAdsByBrand(c *gin.Context) {
 	response.SuccessWithPagination(c, "Successfully retrieved ads for brand", resp, meta)
 }
 
+// GetAdSummaryByBrand godoc
+// @Summary      Get Ad Summary by Brand ID
+// @Description  Retrieve aggregated ad performance metrics for a specific brand
+// @Tags         Meta Ads
+// @Accept       json
+// @Produce      json
+// @Param        brand_id       path      int     true   "Brand ID"
+// @Param        campaign_ids   query     []string false "Filter by campaign IDs" collectionFormat(multi)
+// @Param        adset_ids      query     []string false "Filter by adset IDs" collectionFormat(multi)
+// @Param        date_start     query     string  false  "Start Date (YYYY-MM-DD)"
+// @Param        date_stop      query     string  false  "Stop Date (YYYY-MM-DD)"
+// @Success      200            {object}  response.Response{data=dto.AdSummaryResponse}
+// @Failure      400            {object}  response.ErrorResponse
+// @Failure      500            {object}  response.ErrorResponse
+// @Security BearerAuth
+// @Router       /meta/brands/{brand_id}/ads/summary [get]
+func (h *Handler) GetAdSummaryByBrand(c *gin.Context) {
+	brandIDParam := c.Param("brand_id")
+	brandID, err := strconv.ParseUint(brandIDParam, 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid brand ID", nil)
+		return
+	}
+
+	dateStart := c.Query("date_start")
+	dateStop := c.Query("date_stop")
+	campaignIDs := c.QueryArray("campaign_ids")
+	adsetIDs := c.QueryArray("adset_ids")
+
+	resp, err := h.service.GetSummaryByBrand(brandID, dateStart, dateStop, campaignIDs, adsetIDs)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	response.Success(c, "Successfully retrieved ad summary", resp)
+}
+
 // GetCreative godoc
 // @Summary      Get Ad Creative
 // @Description  Retrieve details of a specific ad creative from the local database (synced from Meta)
