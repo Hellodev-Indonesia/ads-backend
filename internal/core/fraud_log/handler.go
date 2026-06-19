@@ -43,6 +43,13 @@ func (h *Handler) FindAll(c *gin.Context) {
 		return
 	}
 
+	switch filter.Status {
+	case "true":
+		filter.Status = "resolved"
+	case "false":
+		filter.Status = "open"
+	}
+
 	logs, total, err := h.service.FindAll(filter)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error(), nil)
