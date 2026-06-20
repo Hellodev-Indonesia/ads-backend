@@ -137,3 +137,13 @@ func (r *Repository) FailOrphanedSteps(ctx context.Context) error {
 			"error_message": "Interrupted by server restart",
 		}).Error
 }
+
+func (r *Repository) GetConfig(ctx context.Context) (*MetaSyncConfig, error) {
+	var config MetaSyncConfig
+	err := r.db.WithContext(ctx).FirstOrCreate(&config, MetaSyncConfig{ID: 1}).Error
+	return &config, err
+}
+
+func (r *Repository) UpdateConfig(ctx context.Context, config *MetaSyncConfig) error {
+	return r.db.WithContext(ctx).Save(config).Error
+}

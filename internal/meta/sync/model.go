@@ -126,3 +126,14 @@ type StepCounts struct {
 	FailedCount   uint
 	RequestCount  uint
 }
+
+type MetaSyncConfig struct {
+	ID              uint64    `gorm:"primaryKey;autoIncrement" json:"id"`
+	IntervalMinutes int       `gorm:"not null;default:180" json:"interval_minutes"`
+	IsActive        bool      `gorm:"not null;default:true" json:"is_active"`
+	UpdatedAt       time.Time `json:"updated_at"`
+}
+
+func (MetaSyncConfig) TableName() string {
+	return "meta_sync_configs"
+}

@@ -889,6 +889,13 @@ definitions:
         example: "125.50"
         type: string
     type: object
+  github_com_alex_ads_backend_internal_meta_sync_dto.MetaSyncConfigResponse:
+    properties:
+      interval_minutes:
+        type: integer
+      is_active:
+        type: boolean
+    type: object
   github_com_alex_ads_backend_internal_meta_sync_dto.TriggerSyncRequest:
     properties:
       ad_account_id:
@@ -900,6 +907,16 @@ definitions:
       date_stop:
         example: "2026-03-31"
         type: string
+    type: object
+  github_com_alex_ads_backend_internal_meta_sync_dto.UpdateMetaSyncConfigRequest:
+    properties:
+      interval_minutes:
+        minimum: 5
+        type: integer
+      is_active:
+        type: boolean
+    required:
+    - interval_minutes
     type: object
   github_com_alex_ads_backend_internal_notification_alert_dto.AlertResponse:
     properties:
@@ -3967,6 +3984,66 @@ paths:
       - BearerAuth: []
       - BearerAuth: []
       summary: Get Sync Batch
+      tags:
+      - Meta Sync
+  /meta/sync/config:
+    get:
+      description: Returns the meta sync background job configuration.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_sync_dto.MetaSyncConfigResponse'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Sync Config
+      tags:
+      - Meta Sync
+    put:
+      consumes:
+      - application/json
+      description: Updates the meta sync background job configuration.
+      parameters:
+      - description: Config Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_sync_dto.UpdateMetaSyncConfigRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_alex_ads_backend_internal_meta_sync_dto.MetaSyncConfigResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update Sync Config
       tags:
       - Meta Sync
   /meta/sync/status:

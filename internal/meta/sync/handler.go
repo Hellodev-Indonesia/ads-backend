@@ -172,3 +172,56 @@ func parseIntQuery(c *gin.Context, key string, defaultVal int) int {
 	}
 	return v
 }
+
+// GetConfig godoc
+// @Summary      Get Sync Config
+// @Description  Returns the meta sync background job configuration.
+// @Tags         Meta Sync
+// @Produce      json
+// @Success      200  {object}  response.SuccessResponse{data=dto.MetaSyncConfigResponse}
+// @Failure      500  {object}  response.ErrorResponse
+// @Security     BearerAuth
+// @Router       /meta/sync/config [get]
+func (h *Handler) GetConfig(c *gin.Context) {
+	config, err := h.service.GetConfig(c.Request.Context())
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "failed to get config", err)
+		return
+	}
+
+	response.Success(c, "Successfully retrieved sync config", dto.MetaSyncConfigResponse{
+		IntervalMinutes: config.IntervalMinutes,
+		IsActive:        config.IsActive,
+	})
+}
+
+// UpdateConfig godoc
+// @Summary      Update Sync Config
+// @Description  Updates the meta sync background job configuration.
+// @Tags         Meta Sync
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.UpdateMetaSyncConfigRequest true "Config Request"
+// @Success      200  {object}  response.SuccessResponse{data=dto.MetaSyncConfigResponse}
+// @Failure      400  {object}  response.ErrorResponse
+// @Failure      500  {object}  response.ErrorResponse
+// @Security     BearerAuth
+// @Router       /meta/sync/config [put]
+func (h *Handler) UpdateConfig(c *gin.Context) {
+	var req dto.UpdateMetaSyncConfigRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+		return
+	}
+
+	config, err := h.service.UpdateConfig(c.Request.Context(), req.IntervalMinutes, req.IsActive)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, "failed to update config", err)
+		return
+	}
+
+	response.Success(c, "Successfully updated sync config", dto.MetaSyncConfigResponse{
+		IntervalMinutes: config.IntervalMinutes,
+		IsActive:        config.IsActive,
+	})
+}

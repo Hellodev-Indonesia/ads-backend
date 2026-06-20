@@ -4652,6 +4652,110 @@ const docTemplate = `{
                 }
             }
         },
+        "/meta/sync/config": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns the meta sync background job configuration.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Sync"
+                ],
+                "summary": "Get Sync Config",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_sync_dto.MetaSyncConfigResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Updates the meta sync background job configuration.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Meta Sync"
+                ],
+                "summary": "Update Sync Config",
+                "parameters": [
+                    {
+                        "description": "Config Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_sync_dto.UpdateMetaSyncConfigRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/github_com_alex_ads_backend_internal_meta_sync_dto.MetaSyncConfigResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_alex_ads_backend_pkg_response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/meta/sync/status": {
             "get": {
                 "security": [
@@ -6063,6 +6167,17 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_alex_ads_backend_internal_meta_sync_dto.MetaSyncConfigResponse": {
+            "type": "object",
+            "properties": {
+                "interval_minutes": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                }
+            }
+        },
         "github_com_alex_ads_backend_internal_meta_sync_dto.TriggerSyncRequest": {
             "type": "object",
             "properties": {
@@ -6077,6 +6192,21 @@ const docTemplate = `{
                 "date_stop": {
                     "type": "string",
                     "example": "2026-03-31"
+                }
+            }
+        },
+        "github_com_alex_ads_backend_internal_meta_sync_dto.UpdateMetaSyncConfigRequest": {
+            "type": "object",
+            "required": [
+                "interval_minutes"
+            ],
+            "properties": {
+                "interval_minutes": {
+                    "type": "integer",
+                    "minimum": 5
+                },
+                "is_active": {
+                    "type": "boolean"
                 }
             }
         },

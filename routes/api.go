@@ -116,8 +116,10 @@ func RegisterApiRoutes(router *gin.Engine) {
 		// Centrifugo publisher for real-time sync events
 		centrifugoClient := centrifugo.NewClient(config.CentrifugoConfig.URL, config.CentrifugoConfig.APIKey)
 
-		// Sync job
+		// Sync job and Scheduler
 		syncJob := jobs.NewMetaAdsSyncJob(adAccountService, campaignService, adSetService, adsService, insightService, syncService, centrifugoClient, adCreativeService, activityService)
+		scheduler := jobs.NewScheduler(syncService, syncJob)
+		scheduler.Start()
 
 		// Register Meta Routes
 		meta.RegisterMetaRoutes(v1, adAccountHandler, campaignHandler, adSetHandler, adsHandler, insightHandler, activityHandler)

@@ -213,3 +213,20 @@ func (s *Service) CleanupOrphanedBatches(ctx context.Context) error {
 	}
 	return nil
 }
+
+func (s *Service) GetConfig(ctx context.Context) (*MetaSyncConfig, error) {
+	return s.repo.GetConfig(ctx)
+}
+
+func (s *Service) UpdateConfig(ctx context.Context, interval int, isActive bool) (*MetaSyncConfig, error) {
+	config, err := s.repo.GetConfig(ctx)
+	if err != nil {
+		return nil, err
+	}
+	config.IntervalMinutes = interval
+	config.IsActive = isActive
+	if err := s.repo.UpdateConfig(ctx, config); err != nil {
+		return nil, err
+	}
+	return config, nil
+}
