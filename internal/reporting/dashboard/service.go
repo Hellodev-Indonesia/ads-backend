@@ -47,12 +47,17 @@ func (s *dashboardService) GetBrandsMonitoring(ctx context.Context, startDate, e
 
 	var items []dto.BrandMonitoringItem
 	for _, raw := range rawItems {
+		photo := ""
+		if raw.Photo != nil {
+			photo = *raw.Photo
+		}
 		items = append(items, dto.BrandMonitoringItem{
 			BrandID:        raw.BrandID,
 			BrandName:      raw.BrandName,
 			AdAccountCount: raw.AdAccountCount,
 			ActiveCampaign: raw.ActiveCampaign,
 			TotalSpends:    raw.TotalSpends,
+			Photo:          photo,
 		})
 	}
 

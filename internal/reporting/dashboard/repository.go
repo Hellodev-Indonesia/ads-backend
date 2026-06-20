@@ -27,6 +27,7 @@ type BrandMonitoringItemRaw struct {
 	AdAccountCount int64
 	ActiveCampaign int64
 	TotalSpends    float64
+	Photo          *string
 }
 
 type RecentActivityItemRaw struct {
@@ -89,6 +90,7 @@ func (r *dashboardRepository) GetBrandsMonitoring(ctx context.Context, startDate
 		SELECT 
 			b.id as brand_id,
 			b.name as brand_name,
+			b.photo as photo,
 			COUNT(DISTINCT a.id) as ad_account_count,
 			COUNT(DISTINCT CASE WHEN c.effective_status = 'ACTIVE' THEN c.id END) as active_campaign,
 			COALESCE(SUM(i.spend), 0) as total_spends
@@ -96,7 +98,7 @@ func (r *dashboardRepository) GetBrandsMonitoring(ctx context.Context, startDate
 		LEFT JOIN meta_ad_accounts a ON b.id = a.brand_id
 		LEFT JOIN meta_campaigns c ON a.id = c.account_id
 		LEFT JOIN meta_insights i ON c.id = i.campaign_id` + insightWhere + `
-		GROUP BY b.id, b.name
+		GROUP BY b.id, b.name, b.photo
 	`
 
 	if err := r.db.WithContext(ctx).Raw(query, args...).Scan(&items).Error; err != nil {

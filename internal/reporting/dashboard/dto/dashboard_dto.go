@@ -15,6 +15,7 @@ type BrandMonitoringItem struct {
 	AdAccountCount int64   `json:"ad_account_count"`
 	ActiveCampaign int64   `json:"active_campaign"`
 	TotalSpends    float64 `json:"total_spends"`
+	Photo          string  `json:"photo"`
 }
 
 
