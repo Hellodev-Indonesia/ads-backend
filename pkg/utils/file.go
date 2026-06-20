@@ -2,12 +2,14 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"image"
 	"image/jpeg"
 	_ "image/png"
 	"mime/multipart"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/nfnt/resize"
 )
@@ -60,6 +62,6 @@ func ProcessBrandPhoto(fileHeader *multipart.FileHeader, slug string) (string, e
 		return "", err
 	}
 
-	// Return the public URL path
-	return "/uploads/brands/" + filename, nil
+	// Return the public URL path with timestamp to bypass browser cache
+	return "/uploads/brands/" + filename + fmt.Sprintf("?t=%d", time.Now().Unix()), nil
 }

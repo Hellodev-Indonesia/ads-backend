@@ -101,7 +101,7 @@ func (r *repository) GetSummaryByBrand(brandID uint64, dateStart, dateStop strin
 	var rows []InsightSummaryRow
 	query := r.db.Table("meta_insights").
 		Select("spend, impressions, reach, actions").
-		Where("level = 'adset'").
+		Where("level = 'ad'").
 		Where("adset_id IN (SELECT id FROM meta_ad_sets WHERE campaign_id IN (SELECT id FROM meta_campaigns WHERE account_id IN (SELECT id FROM meta_ad_accounts WHERE brand_id = ?)))", brandID)
 
 	if dateStart != "" {
